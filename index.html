@@ -42,7 +42,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-600 mb-1">購買日期</label>
-                        <input type="date" id="eqPurchaseDate" required 
+                        <input type="date" id="eqPurchaseDate" required
                                class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
                     <div>
@@ -65,7 +65,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-600 mb-1">使用年限（單位：年）</label>
-                        <input type="text" id="eqUsageLimit" required placeholder="例如：5" 
+                        <input type="text" id="eqUsageLimit" placeholder="例如：5" 
                                class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition duration-200">
@@ -76,10 +76,32 @@
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 md:col-span-3">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-slate-700">器材資產列表</h2>
-                    <button onclick="fetchEquipment()" class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-md transition">
-                        重新整理
-                    </button>
+                    <h2 class="text-xl font-semibold text-slate-700">器材列表</h2>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-6 flex flex-col sm:flex-row gap-3 items-end text-sm">
+                    <div class="w-full sm:flex-1">
+                        <label class="block text-xs font-medium text-slate-500 mb-1">綜合關鍵字搜尋</label>
+                        <input type="text" id="searchKeyword" placeholder="搜尋名稱、類別..."
+                            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    </div>
+                    <div class="w-full sm:w-[130px]">
+                        <label class="block text-xs font-medium text-slate-500 mb-1">狀態</label>
+                        <select id="searchStatus" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                            <option value="全部狀態">全部狀態</option>
+                            <option value="正常">正常</option>
+                            <option value="維修中">維修中</option>
+                            <option value="報廢">報廢</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button onclick="fetchEquipment()" class="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-md transition shadow-sm">
+                            搜尋
+                        </button>
+                        <button onclick="resetFilters()" class="flex-1 sm:flex-none bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-2 rounded-md transition whitespace-nowrap">
+                            顯示所有
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="overflow-x-auto">
@@ -134,23 +156,36 @@
         // ==========================================================
         async function fetchEquipment() {
             const tbody = document.getElementById('equipmentTableBody');
-            
-            // 向 Supabase 的 'equipment' 資料表請求所有欄位資料，並依 ID 排序
-            const { data, error } = await _supabase
-                .from('equipment')
-                .select('*')
-                .order('equipment_id', { ascending: true });
+            tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
+
+            const keyword = document.getElementById('searchKeyword').value.trim();
+            const status = document.getElementById('searchStatus').value;
+
+            let query = _supabase.from('equipment').select('*'); // 建立 Supabase 基礎查詢物件
+
+            // 關鍵字多欄位模糊搜尋 (使用 Supabase 的 .or 條件)
+            if (keyword !== '') {
+                // ilike 代表不區分大小寫的模糊搜尋；用逗號隔開代表「或 (OR)」
+                query = query.or(`name.ilike.%${keyword}%,category.ilike.%${keyword}%,manager_id.ilike.%${keyword}%`);
+            }
+
+            // 篩選狀態
+            if (status !== '全部狀態') {
+                query = query.eq('status', status);
+            }
+
+            // 執行查詢並排序（新建立的在最前面）
+            const { data, error } = await query.order('created_at', { ascending: false });
 
             if (error) {
-                alert('資料讀取失敗：' + error.message);
+                alert('器材資料讀取失敗：' + error.message);
                 return;
             }
 
-            // 清空舊資料
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">目前暫無任何器材資料</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">找不到符合條件的器材資料</td></tr>`;
                 return;
             }
 
@@ -185,6 +220,17 @@
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        // ==========================================================
+        // 【重設篩選條件並顯示所有名冊】
+        // ==========================================================
+        function resetFilters() {
+            // 清空輸入框與下拉選單
+            document.getElementById('searchKeyword').value = '';
+            document.getElementById('searchStatus').value = '全部狀態';
+            // 重新載入完整資料
+            fetchEquipment();
         }
 
         // ==========================================================
