@@ -17,6 +17,9 @@
                 <a href="tourists.html" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-4 py-2 rounded-md transition text-sm flex items-center gap-1">
                     遊客資料
                 </a>
+                <a href="instructors.html" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-4 py-2 rounded-md transition text-sm flex items-center gap-1">
+                    教練資料
+                </a>
                 <a href="index.html" class="bg-blue-600 text-white font-medium px-4 py-2 rounded-md shadow-sm transition text-sm flex items-center gap-1">
                     器材資產
                 </a>
@@ -83,16 +86,16 @@
                     <table class="w-full text-left border-collapse table-auto">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm font-medium">
-                                <th class="p-3">ID</th>
-                                <th class="p-3">器材名稱</th>
-                                <th class="p-3">類別</th>
-                                <th class="p-3">購買日期</th>
-                                <th class="p-3">狀態</th>
-                                <th class="p-3">購買單位</th>
-                                <th class="p-3">負責人身份證字號</th>
-                                <th class="p-3">使用年限</th>
-                                <th class="p-3">建立時間</th>
-                                <th class="p-3 text-center">操作</th>
+                                <th class="p-3 w-[60px] whitespace-nowrap">ID</th>
+                                <th class="p-3 w-[200px] whitespace-nowrap">器材名稱</th>
+                                <th class="p-3 w-[100px] whitespace-nowrap">類別</th>
+                                <th class="p-3 w-[110px] whitespace-nowrap">購買日期</th>
+                                <th class="p-3 w-[90px] text-center whitespace-nowrap">狀態</th>
+                                <th class="p-3 w-[150px] whitespace-nowrap">購買單位</th>
+                                <th class="p-3 w-[160px] whitespace-nowrap">負責人身分證字號</th>
+                                <th class="p-3 w-[100px] text-center whitespace-nowrap">使用年限</th>
+                                <th class="p-3 w-[180px] whitespace-nowrap">建立時間</th>
+                                <th class="p-3 w-[80px] text-center whitespace-nowrap">操作</th>
                             </tr>
                         </thead>
                         <tbody id="equipmentTableBody" class="text-slate-700 text-sm divide-y divide-slate-100">
@@ -168,7 +171,7 @@
                     <td class="p-3 font-medium">${item.name}</td>
                     <td class="p-3 text-slate-500">${item.category}</td>
                     <td class="p-3 text-slate-500">${item.purchase_date}</td>
-                    <td class="p-3">${statusBadge}</td>
+                    <td class="p-3 text-center whitespace-nowrap">${statusBadge}</td>
                     <td class="p-3 text-slate-500">${item.purchase_unit}</td>
                     <td class="p-3 text-slate-500">${item.manager_id}</td>
                     <td class="p-3 text-slate-500">${item.useful_life_years}</td>

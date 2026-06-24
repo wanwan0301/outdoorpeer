@@ -17,6 +17,9 @@
                 <a href="tourists.html" class="bg-blue-600 text-white font-medium px-4 py-2 rounded-md shadow-sm transition text-sm flex items-center gap-1">
                     遊客資料
                 </a>
+                <a href="instructors.html" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-4 py-2 rounded-md transition text-sm flex items-center gap-1">
+                    教練資料
+                </a>
                 <a href="index.html" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-4 py-2 rounded-md transition text-sm flex items-center gap-1">
                     器材資產
                 </a>
@@ -66,6 +69,11 @@
                         <input type="text" id="tDiet" value="葷食" placeholder="例如：全素、葷食" 
                                class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
+                    <div>
+                        <label class="block font-medium text-slate-600 mb-1">地址</label>
+                        <input type="text" id="tAddress" placeholder="例如：台北市信義區松仁路123號" 
+                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
                     <div class="border-t pt-2 mt-2 space-y-2">
                         <p class="text-xs font-bold text-slate-500">緊急聯絡資訊</p>
                         <div class="grid grid-cols-2 gap-2">
@@ -83,10 +91,31 @@
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 md:col-span-3">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-slate-700">遊客名冊列表</h2>
-                    <button onclick="fetchTourists()" class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-md transition">
-                        重新整理
-                    </button>
+                    <h2 class="text-xl font-semibold text-slate-700">遊客列表</h2>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-6 flex flex-col sm:flex-row gap-3 items-end text-sm">
+                    <div class="w-full sm:flex-1">
+                        <label class="block text-xs font-medium text-slate-500 mb-1">綜合關鍵字搜尋</label>
+                        <input type="text" id="searchKeyword" placeholder="搜尋姓名、身分證、電話..."
+                            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    </div>
+                    <div class="w-full sm:w-[130px]">
+                        <label class="block text-xs font-medium text-slate-500 mb-1">性別篩選</label>
+                        <select id="searchGender" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                            <option value="全部">全部性別</option>
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button onclick="fetchTourists()" class="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-md transition shadow-sm">
+                            搜尋
+                        </button>
+                        <button onclick="resetFilters()" class="flex-1 sm:flex-none bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-2 rounded-md transition whitespace-nowrap">
+                            顯示所有
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="overflow-x-auto">
@@ -95,10 +124,13 @@
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm font-medium">
                                 <th class="p-2.5 whitespace-nowrap">身分證字號</th>
                                 <th class="p-2.5 whitespace-nowrap">姓名(性別)</th>
+                                <th class="p-2.5 whitespace-nowrap">出生日期</th>
                                 <th class="p-2.5 whitespace-nowrap">電話</th>
-                                <th class="p-2.5">電子信箱</th>
+                                <th class="p-2.5 whitespace-nowrap">電子信箱</th>
                                 <th class="p-2.5 text-center whitespace-nowrap">飲食</th>
+                                <th class="p-2.5 whitespace-nowrap">地址</th>
                                 <th class="p-2.5 whitespace-nowrap">緊急聯絡人</th>
+                                <th class="p-2.5 whitespace-nowrap">加入時間</th>
                                 <th class="p-2.5 text-center whitespace-nowrap">操作</th>
                             </tr>
                         </thead>
@@ -128,13 +160,31 @@
             fetchTourists();
         });
 
+        // ==========================================================
+        // 🔍 【支援搜尋與篩選的查詢功能】
+        // ==========================================================
         async function fetchTourists() {
             const tbody = document.getElementById('touristTableBody');
+            tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
             
-            const { data, error } = await _supabase
-                .from('tourists')
-                .select('*')
-                .order('created_at', { ascending: false });
+            const keyword = document.getElementById('searchKeyword').value.trim();
+            const gender = document.getElementById('searchGender').value;
+            
+            let query = _supabase.from('tourists').select('*'); // 建立 Supabase 基礎查詢物件
+
+            // 關鍵字多欄位模糊搜尋 (使用 Supabase 的 .or 條件)
+            if (keyword !== '') {
+                // ilike 代表不區分大小寫的模糊搜尋；用逗號隔開代表「或 (OR)」
+                query = query.or(`name.ilike.%${keyword}%,id_number.ilike.%${keyword}%,phone.ilike.%${keyword}%`);
+            }
+
+            // 篩選性別
+            if (gender !== '全部') {
+                query = query.eq('gender', gender);
+            }
+
+            // 執行查詢並排序（新建立的在最前面）
+            const { data, error } = await query.order('created_at', { ascending: false });
 
             if (error) {
                 alert('遊客資料讀取失敗：' + error.message);
@@ -144,10 +194,11 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">目前暫無任何遊客登記資料</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">找不到符合條件的遊客資料</td></tr>`;
                 return;
             }
 
+            // 渲染資料至前端
             data.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition";
@@ -157,17 +208,20 @@
                         <span class="font-medium">${item.name}</span>
                         <span class="text-xs text-slate-400">(${item.gender})</span>
                     </td>
+                    <td class="p-2.5 font-mono text-slate-500 whitespace-nowrap">${item.birth_date}</td>
                     <td class="p-2.5 font-mono text-slate-500 whitespace-nowrap">${item.phone}</td>
-                    <td class="p-2.5 font-mono text-slate-500 max-w-[180px] break-all">${item.email || '<span class="text-slate-300">未填</span>'}</td>
+                    <td class="p-2.5 font-mono text-slate-500 min-w-[200px] break-all">${item.email || '<span class="text-slate-300">未填</span>'}</td>
                     <td class="p-2.5 text-center whitespace-nowrap">
                         <span class="px-2 py-0.5 rounded text-xs ${item.dietary_habit === '葷食' ? 'bg-slate-100 text-slate-700' : 'bg-green-100 text-green-700'}">
                             ${item.dietary_habit}
                         </span>
                     </td>
+                    <td class="p-2.5 font-mono text-slate-500 min-w-[200px] break-all">${item.address || '<span class="text-slate-300">未填</span>'}</td>
                     <td class="p-2.5 text-slate-500 text-xs">
                         <div class="font-medium text-slate-700">${item.emergency_contact || '未填'}</div>
                         <div class="font-mono text-slate-400 mt-0.5">${item.emergency_phone || ''}</div>
                     </td>
+                    <td class="p-2.5 font-mono text-slate-500">${item.created_at}</td>
                     <td class="p-2.5 text-center whitespace-nowrap">
                         <button onclick="deleteTourist('${item.id_number}')" 
                                 class="text-xs bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded border border-red-200 transition">
@@ -177,6 +231,17 @@
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        // ==========================================================
+        // 【重設篩選條件並顯示所有名冊】
+        // ==========================================================
+        function resetFilters() {
+            // 清空輸入框與下拉選單
+            document.getElementById('searchKeyword').value = '';
+            document.getElementById('searchGender').value = '全部';
+            // 重新載入完整資料
+            fetchTourists();
         }
 
         document.getElementById('addTouristForm').addEventListener('submit', async (e) => {
@@ -189,13 +254,14 @@
             const phone = document.getElementById('tPhone').value;
             const email = document.getElementById('tEmail').value || null;
             const dietary_habit = document.getElementById('tDiet').value;
+            const address = document.getElementById('tAddress').value || null;
             const emergency_contact = document.getElementById('tEmergencyContact').value || null;
             const emergency_phone = document.getElementById('tEmergencyPhone').value || null;
 
             const { error } = await _supabase
                 .from('tourists')
                 .insert([
-                    { id_number, name, gender, birth_date, phone, email, dietary_habit, emergency_contact, emergency_phone }
+                    { id_number, name, gender, birth_date, phone, email, dietary_habit, address, emergency_contact, emergency_phone }
                 ]);
 
             if (error) {
