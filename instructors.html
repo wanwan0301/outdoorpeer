@@ -74,6 +74,24 @@
                         <input type="text" id="iAddress" placeholder="例如：台北市信義區松仁路123號" 
                                class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
+                    <div class="border-t pt-2 mt-2">
+                        <label class="block font-medium text-slate-600 mb-1 flex justify-between items-center">
+                            專長領域
+                            <button type="button" onclick="addSpecialtyField()" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 px-2 py-1 rounded border border-blue-200 transition">➕ 新增欄位</button>
+                        </label>
+                        <div id="specialtiesContainer" class="space-y-2">
+                            <input type="text" name="specialty" placeholder="例如：SUP" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="border-t pt-2 mt-2 mb-4">
+                        <label class="block font-medium text-slate-600 mb-1 flex justify-between items-center">
+                            專業證照
+                            <button type="button" onclick="addLicenseField()" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 px-2 py-1 rounded border border-blue-200 transition">➕ 新增欄位</button>
+                        </label>
+                        <div id="licensesContainer" class="space-y-2">
+                            <input type="text" name="license" placeholder="例如：PADI OW 專任教練" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
                     <div>
                         <label class="block font-medium text-slate-600 mb-1">自我介紹</label>
                         <textarea id="iBio" rows="2" placeholder="簡述教練背景或特殊專長..." 
@@ -129,6 +147,8 @@
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm font-medium">
                                 <th class="p-2.5 whitespace-nowrap">身分證字號</th>
                                 <th class="p-2.5 whitespace-nowrap">姓名(性別)</th>
+                                <th class="p-2.5 whitespace-nowrap">專長</th>
+                                <th class="p-2.5 whitespace-nowrap">證照</th>
                                 <th class="p-2.5 whitespace-nowrap">出生日期</th>
                                 <th class="p-2.5 whitespace-nowrap">電話</th>
                                 <th class="p-2.5 whitespace-nowrap">電子信箱</th>
@@ -142,7 +162,7 @@
                         </thead>
                         <tbody id="instructorTableBody" class="text-slate-700 text-sm divide-y divide-slate-100">
                             <tr>
-                                <td colspan="7" class="p-4 text-center text-slate-400">資料載入中...</td>
+                                <td colspan="13" class="p-4 text-center text-slate-400">資料載入中...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -171,12 +191,16 @@
         // ==========================================================
         async function fetchInstructors() {
             const tbody = document.getElementById('instructorTableBody');
-            tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="13" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
             
             const keyword = document.getElementById('searchKeyword').value.trim();
             const gender = document.getElementById('searchGender').value;
 
-            let query = _supabase.from('instructors').select('*');
+            let query = _supabase.from('instructors').select(`
+                *,
+                instructor_specialties ( specialty ),
+                instructor_licenses ( license_name )
+            `);
 
             // 支援 姓名、身分證、電話 的萬用模糊搜尋
             if (keyword !== '') {
@@ -198,12 +222,20 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">找不到符合條件的教練資料</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="13" class="p-4 text-center text-slate-400">找不到符合條件的教練資料</td></tr>`;
                 return;
             }
 
             // 渲染表格
             data.forEach(item => {
+                const specialtyList = (item.instructor_specialties && item.instructor_specialties.length > 0)
+                    ? item.instructor_specialties.map(s => s.specialty).join(', ')
+                    : '<span class="text-slate-300">—</span>';
+
+                const licenseList = (item.instructor_licenses && item.instructor_licenses.length > 0)
+                    ? item.instructor_licenses.map(l => l.license_name).join('<br>') // 證照名稱較長，用換行顯示較美觀
+                    : '<span class="text-slate-300">—</span>';
+
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition";
                 tr.innerHTML = `
@@ -212,6 +244,8 @@
                         <span class="font-medium">${item.name}</span>
                         <span class="text-xs text-slate-400">(${item.gender})</span>
                     </td>
+                    <td class="p-2.5 text-slate-700 text-sm max-w-[150px] break-words">${specialtyList}</td>
+                    <td class="p-2.5 text-slate-700 text-xs max-w-[200px] break-words">${licenseList}</td>
                     <td class="p-2.5 font-mono text-slate-500 whitespace-nowrap">${item.birth_date}</td>
                     <td class="p-2.5 font-mono text-slate-500 whitespace-nowrap">${item.phone}</td>
                     <td class="p-2.5 font-mono text-slate-500 min-w-[200px] break-all">${item.email || '<span class="text-slate-300">—</span>'}</td>
@@ -236,6 +270,29 @@
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        // ==========================================================
+        // ➕ 【新功能：動態新增專長與證照輸入框】
+        // ==========================================================
+        function addSpecialtyField() {
+            const container = document.getElementById('specialtiesContainer');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'specialty';
+            input.placeholder = '新增專長...';
+            input.className = 'w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none';
+            container.appendChild(input);
+        }
+
+        function addLicenseField() {
+            const container = document.getElementById('licensesContainer');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'license';
+            input.placeholder = '新增證照...';
+            input.className = 'w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none';
+            container.appendChild(input);
         }
 
         // ==========================================================
@@ -264,21 +321,60 @@
             const bio = document.getElementById('iBio').value || null;
             const emergency_contact = document.getElementById('iEmergencyContact').value || null;
             const emergency_phone = document.getElementById('iEmergencyPhone').value || null;
+            // 抓取所有動態輸入的【專長】與【證照】陣列，並過濾掉沒填寫的空字串
+            const specialties = Array.from(document.querySelectorAll('input[name="specialty"]'))
+                .map(input => input.value.trim())
+                .filter(value => value !== '');
+            const licenses = Array.from(document.querySelectorAll('input[name="license"]'))
+                .map(input => input.value.trim())
+                .filter(value => value !== '');
 
-            const { error } = await _supabase
+            const { error: instructorError } = await _supabase
                 .from('instructors')
                 .insert([
                     { id_number, name, gender, birth_date, phone, email, dietary_habit, address, bio, emergency_contact, emergency_phone }
                 ]);
 
-            if (error) {
-                alert('新增失敗（身分證重複或資料錯誤）：' + error.message);
-            } else {
-                alert('新教練資料建檔成功！');
-                document.getElementById('addInstructorForm').reset();
-                document.getElementById('iDiet').value = '葷食';
-                fetchInstructors();
+            if (instructorError) {
+                alert('新增失敗（身分證可能重複或格式錯誤）：' + instructorError.message);
+                return; // 主檔失敗就立刻停止，不繼續寫入子表
             }
+
+            // if (error) {
+            //     alert('新增失敗（身分證重複或資料錯誤）：' + error.message);
+            // } else {
+            //     alert('新教練資料建檔成功！');
+            //     document.getElementById('addInstructorForm').reset();
+            //     document.getElementById('iDiet').value = '葷食';
+            //     fetchInstructors();
+            // }
+
+            if (specialties.length > 0) {
+                // 將字串陣列轉換成 Supabase 需要的物件格式 [{id_number: 'A1...', specialty: 'SUP'}, ...]
+                const specialtiesData = specialties.map(s => ({ id_number: id_number, specialty: s }));
+                const { error: specError } = await _supabase.from('instructor_specialties').insert(specialtiesData);
+                if (specError) console.error('專長寫入異常:', specError);
+            }
+
+            if (licenses.length > 0) {
+                const licensesData = licenses.map(l => ({ id_number: id_number, license_name: l }));
+                const { error: licError } = await _supabase.from('instructor_licenses').insert(licensesData);
+                if (licError) console.error('證照寫入異常:', licError);
+            }
+
+            // === 全部完成後：重設畫面 ===
+            alert('新教練資料建檔成功！');
+            
+            // 清空基本表單
+            document.getElementById('addInstructorForm').reset();
+            document.getElementById('iDiet').value = '葷食';
+            
+            // 將動態輸入區塊還原回最初「各只有一個輸入框」的狀態
+            document.getElementById('specialtiesContainer').innerHTML = '<input type="text" name="specialty" placeholder="例如：SUP" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">';
+            document.getElementById('licensesContainer').innerHTML = '<input type="text" name="license" placeholder="例如：PADI OW 專任教練" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">';
+            
+            // 重新整理右側列表
+            fetchInstructors();
         });
 
         // ==========================================================

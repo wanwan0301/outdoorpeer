@@ -136,7 +136,7 @@
                         </thead>
                         <tbody id="touristTableBody" class="text-slate-700 text-sm divide-y divide-slate-100">
                             <tr>
-                                <td colspan="7" class="p-4 text-center text-slate-400">資料載入中...</td>
+                                <td colspan="10" class="p-4 text-center text-slate-400">資料載入中...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -165,7 +165,7 @@
         // ==========================================================
         async function fetchTourists() {
             const tbody = document.getElementById('touristTableBody');
-            tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
             
             const keyword = document.getElementById('searchKeyword').value.trim();
             const gender = document.getElementById('searchGender').value;
@@ -194,7 +194,7 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">找不到符合條件的遊客資料</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-slate-400">找不到符合條件的遊客資料</td></tr>`;
                 return;
             }
 
