@@ -1,0 +1,1023 @@
+/* =========================================================
+   水域活動網站共用樣式 style.css
+   色調來源：柔和水域插畫風格
+   適用頁面：遊客首頁、遊程、購物車、教練首頁、上架遊程、器材租借、後台管理
+   ========================================================= */
+
+/* ---------- 1. Design Tokens ---------- */
+:root {
+  /* Main palette */
+  --sky-50: #f6fbff;
+  --sky-100: #eaf8ff;
+  --sky-200: #d8f1fb;
+  --water-100: #c9f1fb;
+  --water-200: #98e1f2;
+  --water-300: #69cfe8;
+  --water-400: #38b8d9;
+  --water-500: #1599bf;
+  --water-600: #0d7795;
+  --water-700: #0b5f78;
+
+  --mint-100: #dff3e7;
+  --mint-200: #b9e2c6;
+  --mint-300: #8dcca5;
+  --mint-500: #4f9e79;
+
+  --sand-100: #fff3d1;
+  --sand-200: #ffe2a6;
+  --sand-300: #ffc86a;
+  --coral-100: #ffe3df;
+  --coral-200: #ffc3bd;
+  --coral-300: #ff9b90;
+  --coral-500: #f26b5e;
+
+  --sunset-100: #ffe8c7;
+  --sunset-300: #ffbd86;
+  --pink-100: #fde7ee;
+  --pink-200: #fac9d5;
+  --pink-300: #f3a6b8;
+
+  /* Neutral */
+  --white: #ffffff;
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+
+  /* Status */
+  --success-bg: #e7f7ec;
+  --success-text: #237a4b;
+  --warning-bg: #fff4d6;
+  --warning-text: #9a6700;
+  --danger-bg: #ffe4e1;
+  --danger-text: #b6382f;
+  --info-bg: #e2f4ff;
+  --info-text: #0d7795;
+  --muted-bg: #eef2f7;
+  --muted-text: #64748b;
+
+  /* Typography */
+  --font-sans: "Noto Sans TC", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Layout */
+  --container: 1120px;
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Shadow */
+  --shadow-sm: 0 2px 8px rgba(15, 95, 120, 0.06);
+  --shadow-md: 0 10px 24px rgba(15, 95, 120, 0.1);
+  --shadow-lg: 0 18px 48px rgba(15, 95, 120, 0.14);
+
+  /* Motion */
+  --transition-fast: 160ms ease;
+  --transition: 220ms ease;
+}
+
+/* ---------- 2. Base ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  color: var(--slate-800);
+  background:
+    radial-gradient(circle at 8% 18%, rgba(253, 231, 238, 0.55) 0 90px, transparent 92px),
+    radial-gradient(circle at 88% 12%, rgba(201, 241, 251, 0.72) 0 120px, transparent 122px),
+    linear-gradient(180deg, var(--sky-50) 0%, var(--sky-100) 48%, #f9fdff 100%);
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::selection {
+  background: var(--water-200);
+  color: var(--water-700);
+}
+
+/* ---------- 3. Layout Helpers ---------- */
+.container {
+  width: min(100% - 32px, var(--container));
+  margin-inline: auto;
+}
+
+.page {
+  padding: 32px 0 56px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-title {
+  margin: 0;
+  color: var(--slate-800);
+  font-size: clamp(1.6rem, 2.2vw, 2.3rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.page-subtitle {
+  margin: 8px 0 0;
+  color: var(--slate-500);
+  font-size: 0.95rem;
+}
+
+.section {
+  margin-top: 28px;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  margin: 0;
+  color: var(--slate-800);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.section-note {
+  margin: 4px 0 0;
+  color: var(--slate-500);
+  font-size: 0.9rem;
+}
+
+/* ---------- 4. Header / Navigation ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+  backdrop-filter: blur(14px);
+}
+
+.site-header__inner {
+  width: min(100% - 32px, var(--container));
+  min-height: 72px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.brand__title {
+  color: var(--water-700);
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+}
+
+.brand__mode {
+  margin-top: 4px;
+  color: var(--slate-500);
+  font-size: 0.75rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-link,
+.nav-button {
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--slate-600);
+  padding: 9px 14px;
+  font-size: 0.92rem;
+  font-weight: 650;
+  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.nav-link:hover,
+.nav-button:hover {
+  background: var(--sky-100);
+  color: var(--water-700);
+}
+
+.nav-link.is-active,
+.nav-button.is-active {
+  background: var(--water-500);
+  color: var(--white);
+  box-shadow: 0 8px 18px rgba(21, 153, 191, 0.22);
+}
+
+.mobile-menu-button {
+  display: none;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--slate-600);
+  padding: 8px 12px;
+  font-weight: 700;
+}
+
+.mobile-menu {
+  display: none;
+  border-top: 1px solid var(--slate-200);
+  background: rgba(255, 255, 255, 0.96);
+  padding: 12px 16px;
+}
+
+.mobile-menu.is-open {
+  display: block;
+}
+
+.mobile-menu a,
+.mobile-menu button {
+  display: block;
+  width: 100%;
+  margin-bottom: 6px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--slate-600);
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 650;
+}
+
+.mobile-menu a:hover,
+.mobile-menu button:hover {
+  background: var(--sky-100);
+  color: var(--water-700);
+}
+
+/* ---------- 5. Hero：水域首頁主視覺 ---------- */
+.hero-water {
+  position: relative;
+  min-height: 520px;
+  overflow: hidden;
+  border: 1px solid rgba(216, 241, 251, 0.9);
+  border-radius: 30px;
+  background: var(--sky-100);
+  box-shadow: var(--shadow-md);
+}
+
+.hero-water::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 8% 52%, rgba(250, 201, 213, 0.9) 0 120px, transparent 122px),
+    radial-gradient(circle at 88% 34%, rgba(152, 225, 242, 0.95) 0 160px, transparent 162px),
+    radial-gradient(circle at 76% 55%, rgba(255, 226, 166, 0.9) 0 110px, transparent 112px);
+  opacity: 0.68;
+}
+
+.hero-water__content {
+  position: relative;
+  z-index: 5;
+  width: min(540px, calc(100% - 36px));
+  margin: 64px 0 0 56px;
+  padding: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(10px);
+}
+
+.hero-water__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--water-700);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.hero-water__title {
+  margin: 0;
+  color: var(--slate-800);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+}
+
+.hero-water__desc {
+  margin: 16px 0 0;
+  color: var(--slate-600);
+  font-size: 1rem;
+}
+
+.hero-water__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Hero decorative shape */
+.hero-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 235px;
+  background: var(--water-300);
+}
+
+.hero-wave::before {
+  content: "";
+  position: absolute;
+  left: -5%;
+  top: -38px;
+  width: 110%;
+  height: 74px;
+  background: var(--water-300);
+  border-radius: 50% 50% 0 0;
+}
+
+.hero-hill {
+  position: absolute;
+  bottom: 210px;
+  border-radius: 999px 999px 0 0;
+  opacity: 0.96;
+}
+
+.hero-hill--left {
+  left: -70px;
+  width: 330px;
+  height: 112px;
+  background: var(--mint-300);
+}
+
+.hero-hill--middle {
+  left: 260px;
+  width: 390px;
+  height: 94px;
+  background: var(--mint-200);
+}
+
+.hero-hill--right {
+  right: -80px;
+  width: 430px;
+  height: 138px;
+  background: #70c2b2;
+}
+
+.hero-sun {
+  position: absolute;
+  top: 42px;
+  right: 160px;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: var(--pink-200);
+  opacity: 0.85;
+}
+
+.hero-blob {
+  position: absolute;
+  border-radius: 999px;
+  opacity: 0.72;
+}
+
+.hero-blob--water {
+  right: -80px;
+  top: 130px;
+  width: 270px;
+  height: 270px;
+  background: var(--water-200);
+}
+
+.hero-blob--coral {
+  right: -55px;
+  bottom: 190px;
+  width: 230px;
+  height: 150px;
+  background: var(--sunset-300);
+}
+
+.hero-ripple {
+  position: absolute;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.hero-ripple--1 {
+  left: 80px;
+  bottom: 150px;
+  width: 300px;
+  transform: rotate(-2deg);
+}
+
+.hero-ripple--2 {
+  right: 120px;
+  bottom: 88px;
+  width: 260px;
+  background: rgba(13, 119, 149, 0.16);
+  transform: rotate(4deg);
+}
+
+/* ---------- 6. Cards ---------- */
+.card {
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.card:hover {
+  border-color: var(--sky-200);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.card__body {
+  padding: 20px;
+}
+
+.card__title {
+  margin: 0;
+  color: var(--slate-800);
+  font-size: 1.08rem;
+  font-weight: 800;
+}
+
+.card__text {
+  margin: 8px 0 0;
+  color: var(--slate-500);
+  font-size: 0.92rem;
+}
+
+.card-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.card-grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.card-grid--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.quick-card {
+  width: 100%;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 20px;
+  text-align: left;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.quick-card:hover {
+  border-color: var(--water-200);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.quick-card__title {
+  margin: 0;
+  color: var(--slate-800);
+  font-weight: 850;
+}
+
+.quick-card__desc {
+  margin: 5px 0 0;
+  color: var(--slate-500);
+  font-size: 0.88rem;
+}
+
+/* Activity / course card */
+.activity-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.activity-card__cover {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  background: var(--sky-100);
+}
+
+.activity-card__cover::before {
+  content: "";
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  bottom: -30px;
+  height: 84px;
+  background: var(--water-200);
+  border-radius: 50% 50% 0 0;
+}
+
+.activity-card__cover::after {
+  content: "";
+  position: absolute;
+  left: 30px;
+  bottom: 44px;
+  width: 128px;
+  height: 45px;
+  border-radius: 999px 999px 0 0;
+  background: var(--mint-200);
+  box-shadow: 170px 4px 0 var(--mint-300), 275px -22px 0 var(--water-100);
+}
+
+.activity-card__cover-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  height: 100%;
+  place-items: center;
+  padding: 16px;
+  text-align: center;
+}
+
+.activity-card__name {
+  color: var(--water-700);
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
+.activity-card__meta {
+  margin-top: 4px;
+  color: var(--water-600);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.activity-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 18px;
+}
+
+.activity-card__desc {
+  color: var(--slate-500);
+  font-size: 0.92rem;
+}
+
+.activity-card__info {
+  display: grid;
+  gap: 6px;
+  margin: 14px 0;
+  color: var(--slate-600);
+  font-size: 0.9rem;
+}
+
+.activity-card__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* ---------- 7. Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled,
+.btn.is-disabled {
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.6;
+}
+
+.btn-primary {
+  background: var(--water-500);
+  color: var(--white);
+  box-shadow: 0 8px 18px rgba(21, 153, 191, 0.22);
+}
+
+.btn-primary:hover {
+  background: var(--water-600);
+}
+
+.btn-secondary {
+  border-color: var(--water-200);
+  background: var(--white);
+  color: var(--water-700);
+}
+
+.btn-secondary:hover {
+  background: var(--sky-100);
+}
+
+.btn-soft {
+  background: var(--sky-100);
+  color: var(--water-700);
+}
+
+.btn-soft:hover {
+  background: var(--sky-200);
+}
+
+.btn-danger {
+  background: var(--coral-500);
+  color: var(--white);
+  box-shadow: 0 8px 18px rgba(242, 107, 94, 0.18);
+}
+
+.btn-danger:hover {
+  background: #dc5b50;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* ---------- 8. Forms ---------- */
+.form-panel {
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-group {
+  display: grid;
+  gap: 7px;
+}
+
+.form-label {
+  color: var(--slate-600);
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.form-control {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--slate-800);
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+}
+
+.form-control::placeholder {
+  color: var(--slate-400);
+}
+
+.form-control:focus {
+  border-color: var(--water-400);
+  box-shadow: 0 0 0 4px rgba(56, 184, 217, 0.15);
+}
+
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-help {
+  color: var(--slate-500);
+  font-size: 0.8rem;
+}
+
+/* ---------- 9. Tables / Admin ---------- */
+.table-panel {
+  overflow: hidden;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-sm);
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--slate-200);
+}
+
+.table-title {
+  margin: 0;
+  color: var(--slate-800);
+  font-size: 1.1rem;
+  font-weight: 850;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table th {
+  background: var(--sky-100);
+  color: var(--slate-600);
+  padding: 13px 14px;
+  text-align: left;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.data-table td {
+  border-top: 1px solid var(--slate-100);
+  color: var(--slate-700);
+  padding: 13px 14px;
+  vertical-align: middle;
+}
+
+.data-table tbody tr {
+  transition: background var(--transition-fast);
+}
+
+.data-table tbody tr:hover {
+  background: rgba(234, 248, 255, 0.7);
+}
+
+/* ---------- 10. Badges / Status ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.badge-success {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.badge-warning {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+}
+
+.badge-danger {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}
+
+.badge-info {
+  background: var(--info-bg);
+  color: var(--info-text);
+}
+
+.badge-muted {
+  background: var(--muted-bg);
+  color: var(--muted-text);
+}
+
+/* 水域活動狀態可直接使用 */
+.status-open {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.status-formed {
+  background: var(--info-bg);
+  color: var(--info-text);
+}
+
+.status-full {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+}
+
+.status-cancelled {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}
+
+.status-ended {
+  background: var(--muted-bg);
+  color: var(--muted-text);
+}
+
+/* ---------- 11. Cart / Summary ---------- */
+.summary-box {
+  border: 1px solid var(--sky-200);
+  border-radius: var(--radius-lg);
+  background: rgba(234, 248, 255, 0.72);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 0;
+  color: var(--slate-600);
+}
+
+.summary-row + .summary-row {
+  border-top: 1px solid rgba(203, 213, 225, 0.6);
+}
+
+.summary-row strong {
+  color: var(--slate-800);
+}
+
+/* ---------- 12. Utility ---------- */
+.text-muted {
+  color: var(--slate-500);
+}
+
+.text-primary {
+  color: var(--water-700);
+}
+
+.bg-panel {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.shadow-soft {
+  box-shadow: var(--shadow-sm);
+}
+
+.rounded-soft {
+  border-radius: var(--radius-lg);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------- 13. Responsive ---------- */
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: inline-flex;
+  }
+
+  .hero-water {
+    min-height: 620px;
+  }
+
+  .hero-water__content {
+    margin: 28px auto 0;
+    padding: 26px;
+  }
+
+  .hero-sun {
+    right: 36px;
+    width: 88px;
+    height: 88px;
+  }
+
+  .hero-hill--left {
+    left: -160px;
+  }
+
+  .hero-hill--middle {
+    left: 120px;
+  }
+
+  .hero-hill--right {
+    right: -180px;
+  }
+
+  .card-grid--2,
+  .card-grid--3,
+  .card-grid--4,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-head,
+  .table-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .activity-card__actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding-top: 22px;
+  }
+
+  .hero-water {
+    border-radius: 22px;
+  }
+
+  .hero-water__title {
+    font-size: 2rem;
+  }
+
+  .hero-water__actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .site-header__inner {
+    min-height: 66px;
+  }
+
+  .brand__title {
+    font-size: 1.12rem;
+  }
+}
