@@ -1023,7 +1023,6 @@ textarea.form-control {
     font-size: 1.12rem;
   }
 }
-"""
 
 path = Path("/mnt/data/style.css")
 path.write_text(css, encoding="utf-8")
