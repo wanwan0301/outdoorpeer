@@ -1,6 +1,4 @@
-from pathlib import Path
-
-css = r"""/* =========================================================
+/* =========================================================
    水域活動網站共用樣式 style.css
    色調來源：柔和水域插畫風格
    適用頁面：遊客首頁、遊程、購物車、教練首頁、上架遊程、器材租借、後台管理
@@ -1023,8 +1021,3 @@ textarea.form-control {
     font-size: 1.12rem;
   }
 }
-
-path = Path("/mnt/data/style.css")
-path.write_text(css, encoding="utf-8")
-print(f"created: {path}")
-print(f"size: {path.stat().st_size} bytes")
