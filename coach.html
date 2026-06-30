@@ -19,6 +19,7 @@
                 <a href="tourists.html" class="nav-link">遊客資料</a>
                 <a href="coach.html" class="nav-link is-active">教練資料</a>
                 <a href="equip.html" class="nav-link">器材資產</a>
+                <a href="courses.html" class="nav-link">開設課程</a>
             </nav>
         </div>
     </header>
@@ -194,10 +195,10 @@
             const keyword = document.getElementById('searchKeyword').value.trim();
             const gender = document.getElementById('searchGender').value;
 
-            let query = _supabase.from('instructors').select(`
+            let query = _supabase.from('coach').select(`
                 *,
-                instructor_specialties ( specialty ),
-                instructor_licenses ( license_name )
+                coach_specialties ( specialty ),
+                coach_licenses ( license_name )
             `);
 
             // 支援 姓名、身分證、電話 的萬用模糊搜尋
@@ -226,12 +227,12 @@
 
             // 渲染表格
             data.forEach(item => {
-                const specialtyList = (item.instructor_specialties && item.instructor_specialties.length > 0)
-                    ? item.instructor_specialties.map(s => s.specialty).join(', ')
+                const specialtyList = (item.coach_specialties && item.coach_specialties.length > 0)
+                    ? `<div class="flex flex-col gap-1 items-start">` + item.coach_specialties.map(s => `<span class="badge badge-info">${s.specialty}</span>`).join('') + `</div>`
                     : '<span class="text-slate-300">—</span>';
 
-                const licenseList = (item.instructor_licenses && item.instructor_licenses.length > 0)
-                    ? item.instructor_licenses.map(l => l.license_name).join('<br>') // 證照名稱較長，用換行顯示較美觀
+                const licenseList = (item.coach_licenses && item.coach_licenses.length > 0)
+                    ? `<div class="flex flex-col gap-1 items-start">` + item.coach_licenses.map(l => `<span class="badge badge-muted">${l.license_name}</span>`).join('') + `</div>`
                     : '<span class="text-slate-300">—</span>';
 
                 const tr = document.createElement('tr');
@@ -241,8 +242,8 @@
                         <span class="font-medium">${item.name}</span>
                         <span class="text-xs text-slate-400">(${item.gender})</span>
                     </td>
-                    <td class="text-slate-700 text-sm max-w-[150px] break-words">${specialtyList}</td>
-                    <td class="text-slate-700 text-xs max-w-[200px] break-words">${licenseList}</td>
+                    <td class="text-slate-700 text-sm min-w-[100px] break-words">${specialtyList}</td>
+                    <td class="text-slate-700 text-xs min-w-[170px] break-words">${licenseList}</td>
                     <td class="font-mono text-slate-500 whitespace-nowrap">${item.birth_date}</td>
                     <td class="font-mono text-slate-500 whitespace-nowrap">${item.phone}</td>
                     <td class="font-mono text-slate-500 min-w-[200px] break-all">${item.email || '<span class="text-slate-300">—</span>'}</td>
@@ -327,7 +328,7 @@
                 .filter(value => value !== '');
 
             const { error: instructorError } = await _supabase
-                .from('instructors')
+                .from('coach')
                 .insert([
                     { id_number, name, gender, birth_date, phone, email, dietary_habit, address, bio, emergency_contact, emergency_phone }
                 ]);
@@ -340,13 +341,13 @@
             if (specialties.length > 0) {
                 // 將字串陣列轉換成 Supabase 需要的物件格式 [{id_number: 'A1...', specialty: 'SUP'}, ...]
                 const specialtiesData = specialties.map(s => ({ id_number: id_number, specialty: s }));
-                const { error: specError } = await _supabase.from('instructor_specialties').insert(specialtiesData);
+                const { error: specError } = await _supabase.from('coach_specialties').insert(specialtiesData);
                 if (specError) console.error('專長寫入異常:', specError);
             }
 
             if (licenses.length > 0) {
                 const licensesData = licenses.map(l => ({ id_number: id_number, license_name: l }));
-                const { error: licError } = await _supabase.from('instructor_licenses').insert(licensesData);
+                const { error: licError } = await _supabase.from('coach_licenses').insert(licensesData);
                 if (licError) console.error('證照寫入異常:', licError);
             }
 
@@ -372,7 +373,7 @@
             if (!confirm(`確定要永久刪除教練 [${id_number}] 的資料嗎？\n請注意：這會連帶刪除該教練的專長與證照紀錄。`)) return;
 
             const { error } = await _supabase
-                .from('instructors')
+                .from('coach')
                 .delete()
                 .eq('id_number', id_number);
 

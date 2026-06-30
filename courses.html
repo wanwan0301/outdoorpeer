@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水域活動工作室 - 開設課程</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+
+    <header class="site-header">
+        <div class="site-header__inner">
+            <div class="brand">
+                <span class="brand__title">水域活動工作室</span>
+                <span class="brand__mode">後端管理系統</span>
+            </div>
+            <nav class="nav">
+                <a href="tourists.html" class="nav-link">遊客資料</a>
+                <a href="coach.html" class="nav-link">教練資料</a>
+                <a href="equip.html" class="nav-link">器材資產</a>
+                <a href="courses.html" class="nav-link is-active">開設課程</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container page">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="form-panel h-fit text-sm">
+                <h2 class="text-lg font-semibold text-slate-700 mb-4">開設新課程</h2>
+                <form id="addForm" class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">課程項目</label>
+                        <select id="cItem" required class="form-control">
+                            <option value="">請選擇項目...</option>
+                            <option value="SUP立槳">SUP立槳</option>
+                            <option value="獨木舟">獨木舟</option>
+                            <option value="衝浪">衝浪</option>
+                            <option value="自由潛水">自由潛水</option>
+                            <option value="水肺潛水">水肺潛水</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">指派教練</label>
+                        <select id="cInstructorId" required class="form-control">
+                            <option value="">載入中...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">開始時間</label>
+                        <input type="datetime-local" id="cStartTime" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">結束時間</label>
+                        <input type="datetime-local" id="cEndTime" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">價格</label>
+                        <input type="number" id="cPrice" required min="0" step="1" placeholder="例如：1500" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">難易度分類</label>
+                        <select id="cDifficulty" class="form-control">
+                            <option value="初階">初階</option>
+                            <option value="中階">中階</option>
+                            <option value="中高階">中高階</option>
+                            <option value="高階">高階</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">人數上限（容納人數）</label>
+                        <input type="number" id="cCapacity" required min="1" placeholder="例如：10" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">開課狀態</label>
+                        <select id="cStatus" class="form-control">
+                            <option value="開放報名中">開放報名中</option>
+                            <option value="已成團">已成團</option>
+                            <option value="已客滿">已客滿</option>
+                            <option value="已取消">已取消</option>
+                            <option value="已結束">已結束</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        確認開設課程
+                    </button>
+                </form>
+            </div>
+
+            <div class="table-panel md:col-span-3">
+                <div class="table-toolbar">
+                    <h2 class="table-title">開設課程列表</h2>
+                </div>
+
+                <div class="p-5 border-b flex flex-col sm:flex-row gap-3 items-end text-sm">
+                    <div class="w-full sm:flex-1">
+                        <label class="form-label text-xs">搜尋課程或教練</label>
+                        <input type="text" id="searchKeyword" placeholder="搜尋項目、教練姓名..."
+                            class="form-control mt-1">
+                    </div>
+                    <div class="w-full sm:w-[130px]">
+                        <label class="form-label text-xs">開課狀態</label>
+                        <select id="searchStatus" class="form-control mt-1">
+                            <option value="全部">全部狀態</option>
+                            <option value="開放報名中">開放報名中</option>
+                            <option value="已成團">已成團</option>
+                            <option value="已客滿">已客滿</option>
+                            <option value="已取消">已取消</option>
+                            <option value="已結束">已結束</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button onclick="fetchCourses()" class="btn btn-primary">
+                            搜尋
+                        </button>
+                        <button onclick="resetFilters()" class="btn btn-secondary">
+                            顯示所有
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-scroll">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>課程項目</th>
+                                <th>擔當教練</th>
+                                <th>時間區間</th>
+                                <th class="text-center">難易度</th>
+                                <th>價格</th>
+                                <th class="text-center">容納上限</th>
+                                <th class="text-center">狀態</th>
+                                <th class="text-center">報名情況</th>
+                                <th class="text-center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="courseTableBody">
+                            <tr>
+                                <td colspan="10" class="p-4 text-center text-slate-400">資料載入中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 報名名冊彈出視窗 (Modal) -->
+    <div id="rosterModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-lg border border-slate-200 w-full max-w-4xl max-h-[85vh] flex flex-col">
+            <div class="p-5 border-b flex justify-between items-center bg-slate-50 rounded-t-xl">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800" id="modalTitle">場次報名名冊</h3>
+                    <p class="text-xs text-slate-500 mt-1" id="modalSubtitle">場次資訊載入中...</p>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 font-bold text-xl">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="table-scroll">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>遊客姓名</th>
+                                <th class="text-center">性別</th>
+                                <th>聯絡電話</th>
+                                <th>緊急聯絡人</th>
+                                <th>緊急聯絡電話</th>
+                                <th class="text-center">繳費狀態</th>
+                                <th class="text-center">保險狀態</th>
+                                <th>報名時間</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rosterTableBody">
+                            <tr>
+                                <td colspan="8" class="text-center p-4 text-slate-400">載入中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="p-4 border-t bg-slate-50 flex justify-end rounded-b-xl">
+                <button onclick="closeModal()" class="btn btn-secondary text-sm">關閉</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI'; 
+
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeDropdowns();
+            fetchCourses();
+        });
+
+        async function initializeDropdowns() {
+            // 載入教練選單
+            const { data: coaches, error: coachError } = await _supabase
+                .from('coach')
+                .select('id_number, name')
+                .order('name');
+            
+            const coachSelect = document.getElementById('cInstructorId');
+            if (coachError) {
+                coachSelect.innerHTML = '<option value="">載入失敗</option>';
+            } else {
+                coachSelect.innerHTML = '<option value="">請選擇教練...</option>' + 
+                    coaches.map(i => `<option value="${i.id_number}">${i.name} (${i.id_number})</option>`).join('');
+            }
+        }
+
+        async function fetchCourses() {
+            const tbody = document.getElementById('courseTableBody');
+            tbody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
+
+            const keyword = document.getElementById('searchKeyword').value.trim();
+            const status = document.getElementById('searchStatus').value;
+
+            // 使用 select 載入關聯的 course_instructors 與 coach
+            let query = _supabase.from('course').select(`
+                *,
+                course_instructors (
+                    coach ( name )
+                )
+            `);
+
+            if (status !== '全部') {
+                query = query.eq('session_status', status);
+            }
+
+            const { data, error } = await query.order('start_time', { ascending: false });
+
+            if (error) {
+                alert('開設課程資料讀取失敗：' + error.message);
+                return;
+            }
+
+            let filteredData = data || [];
+
+            // 關鍵字搜尋過濾
+            if (keyword !== '') {
+                const kw = keyword.toLowerCase();
+                filteredData = filteredData.filter(item => {
+                    const itemName = item.item ? item.item.toLowerCase() : '';
+                    const instructorNames = (item.course_instructors && item.course_instructors.length > 0)
+                        ? item.course_instructors.map(ci => ci.coach ? ci.coach.name.toLowerCase() : '').join(' ')
+                        : '';
+                    return itemName.includes(kw) || instructorNames.includes(kw);
+                });
+            }
+
+            tbody.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-slate-400">找不到符合條件的場次資料</td></tr>`;
+                return;
+            }
+
+            filteredData.forEach(item => {
+                const instructorNames = (item.course_instructors && item.course_instructors.length > 0)
+                    ? item.course_instructors.map(ci => ci.coach ? ci.coach.name : '').filter(Boolean).join(', ')
+                    : '<span class="text-slate-300">未指派</span>';
+
+                let statusBadge = `<span class="badge badge-success">${item.session_status}</span>`;
+                if (item.session_status === '已成團') {
+                    statusBadge = `<span class="badge badge-info">${item.session_status}</span>`;
+                } else if (item.session_status === '已客滿') {
+                    statusBadge = `<span class="badge badge-warning">${item.session_status}</span>`;
+                } else if (item.session_status === '已取消') {
+                    statusBadge = `<span class="badge badge-danger">${item.session_status}</span>`;
+                } else if (item.session_status === '已結束') {
+                    statusBadge = `<span class="badge badge-muted">${item.session_status}</span>`;
+                }
+
+                let diffBadge = `<span class="badge badge-success">${item.difficulty_level}</span>`;
+                if (item.difficulty_level === '中階') {
+                    diffBadge = `<span class="badge badge-warning">${item.difficulty_level}</span>`;
+                } else if (item.difficulty_level === '中高階') {
+                    diffBadge = `<span class="badge badge-info">${item.difficulty_level}</span>`;
+                } else if (item.difficulty_level === '高階') {
+                    diffBadge = `<span class="badge badge-danger">${item.difficulty_level}</span>`;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="font-mono font-bold">${item.session_id}</td>
+                    <td class="font-medium">${item.item}</td>
+                    <td>${instructorNames}</td>
+                    <td class="text-xs text-slate-500 font-mono">
+                        <div>起：${formatDateTime(item.start_time)}</div>
+                        <div>迄：${formatDateTime(item.end_time)}</div>
+                    </td>
+                    <td class="text-center whitespace-nowrap">${diffBadge}</td>
+                    <td class="font-mono text-slate-600">NT$ ${Number(item.price).toLocaleString()}</td>
+                    <td class="text-center font-mono">${item.capacity} 人</td>
+                    <td class="text-center whitespace-nowrap">${statusBadge}</td>
+                    <td class="text-center whitespace-nowrap">
+                        <button onclick="showRoster(${item.session_id}, '${item.item.replace(/'/g, "\\'")}', '${item.start_time}')" 
+                                class="btn btn-secondary text-xs" style="min-height: 28px; padding: 4px 8px;">
+                            查看名冊
+                        </button>
+                    </td>
+                    <td class="text-center whitespace-nowrap">
+                        <button onclick="deleteCourse(${item.session_id})" 
+                                class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                            刪除
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function formatDateTime(val) {
+            if (!val) return '—';
+            const d = new Date(val);
+            return d.toLocaleString('zh-TW', { hour12: false }).replace(/\//g, '-');
+        }
+
+        function resetFilters() {
+            document.getElementById('searchKeyword').value = '';
+            document.getElementById('searchStatus').value = '全部';
+            fetchCourses();
+        }
+
+        document.getElementById('addForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const item = document.getElementById('cItem').value;
+            const instructor_id = document.getElementById('cInstructorId').value;
+            const start_time = document.getElementById('cStartTime').value;
+            const end_time = document.getElementById('cEndTime').value;
+            const price = parseFloat(document.getElementById('cPrice').value);
+            const difficulty_level = document.getElementById('cDifficulty').value;
+            const capacity = parseInt(document.getElementById('cCapacity').value);
+            const session_status = document.getElementById('cStatus').value;
+
+            if (new Date(start_time) >= new Date(end_time)) {
+                alert('開始時間必須早於結束時間！');
+                return;
+            }
+
+            // 1. 先寫入 course 主表（不包含 instructor_id 欄位）
+            const { data, error } = await _supabase
+                .from('course')
+                .insert([
+                    { item, start_time, end_time, price, difficulty_level, capacity, session_status }
+                ])
+                .select();
+
+            if (error) {
+                alert('開設課程失敗：' + error.message);
+                return;
+            }
+
+            // 2. 寫入 course_instructors 中間關聯表
+            const session_id = data[0].session_id;
+            const { error: relError } = await _supabase
+                .from('course_instructors')
+                .insert([
+                    { session_id, instructor_id }
+                ]);
+
+            if (relError) {
+                alert('指派教練失敗（但課程已開設）：' + relError.message);
+            } else {
+                alert('課程開設並指派教練成功！');
+            }
+
+            document.getElementById('addForm').reset();
+            fetchCourses();
+        });
+
+        async function deleteCourse(id) {
+            if (!confirm(`確定要永久刪除開課場次 #${id} 嗎？`)) return;
+
+            // 1. 先刪除中間關聯表中的紀錄
+            const { error: relError } = await _supabase
+                .from('course_instructors')
+                .delete()
+                .eq('session_id', id);
+
+            if (relError) {
+                alert('刪除教練關聯紀錄失敗：' + relError.message);
+                return;
+            }
+
+            // 2. 再刪除課程主表紀錄
+            const { error } = await _supabase
+                .from('course')
+                .delete()
+                .eq('session_id', id);
+
+            if (error) {
+                alert('刪除失敗，該場次目前可能已經有學員報名紀錄：' + error.message);
+            } else {
+                alert('開課場次已成功刪除！');
+                fetchCourses();
+            }
+        }
+
+        async function showRoster(sessionId, courseName, startTime) {
+            const modal = document.getElementById('rosterModal');
+            const title = document.getElementById('modalTitle');
+            const subtitle = document.getElementById('modalSubtitle');
+            const tbody = document.getElementById('rosterTableBody');
+
+            title.textContent = `場次 #${sessionId} 報名名冊`;
+            subtitle.textContent = `${courseName} | ${formatDateTime(startTime)}`;
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center p-4 text-slate-400">正在下載名冊...</td></tr>';
+            
+            modal.classList.remove('hidden');
+
+            const { data, error } = await _supabase
+                .from('bookings')
+                .select(`
+                    booking_id,
+                    payment_status,
+                    insurance_status,
+                    booking_time,
+                    tourists (
+                        name,
+                        gender,
+                        phone,
+                        emergency_contact,
+                        emergency_phone
+                    )
+                `)
+                .eq('session_id', sessionId)
+                .order('booking_time', { ascending: true });
+
+            if (error) {
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center p-4 text-red-500">載入失敗：${error.message}</td></tr>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center p-4 text-slate-400">目前尚無遊客報名此場次。</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(item => {
+                const tourist = item.tourists || {};
+                const name = tourist.name || '未知';
+                const gender = tourist.gender || '—';
+                const phone = tourist.phone || '—';
+                const contact = tourist.emergency_contact || '—';
+                const cPhone = tourist.emergency_phone || '—';
+
+                let payBadge = `<span class="badge badge-muted">${item.payment_status}</span>`;
+                if (item.payment_status === '已繳費') {
+                    payBadge = `<span class="badge badge-success">${item.payment_status}</span>`;
+                } else if (item.payment_status === '已退款') {
+                    payBadge = `<span class="badge badge-danger">${item.payment_status}</span>`;
+                }
+
+                const insBadge = item.insurance_status === '已投保' 
+                    ? `<span class="badge badge-success">${item.insurance_status}</span>`
+                    : `<span class="badge badge-muted">${item.insurance_status}</span>`;
+
+                return `
+                    <tr>
+                        <td class="font-medium">${name}</td>
+                        <td class="text-center">${gender}</td>
+                        <td class="font-mono text-xs">${phone}</td>
+                        <td>${contact}</td>
+                        <td class="font-mono text-xs">${cPhone}</td>
+                        <td class="text-center">${payBadge}</td>
+                        <td class="text-center">${insBadge}</td>
+                        <td class="font-mono text-xs text-slate-500">${formatDateTime(item.booking_time)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function closeModal() {
+            document.getElementById('rosterModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
