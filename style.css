@@ -7,35 +7,35 @@
 /* ---------- 1. Design Tokens ---------- */
 :root {
   /* Main palette */
-  --sky-50: #f6fbff;
-  --sky-100: #eaf8ff;
-  --sky-200: #d8f1fb;
-  --water-100: #c9f1fb;
-  --water-200: #98e1f2;
-  --water-300: #69cfe8;
-  --water-400: #38b8d9;
-  --water-500: #1599bf;
-  --water-600: #0d7795;
-  --water-700: #0b5f78;
+  --sky-50: #f8fafc;
+  --sky-100: #f1f5f9;
+  --sky-200: #e2e8f0;
+  --water-100: #eff6ff;
+  --water-200: #dbeafe;
+  --water-300: #bfdbfe;
+  --water-400: #60a5fa;
+  --water-500: #2563eb;
+  --water-600: #1d4ed8;
+  --water-700: #1e40af;
 
-  --mint-100: #dff3e7;
-  --mint-200: #b9e2c6;
-  --mint-300: #8dcca5;
-  --mint-500: #4f9e79;
+  --mint-100: #dcfce7;
+  --mint-200: #bbf7d0;
+  --mint-300: #86efac;
+  --mint-500: #22c55e;
 
-  --sand-100: #fff3d1;
-  --sand-200: #ffe2a6;
-  --sand-300: #ffc86a;
-  --coral-100: #ffe3df;
-  --coral-200: #ffc3bd;
-  --coral-300: #ff9b90;
-  --coral-500: #f26b5e;
+  --sand-100: #fef9c3;
+  --sand-200: #fef08a;
+  --sand-300: #fde047;
+  --coral-100: #ffedd5;
+  --coral-200: #fed7aa;
+  --coral-300: #fdba74;
+  --coral-500: #f97316;
 
-  --sunset-100: #ffe8c7;
-  --sunset-300: #ffbd86;
-  --pink-100: #fde7ee;
-  --pink-200: #fac9d5;
-  --pink-300: #f3a6b8;
+  --sunset-100: #ffedd5;
+  --sunset-300: #fdba74;
+  --pink-100: #fce7f3;
+  --pink-200: #fbcfe8;
+  --pink-300: #f472b6;
 
   /* Neutral */
   --white: #ffffff;
@@ -51,33 +51,33 @@
   --slate-900: #0f172a;
 
   /* Status */
-  --success-bg: #e7f7ec;
-  --success-text: #237a4b;
-  --warning-bg: #fff4d6;
-  --warning-text: #9a6700;
-  --danger-bg: #ffe4e1;
-  --danger-text: #b6382f;
-  --info-bg: #e2f4ff;
-  --info-text: #0d7795;
-  --muted-bg: #eef2f7;
+  --success-bg: #f0fdf4;
+  --success-text: #15803d;
+  --warning-bg: #fffbeb;
+  --warning-text: #b45309;
+  --danger-bg: #fef2f2;
+  --danger-text: #b91c1c;
+  --info-bg: #eff6ff;
+  --info-text: #1d4ed8;
+  --muted-bg: #f1f5f9;
   --muted-text: #64748b;
 
   /* Typography */
-  --font-sans: "Noto Sans TC", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
 
   /* Layout */
   --container: 1120px;
   --radius-xs: 6px;
-  --radius-sm: 10px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-xl: 24px;
   --radius-pill: 999px;
 
   /* Shadow */
-  --shadow-sm: 0 2px 8px rgba(15, 95, 120, 0.06);
-  --shadow-md: 0 10px 24px rgba(15, 95, 120, 0.1);
-  --shadow-lg: 0 18px 48px rgba(15, 95, 120, 0.14);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 
   /* Motion */
   --transition-fast: 160ms ease;
@@ -98,10 +98,7 @@ body {
   min-height: 100vh;
   font-family: var(--font-sans);
   color: var(--slate-800);
-  background:
-    radial-gradient(circle at 8% 18%, rgba(253, 231, 238, 0.55) 0 90px, transparent 92px),
-    radial-gradient(circle at 88% 12%, rgba(201, 241, 251, 0.72) 0 120px, transparent 122px),
-    linear-gradient(180deg, var(--sky-50) 0%, var(--sky-100) 48%, #f9fdff 100%);
+  background-color: #f9fafb;
   line-height: 1.6;
 }
 

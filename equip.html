@@ -5,89 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>水域活動工作室 - 後端管理系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-50 min-h-screen p-6 font-sans">
+<body class="bg-gray-50 min-h-screen font-sans">
 
-    <div class="max-w-5xl mx-auto">
-        <header class="mb-8 border-b pb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-slate-800">水域活動工作室 - 後端管理系統</h1>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <div class="brand">
+                <span class="brand__title">水域活動工作室</span>
+                <span class="brand__mode">後端管理系統</span>
             </div>
-            <div class="flex gap-2">
-                <a href="tourists.html" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-4 py-2 rounded-md transition text-sm flex items-center gap-1">
-                    遊客資料
-                </a>
-                <a href="coach.html" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-4 py-2 rounded-md transition text-sm flex items-center gap-1">
-                    教練資料
-                </a>
-                <a href="equip.html" class="bg-blue-600 text-white font-medium px-4 py-2 rounded-md shadow-sm transition text-sm flex items-center gap-1">
-                    器材資產
-                </a>
-            </div>
-        </header>
+            <nav class="nav">
+                <a href="tourists.html" class="nav-link">遊客資料</a>
+                <a href="coach.html" class="nav-link">教練資料</a>
+                <a href="equip.html" class="nav-link is-active">器材資產</a>
+            </nav>
+        </div>
+    </header>
 
+    <main class="container page">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 h-fit text-sm">
+            <div class="form-panel h-fit text-sm">
                 <h2 class="text-xl font-semibold text-slate-700 mb-4">新增器材資產</h2>
                 <form id="addForm" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">器材名稱</label>
+                    <div class="form-group">
+                        <label class="form-label">器材名稱</label>
                         <input type="text" id="eqName" required placeholder="例如：紅槳10尺6吋SUP板" 
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                               class="form-control">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">器材類別</label>
+                    <div class="form-group">
+                        <label class="form-label">器材類別</label>
                         <input type="text" id="eqCategory" required placeholder="例如：SUP板、蛙鞋、防寒衣" 
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                               class="form-control">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">購買日期</label>
+                    <div class="form-group">
+                        <label class="form-label">購買日期</label>
                         <input type="date" id="eqPurchaseDate" required
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                               class="form-control">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">器材狀態</label>
-                        <select id="eqStatus" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <div class="form-group">
+                        <label class="form-label">器材狀態</label>
+                        <select id="eqStatus" class="form-control">
                             <option value="正常">正常</option>
                             <option value="維修中">維修中</option>
                             <option value="報廢">報廢</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">購買單位</label>
+                    <div class="form-group">
+                        <label class="form-label">購買單位</label>
                         <input type="text" id="eqPurchaseUnit"  
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                               class="form-control">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">負責人身份證字號</label>
+                    <div class="form-group">
+                        <label class="form-label">負責人身份證字號</label>
                         <input type="text" id="eqManagerId" required pattern="^[A-Z][1-2][0-9]{8}$" placeholder="例如：A123456789" 
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none uppercase">
+                               class="form-control uppercase">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">使用年限（單位：年）</label>
+                    <div class="form-group">
+                        <label class="form-label">使用年限（單位：年）</label>
                         <input type="text" id="eqUsageLimit" placeholder="例如：5" 
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                               class="form-control">
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition duration-200">
+                    <button type="submit" class="btn btn-primary btn-full">
                         確認新增
                     </button>
                 </form>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 md:col-span-3">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-slate-700">器材列表</h2>
+            <div class="table-panel md:col-span-3">
+                <div class="table-toolbar">
+                    <h2 class="table-title">器材列表</h2>
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-6 flex flex-col sm:flex-row gap-3 items-end text-sm">
+                <div class="p-5 border-b flex flex-col sm:flex-row gap-3 items-end text-sm">
                     <div class="w-full sm:flex-1">
-                        <label class="block text-xs font-medium text-slate-500 mb-1">綜合關鍵字搜尋</label>
+                        <label class="form-label text-xs">綜合關鍵字搜尋</label>
                         <input type="text" id="searchKeyword" placeholder="搜尋名稱、類別..."
-                            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                            class="form-control mt-1">
                     </div>
                     <div class="w-full sm:w-[130px]">
-                        <label class="block text-xs font-medium text-slate-500 mb-1">狀態</label>
-                        <select id="searchStatus" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                        <label class="form-label text-xs">狀態</label>
+                        <select id="searchStatus" class="form-control mt-1">
                             <option value="全部狀態">全部狀態</option>
                             <option value="正常">正常</option>
                             <option value="維修中">維修中</option>
@@ -95,41 +93,41 @@
                         </select>
                     </div>
                     <div class="flex gap-2 w-full sm:w-auto">
-                        <button onclick="fetchEquipment()" class="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-md transition shadow-sm">
+                        <button onclick="fetchEquipment()" class="btn btn-primary">
                             搜尋
                         </button>
-                        <button onclick="resetFilters()" class="flex-1 sm:flex-none bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-2 rounded-md transition whitespace-nowrap">
+                        <button onclick="resetFilters()" class="btn btn-secondary">
                             顯示所有
                         </button>
                     </div>
                 </div>
                 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse table-auto">
+                <div class="table-scroll">
+                    <table class="data-table">
                         <thead>
-                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm font-medium">
-                                <th class="p-3 w-[60px] whitespace-nowrap">ID</th>
-                                <th class="p-3 w-[200px] whitespace-nowrap">器材名稱</th>
-                                <th class="p-3 w-[100px] whitespace-nowrap">類別</th>
-                                <th class="p-3 w-[110px] whitespace-nowrap">購買日期</th>
-                                <th class="p-3 w-[90px] text-center whitespace-nowrap">狀態</th>
-                                <th class="p-3 w-[150px] whitespace-nowrap">購買單位</th>
-                                <th class="p-3 w-[160px] whitespace-nowrap">負責人身分證字號</th>
-                                <th class="p-3 w-[100px] text-center whitespace-nowrap">使用年限</th>
-                                <th class="p-3 w-[180px] whitespace-nowrap">建立時間</th>
-                                <th class="p-3 w-[80px] text-center whitespace-nowrap">操作</th>
+                            <tr>
+                                <th>ID</th>
+                                <th>器材名稱</th>
+                                <th>類別</th>
+                                <th>購買日期</th>
+                                <th class="text-center">狀態</th>
+                                <th>購買單位</th>
+                                <th>負責人身分證字號</th>
+                                <th class="text-center">使用年限</th>
+                                <th>建立時間</th>
+                                <th class="text-center">操作</th>
                             </tr>
                         </thead>
-                        <tbody id="equipmentTableBody" class="text-slate-700 text-sm divide-y divide-slate-100">
+                        <tbody id="equipmentTableBody">
                             <tr>
-                                <td colspan="6" class="p-4 text-center text-slate-400">資料載入中...</td>
+                                <td colspan="10" class="p-4 text-center text-slate-400">資料載入中...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -137,7 +135,6 @@
         // ==========================================================
         // 🔑 填寫你的 Supabase 連線資訊
         // ==========================================================
-        // ⚠️ 請在引號內替換為你在 Supabase 後端產生的專屬網址與 API 金鑰
         const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI'; 
 
@@ -156,7 +153,7 @@
         // ==========================================================
         async function fetchEquipment() {
             const tbody = document.getElementById('equipmentTableBody');
-            tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
 
             const keyword = document.getElementById('searchKeyword').value.trim();
             const status = document.getElementById('searchStatus').value;
@@ -185,35 +182,34 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">找不到符合條件的器材資料</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-slate-400">找不到符合條件的器材資料</td></tr>`;
                 return;
             }
 
             // 將資料渲染成表格 HTML
             data.forEach(item => {
                 // 根據狀態給予不同顏色標籤
-                let statusBadge = `<span class="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700">${item.status}</span>`;
+                let statusBadge = `<span class="badge badge-success">${item.status}</span>`;
                 if (item.status === '維修中') {
-                    statusBadge = `<span class="px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-700">${item.status}</span>`;
+                    statusBadge = `<span class="badge badge-warning">${item.status}</span>`;
                 } else if (item.status === '報廢') {
-                    statusBadge = `<span class="px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700">${item.status}</span>`;
+                    statusBadge = `<span class="badge badge-danger">${item.status}</span>`;
                 }
 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition";
                 tr.innerHTML = `
-                    <td class="p-3 font-mono font-bold">${item.equipment_id}</td>
-                    <td class="p-3 font-medium">${item.name}</td>
-                    <td class="p-3 text-slate-500">${item.category}</td>
-                    <td class="p-3 text-slate-500">${item.purchase_date}</td>
-                    <td class="p-3 text-center whitespace-nowrap">${statusBadge}</td>
-                    <td class="p-3 text-slate-500">${item.purchase_unit}</td>
-                    <td class="p-3 text-slate-500">${item.manager_id}</td>
-                    <td class="p-3 text-slate-500">${item.useful_life_years}</td>
-                    <td class="p-3 text-slate-500">${item.created_at}</td>
-                    <td class="p-3 text-center">
+                    <td class="font-mono font-bold">${item.equipment_id}</td>
+                    <td class="font-medium">${item.name}</td>
+                    <td class="text-slate-500">${item.category}</td>
+                    <td class="text-slate-500">${item.purchase_date}</td>
+                    <td class="text-center whitespace-nowrap">${statusBadge}</td>
+                    <td class="text-slate-500">${item.purchase_unit}</td>
+                    <td class="text-slate-500">${item.manager_id}</td>
+                    <td class="text-center text-slate-500">${item.useful_life_years}</td>
+                    <td class="text-slate-500">${item.created_at}</td>
+                    <td class="text-center whitespace-nowrap">
                         <button onclick="deleteEquipment(${item.equipment_id})" 
-                                class="text-xs bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded border border-red-200 transition">
+                                class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
                             刪除
                         </button>
                     </td>

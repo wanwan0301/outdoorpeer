@@ -5,136 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>水域活動工作室 - 遊客資料管理</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-50 min-h-screen p-6 font-sans">
+<body class="bg-gray-50 min-h-screen font-sans">
 
-    <div class="max-w-7xl mx-auto">
-        <header class="mb-8 border-b pb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-slate-800">水域活動工作室 - 後端管理系統</h1>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <div class="brand">
+                <span class="brand__title">水域活動工作室</span>
+                <span class="brand__mode">後端管理系統</span>
             </div>
-            <div class="flex gap-2">
-                <a href="tourists.html" class="bg-blue-600 text-white font-medium px-4 py-2 rounded-md shadow-sm transition text-sm flex items-center gap-1">
-                    遊客資料
-                </a>
-                <a href="coach.html" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-4 py-2 rounded-md transition text-sm flex items-center gap-1">
-                    教練資料
-                </a>
-                <a href="equip.html" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-4 py-2 rounded-md transition text-sm flex items-center gap-1">
-                    器材資產
-                </a>
-            </div>
-        </header>
+            <nav class="nav">
+                <a href="tourists.html" class="nav-link is-active">遊客資料</a>
+                <a href="coach.html" class="nav-link">教練資料</a>
+                <a href="equip.html" class="nav-link">器材資產</a>
+            </nav>
+        </div>
+    </header>
 
+    <main class="container page">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 h-fit text-sm">
+            <div class="form-panel h-fit text-sm">
                 <h2 class="text-lg font-semibold text-slate-700 mb-4">新增遊客資料</h2>
                 <form id="addTouristForm" class="space-y-4">
-                    <div>
-                        <label class="block font-medium text-slate-600 mb-1">身分證字號</label>
+                    <div class="form-group">
+                        <label class="form-label">身分證字號</label>
                         <input type="text" id="tIdNumber" required pattern="^[A-Z][1-2][0-9]{8}$" placeholder="例如：A123456789" 
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none uppercase">
+                               class="form-control uppercase">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">姓名</label>
+                        <div class="form-group">
+                            <label class="form-label">姓名</label>
                             <input type="text" id="tName" required placeholder="姓名" 
-                                   class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                   class="form-control">
                         </div>
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">性別</label>
-                            <select id="tGender" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <div class="form-group">
+                            <label class="form-label">性別</label>
+                            <select id="tGender" class="form-control">
                                 <option value="男">男</option>
                                 <option value="女">女</option>
                             </select>
                         </div>
                     </div>
-                    <div>
-                        <label class="block font-medium text-slate-600 mb-1">出生年月日</label>
+                    <div class="form-group">
+                        <label class="form-label">出生年月日</label>
                         <input type="date" id="tBirthDate" required 
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                               class="form-control">
                     </div>
-                    <div>
-                        <label class="block font-medium text-slate-600 mb-1">聯絡電話</label>
+                    <div class="form-group">
+                        <label class="form-label">聯絡電話</label>
                         <input type="text" id="tPhone" required placeholder="例如：0912345678" 
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                               class="form-control">
                     </div>
-                    <div>
-                        <label class="block font-medium text-slate-600 mb-1">Email</label>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
                         <input type="email" id="tEmail" placeholder="example@email.com" 
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                               class="form-control">
                     </div>
-                    <div>
-                        <label class="block font-medium text-slate-600 mb-1">飲食習慣</label>
+                    <div class="form-group">
+                        <label class="form-label">飲食習慣</label>
                         <input type="text" id="tDiet" value="葷食" placeholder="例如：全素、葷食" 
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                               class="form-control">
                     </div>
-                    <div>
-                        <label class="block font-medium text-slate-600 mb-1">地址</label>
+                    <div class="form-group">
+                        <label class="form-label">地址</label>
                         <input type="text" id="tAddress" placeholder="例如：台北市信義區松仁路123號" 
-                               class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                               class="form-control">
                     </div>
                     <div class="border-t pt-2 mt-2 space-y-2">
                         <p class="text-xs font-bold text-slate-500">緊急聯絡資訊</p>
                         <div class="grid grid-cols-2 gap-2">
                             <input type="text" id="tEmergencyContact" placeholder="姓名" 
-                                   class="w-full p-2 border rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                   class="form-control text-xs" style="min-height: 36px;">
                             <input type="text" id="tEmergencyPhone" placeholder="電話" 
-                                   class="w-full p-2 border rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                   class="form-control text-xs" style="min-height: 36px;">
                         </div>
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition duration-200">
+                    <button type="submit" class="btn btn-primary btn-full">
                         確認新增遊客
                     </button>
                 </form>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 md:col-span-3">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-slate-700">遊客列表</h2>
+            <div class="table-panel md:col-span-3">
+                <div class="table-toolbar">
+                    <h2 class="table-title">遊客列表</h2>
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-6 flex flex-col sm:flex-row gap-3 items-end text-sm">
+                <div class="p-5 border-b flex flex-col sm:flex-row gap-3 items-end text-sm">
                     <div class="w-full sm:flex-1">
-                        <label class="block text-xs font-medium text-slate-500 mb-1">綜合關鍵字搜尋</label>
+                        <label class="form-label text-xs">綜合關鍵字搜尋</label>
                         <input type="text" id="searchKeyword" placeholder="搜尋姓名、身分證、電話..."
-                            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                            class="form-control mt-1">
                     </div>
                     <div class="w-full sm:w-[130px]">
-                        <label class="block text-xs font-medium text-slate-500 mb-1">性別篩選</label>
-                        <select id="searchGender" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                        <label class="form-label text-xs">性別篩選</label>
+                        <select id="searchGender" class="form-control mt-1">
                             <option value="全部">全部性別</option>
                             <option value="男">男</option>
                             <option value="女">女</option>
                         </select>
                     </div>
                     <div class="flex gap-2 w-full sm:w-auto">
-                        <button onclick="fetchTourists()" class="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-md transition shadow-sm">
+                        <button onclick="fetchTourists()" class="btn btn-primary">
                             搜尋
                         </button>
-                        <button onclick="resetFilters()" class="flex-1 sm:flex-none bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-2 rounded-md transition whitespace-nowrap">
+                        <button onclick="resetFilters()" class="btn btn-secondary">
                             顯示所有
                         </button>
                     </div>
                 </div>
                 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse table-auto">
+                <div class="table-scroll">
+                    <table class="data-table">
                         <thead>
-                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm font-medium">
-                                <th class="p-2.5 whitespace-nowrap">身分證字號</th>
-                                <th class="p-2.5 whitespace-nowrap">姓名(性別)</th>
-                                <th class="p-2.5 whitespace-nowrap">出生日期</th>
-                                <th class="p-2.5 whitespace-nowrap">電話</th>
-                                <th class="p-2.5 whitespace-nowrap">電子信箱</th>
-                                <th class="p-2.5 text-center whitespace-nowrap">飲食</th>
-                                <th class="p-2.5 whitespace-nowrap">地址</th>
-                                <th class="p-2.5 whitespace-nowrap">緊急聯絡人</th>
-                                <th class="p-2.5 whitespace-nowrap">加入時間</th>
-                                <th class="p-2.5 text-center whitespace-nowrap">操作</th>
+                            <tr>
+                                <th>身分證字號</th>
+                                <th>姓名(性別)</th>
+                                <th>出生日期</th>
+                                <th>電話</th>
+                                <th>電子信箱</th>
+                                <th class="text-center">飲食</th>
+                                <th>地址</th>
+                                <th>緊急聯絡人</th>
+                                <th>加入時間</th>
+                                <th class="text-center">操作</th>
                             </tr>
                         </thead>
-                        <tbody id="touristTableBody" class="text-slate-700 text-sm divide-y divide-slate-100">
+                        <tbody id="touristTableBody">
                             <tr>
                                 <td colspan="10" class="p-4 text-center text-slate-400">資料載入中...</td>
                             </tr>
@@ -143,7 +141,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -201,30 +199,29 @@
             // 渲染資料至前端
             data.forEach(item => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition";
                 tr.innerHTML = `
-                    <td class="p-2.5 font-mono font-bold text-slate-600 whitespace-nowrap">${item.id_number}</td>
-                    <td class="p-2.5 whitespace-nowrap">
+                    <td class="font-mono font-bold text-slate-600 whitespace-nowrap">${item.id_number}</td>
+                    <td class="whitespace-nowrap">
                         <span class="font-medium">${item.name}</span>
                         <span class="text-xs text-slate-400">(${item.gender})</span>
                     </td>
-                    <td class="p-2.5 font-mono text-slate-500 whitespace-nowrap">${item.birth_date}</td>
-                    <td class="p-2.5 font-mono text-slate-500 whitespace-nowrap">${item.phone}</td>
-                    <td class="p-2.5 font-mono text-slate-500 min-w-[200px] break-all">${item.email || '<span class="text-slate-300">未填</span>'}</td>
-                    <td class="p-2.5 text-center whitespace-nowrap">
-                        <span class="px-2 py-0.5 rounded text-xs ${item.dietary_habit === '葷食' ? 'bg-slate-100 text-slate-700' : 'bg-green-100 text-green-700'}">
+                    <td class="font-mono text-slate-500 whitespace-nowrap">${item.birth_date}</td>
+                    <td class="font-mono text-slate-500 whitespace-nowrap">${item.phone}</td>
+                    <td class="font-mono text-slate-500 min-w-[200px] break-all">${item.email || '<span class="text-slate-300">未填</span>'}</td>
+                    <td class="text-center whitespace-nowrap">
+                        <span class="badge ${item.dietary_habit === '葷食' ? 'badge-muted' : 'badge-success'}">
                             ${item.dietary_habit}
                         </span>
                     </td>
-                    <td class="p-2.5 font-mono text-slate-500 min-w-[200px] break-all">${item.address || '<span class="text-slate-300">未填</span>'}</td>
-                    <td class="p-2.5 text-slate-500 text-xs">
+                    <td class="font-mono text-slate-500 min-w-[200px] break-all">${item.address || '<span class="text-slate-300">未填</span>'}</td>
+                    <td class="text-slate-500 text-xs">
                         <div class="font-medium text-slate-700">${item.emergency_contact || '未填'}</div>
                         <div class="font-mono text-slate-400 mt-0.5">${item.emergency_phone || ''}</div>
                     </td>
-                    <td class="p-2.5 font-mono text-slate-500">${item.created_at}</td>
-                    <td class="p-2.5 text-center whitespace-nowrap">
+                    <td class="font-mono text-slate-500">${item.created_at}</td>
+                    <td class="text-center whitespace-nowrap">
                         <button onclick="deleteTourist('${item.id_number}')" 
-                                class="text-xs bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded border border-red-200 transition">
+                                class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
                             刪除
                         </button>
                     </td>
