@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="bg-gray-50 min-h-screen font-sans">
 
     <header class="site-header">
@@ -30,14 +32,13 @@
                 <form id="addInstructorForm" class="space-y-4">
                     <div class="form-group">
                         <label class="form-label">身分證字號</label>
-                        <input type="text" id="iIdNumber" required pattern="^[A-Z][1-2][0-9]{8}$" placeholder="例如：A123456789" 
-                               class="form-control uppercase">
+                        <input type="text" id="iIdNumber" required pattern="^[A-Z][1-2][0-9]{8}$"
+                            placeholder="例如：A123456789" class="form-control uppercase">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div class="form-group">
                             <label class="form-label">姓名</label>
-                            <input type="text" id="iName" required placeholder="教練姓名" 
-                                   class="form-control">
+                            <input type="text" id="iName" required placeholder="姓名" class="form-control">
                         </div>
                         <div class="form-group">
                             <label class="form-label">性別</label>
@@ -49,33 +50,29 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">出生年月日</label>
-                        <input type="date" id="iBirthDate" required 
-                               class="form-control">
+                        <input type="date" id="iBirthDate" required class="form-control">
                     </div>
                     <div class="form-group">
                         <label class="form-label">聯絡電話</label>
-                        <input type="text" id="iPhone" required placeholder="例如：0912345678" 
-                               class="form-control">
+                        <input type="text" id="iPhone" required placeholder="例如：0912345678" class="form-control">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Email</label>
-                        <input type="email" id="iEmail" placeholder="coach@studio.com" 
-                               class="form-control">
+                        <input type="email" id="iEmail" placeholder="coach@studio.com" class="form-control">
                     </div>
                     <div class="form-group">
                         <label class="form-label">飲食習慣</label>
-                        <input type="text" id="iDiet" value="葷食" placeholder="例如：全素、葷食" 
-                               class="form-control">
+                        <input type="text" id="iDiet" placeholder="例如：全素、葷食" class="form-control">
                     </div>
                     <div class="form-group">
                         <label class="form-label">地址</label>
-                        <input type="text" id="iAddress" placeholder="例如：台北市信義區松仁路123號" 
-                               class="form-control">
+                        <input type="text" id="iAddress" placeholder="例如：台北市信義區松仁路123號" class="form-control">
                     </div>
                     <div class="border-t pt-2 mt-2">
                         <label class="form-label flex justify-between items-center">
                             專長領域
-                            <button type="button" onclick="addSpecialtyField()" class="btn btn-secondary text-xs" style="min-height: 24px; padding: 2px 6px;">新增欄位</button>
+                            <button type="button" onclick="addSpecialtyField()" class="btn btn-secondary text-xs"
+                                style="min-height: 24px; padding: 2px 6px;">新增欄位</button>
                         </label>
                         <div id="specialtiesContainer" class="space-y-2 mt-2">
                             <input type="text" name="specialty" placeholder="例如：SUP" class="form-control">
@@ -84,7 +81,8 @@
                     <div class="border-t pt-2 mt-2 mb-4">
                         <label class="form-label flex justify-between items-center">
                             專業證照
-                            <button type="button" onclick="addLicenseField()" class="btn btn-secondary text-xs" style="min-height: 24px; padding: 2px 6px;">新增欄位</button>
+                            <button type="button" onclick="addLicenseField()" class="btn btn-secondary text-xs"
+                                style="min-height: 24px; padding: 2px 6px;">新增欄位</button>
                         </label>
                         <div id="licensesContainer" class="space-y-2 mt-2">
                             <input type="text" name="license" placeholder="例如：PADI OW 專任教練" class="form-control">
@@ -92,16 +90,16 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">自我介紹</label>
-                        <textarea id="iBio" rows="2" placeholder="簡述教練背景或特殊專長..." 
-                                  class="form-control" style="min-height: 80px;"></textarea>
+                        <textarea id="iBio" rows="2" placeholder="簡述教練背景或特殊專長..." class="form-control"
+                            style="min-height: 80px;"></textarea>
                     </div>
                     <div class="border-t pt-2 mt-2 space-y-2">
                         <p class="text-xs font-bold text-slate-500">緊急聯絡資訊</p>
                         <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="iEmergencyContact" placeholder="姓名" 
-                                   class="form-control text-xs" style="min-height: 36px;">
-                            <input type="text" id="iEmergencyPhone" placeholder="電話" 
-                                   class="form-control text-xs" style="min-height: 36px;">
+                            <input type="text" id="iEmergencyContact" placeholder="姓名" class="form-control text-xs"
+                                style="min-height: 36px;">
+                            <input type="text" id="iEmergencyPhone" placeholder="電話" class="form-control text-xs"
+                                style="min-height: 36px;">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-full">
@@ -113,20 +111,26 @@
             <div class="table-panel md:col-span-3">
                 <div class="table-toolbar">
                     <h2 class="table-title">教練列表</h2>
+                    <button onclick="exportToExcel()" class="btn btn-secondary text-xs"
+                        style="min-height: 32px; padding: 4px 12px; box-shadow: none;">
+                        匯出 Excel
+                    </button>
                 </div>
-                
+
                 <div class="p-5 border-b flex flex-col sm:flex-row gap-3 items-end text-sm">
                     <div class="w-full sm:flex-1">
                         <label class="form-label text-xs">綜合關鍵字搜尋</label>
-                        <input type="text" id="searchKeyword" placeholder="搜尋姓名、身分證、電話..."
-                               class="form-control mt-1">
+                        <input type="text" id="searchKeyword" placeholder="搜尋姓名、身分證、電話..." class="form-control mt-1">
                     </div>
-                    <div class="w-full sm:w-[130px]">
-                        <label class="form-label text-xs">性別篩選</label>
-                        <select id="searchGender" class="form-control mt-1">
-                            <option value="全部">全部性別</option>
-                            <option value="男">男</option>
-                            <option value="女">女</option>
+                    <div class="w-full sm:w-[150px]">
+                        <label class="form-label text-xs">專長篩選</label>
+                        <select id="searchSpecialty" class="form-control mt-1">
+                            <option value="全部">全部專長</option>
+                            <option value="SUP立槳">SUP立槳</option>
+                            <option value="獨木舟">獨木舟</option>
+                            <option value="衝浪">衝浪</option>
+                            <option value="自由潛水">自由潛水</option>
+                            <option value="水肺潛水">水肺潛水</option>
                         </select>
                     </div>
                     <div class="flex gap-2 w-full sm:w-auto">
@@ -138,7 +142,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="table-scroll">
                     <table class="data-table">
                         <thead>
@@ -146,21 +150,14 @@
                                 <th>身分證字號</th>
                                 <th>姓名(性別)</th>
                                 <th>專長</th>
-                                <th>證照</th>
-                                <th>出生日期</th>
                                 <th>電話</th>
                                 <th>電子信箱</th>
-                                <th class="text-center">飲食</th>
-                                <th>地址</th>
-                                <th>自我介紹</th>
-                                <th>緊急聯絡人</th>
-                                <th>加入時間</th>
                                 <th class="text-center">操作</th>
                             </tr>
                         </thead>
                         <tbody id="instructorTableBody">
                             <tr>
-                                <td colspan="13" class="p-4 text-center text-slate-400">資料載入中...</td>
+                                <td colspan="6" class="p-4 text-center text-slate-400">資料載入中...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -169,14 +166,267 @@
         </div>
     </main>
 
+    <!-- ==========================================================
+         教練詳細資料模態框 (Modal)
+         ========================================================== -->
+    <div id="detailsModal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all m-4">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    教練詳細資料
+                </h3>
+                <button onclick="closeDetailsModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="px-6 py-6 space-y-6 max-h-[70vh] overflow-y-auto text-sm text-left">
+                <!-- 基本資訊 -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">基本資訊</h4>
+                    <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl">
+                        <div>
+                            <span class="text-slate-500 text-xs block">姓名</span>
+                            <span id="modalName" class="font-semibold text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 text-xs block">性別</span>
+                            <span id="modalGender" class="font-semibold text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 text-xs block">身分證字號</span>
+                            <span id="modalIdNumber" class="font-semibold font-mono text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 text-xs block">出生年月日</span>
+                            <span id="modalBirthDate" class="font-semibold font-mono text-slate-800"></span>
+                        </div>
+                        <div class="col-span-2 border-t border-slate-200/60 pt-2 mt-1">
+                            <span class="text-slate-500 text-xs block">建立時間</span>
+                            <span id="modalCreatedAt" class="font-semibold font-mono text-slate-800"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 聯絡資訊 -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">聯絡資訊</h4>
+                    <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
+                        <div class="flex justify-between border-b border-slate-200/60 pb-2">
+                            <span class="text-slate-500">聯絡電話</span>
+                            <span id="modalPhone" class="font-semibold font-mono text-slate-800"></span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-200/60 pb-2">
+                            <span class="text-slate-500">Email</span>
+                            <span id="modalEmail" class="font-semibold font-mono text-slate-800"></span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-slate-500 mb-1">通訊地址</span>
+                            <span id="modalAddress" class="font-medium text-slate-800"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 自我介紹 -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">自我介紹</h4>
+                    <div class="bg-slate-50 p-4 rounded-xl min-h-[58px] text-slate-700 whitespace-pre-line"
+                        id="modalBio">
+                    </div>
+                </div>
+
+                <!-- 飲食與緊急聯絡 -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">飲食習慣</h4>
+                        <div class="bg-slate-50 p-3 rounded-xl min-h-[58px] flex items-center">
+                            <span id="modalDiet" class="font-semibold text-slate-800"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">緊急聯絡人</h4>
+                        <div class="bg-slate-50 p-3 rounded-xl min-h-[58px]">
+                            <div id="modalEmergencyContact" class="font-semibold text-slate-800"></div>
+                            <div id="modalEmergencyPhone" class="text-xs font-mono text-slate-500 mt-0.5"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 專長與證照 -->
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">專長領域</h4>
+                        <div id="modalSpecialtiesContainer"
+                            class="flex flex-wrap gap-2 p-3 border border-slate-100 rounded-xl bg-slate-50/50">
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">專業證照</h4>
+                        <div id="modalLicensesContainer"
+                            class="flex flex-wrap gap-2 p-3 border border-slate-100 rounded-xl bg-slate-50/50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-3 border-t border-slate-100 bg-slate-50 flex justify-end">
+                <button onclick="closeDetailsModal()"
+                    class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
+                    關閉
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+         編輯教練資料模態框 (Modal)
+         ========================================================== -->
+    <div id="editModal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all m-4">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    編輯教練資料
+                </h3>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="editInstructorForm" class="px-6 py-6 space-y-4 max-h-[70vh] overflow-y-auto text-sm text-left">
+                <!-- 身分證字號 (唯讀) -->
+                <div class="form-group bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <label class="text-slate-500 text-xs block font-bold mb-1">身分證字號 (不可修改)</label>
+                    <input type="text" id="editIdNumber" readonly
+                        class="w-full bg-transparent font-mono font-bold text-slate-500 outline-none border-none p-0 cursor-not-allowed">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">姓名</label>
+                        <input type="text" id="editName" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">性別</label>
+                        <select id="editGender" class="form-control">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">出生年月日</label>
+                        <input type="date" id="editBirthDate" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">聯絡電話</label>
+                        <input type="text" id="editPhone" required class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">Email</label>
+                    <input type="email" id="editEmail" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">飲食習慣</label>
+                    <input type="text" id="editDiet" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">地址</label>
+                    <input type="text" id="editAddress" class="form-control">
+                </div>
+
+                <!-- 專長與證照編輯區 -->
+                <div class="border-t border-slate-100 pt-3 mt-3">
+                    <label class="form-label flex justify-between items-center text-xs">
+                        專長領域
+                        <button type="button" onclick="addEditSpecialtyField()" class="btn btn-secondary text-[10px]"
+                            style="min-height: 20px; padding: 2px 6px;">新增欄位</button>
+                    </label>
+                    <div id="editSpecialtiesContainer" class="space-y-2 mt-2">
+                        <!-- 動態載入專長輸入框 -->
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3 mt-3">
+                    <label class="form-label flex justify-between items-center text-xs">
+                        專業證照
+                        <button type="button" onclick="addEditLicenseField()" class="btn btn-secondary text-[10px]"
+                            style="min-height: 20px; padding: 2px 6px;">新增欄位</button>
+                    </label>
+                    <div id="editLicensesContainer" class="space-y-2 mt-2">
+                        <!-- 動態載入證照輸入框 -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">自我介紹</label>
+                    <textarea id="editBio" rows="2" class="form-control" style="min-height: 80px;"></textarea>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3 mt-3 space-y-2">
+                    <p class="text-xs font-bold text-slate-500">緊急聯絡資訊</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="form-group">
+                            <label class="form-label text-[10px] text-slate-400">緊急聯絡人姓名</label>
+                            <input type="text" id="editEmergencyContact" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label text-[10px] text-slate-400">緊急聯絡人電話</label>
+                            <input type="text" id="editEmergencyPhone" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="pt-4 border-t border-slate-100 flex justify-end gap-2">
+                    <button type="button" onclick="closeEditModal()"
+                        class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
+                        取消
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg text-xs transition-colors shadow-sm">
+                        儲存修改
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <script>
         // ==========================================================
         // 🔑 填寫你的 Supabase 連線資訊
         // ==========================================================
-        const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co'; 
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI'; 
+        const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI';
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -189,25 +439,36 @@
         // ==========================================================
         async function fetchInstructors() {
             const tbody = document.getElementById('instructorTableBody');
-            tbody.innerHTML = '<tr><td colspan="13" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
-            
-            const keyword = document.getElementById('searchKeyword').value.trim();
-            const gender = document.getElementById('searchGender').value;
+            tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
 
-            let query = _supabase.from('instructors').select(`
+            const keyword = document.getElementById('searchKeyword').value.trim();
+            const specialtyVal = document.getElementById('searchSpecialty').value;
+
+            // 決定查詢欄位 (若有篩選專長，使用 !inner 做內部聯接以篩選教練，但同時使用別名 all_specialties 載入所有專長)
+            let selectStr = `
                 *,
-                instructor_specialties ( specialty ),
-                instructor_licenses ( license_name )
-            `);
+                coach_specialties ( specialty ),
+                coach_licenses ( license_name )
+            `;
+            if (specialtyVal !== '全部') {
+                selectStr = `
+                    *,
+                    coach_specialties!inner ( specialty ),
+                    all_specialties:coach_specialties ( specialty ),
+                    coach_licenses ( license_name )
+                `;
+            }
+
+            let query = _supabase.from('coach').select(selectStr);
 
             // 支援 姓名、身分證、電話 的萬用模糊搜尋
             if (keyword !== '') {
                 query = query.or(`name.ilike.%${keyword}%,id_number.ilike.%${keyword}%,phone.ilike.%${keyword}%`);
             }
 
-            // 性別過濾
-            if (gender !== '全部') {
-                query = query.eq('gender', gender);
+            // 專長過濾
+            if (specialtyVal !== '全部') {
+                query = query.eq('coach_specialties.specialty', specialtyVal);
             }
 
             const { data, error } = await query.order('created_at', { ascending: false });
@@ -220,18 +481,18 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="13" class="p-4 text-center text-slate-400">找不到符合條件的教練資料</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">找不到符合條件的教練資料</td></tr>`;
                 return;
             }
 
-            // 渲染表格
-            data.forEach(item => {
-                const specialtyList = (item.instructor_specialties && item.instructor_specialties.length > 0)
-                    ? item.instructor_specialties.map(s => s.specialty).join(', ')
-                    : '<span class="text-slate-300">—</span>';
+            // 儲存到全域變數，供詳細資料按鈕使用
+            window.instructorsData = data;
 
-                const licenseList = (item.instructor_licenses && item.instructor_licenses.length > 0)
-                    ? item.instructor_licenses.map(l => l.license_name).join('<br>') // 證照名稱較長，用換行顯示較美觀
+            // 渲染表格
+            data.forEach((item, index) => {
+                const targetSpecialties = item.all_specialties || item.coach_specialties;
+                const specialtyList = (targetSpecialties && targetSpecialties.length > 0)
+                    ? targetSpecialties.map(s => `<span class="badge badge-info mr-1 mb-1">${s.specialty}</span>`).join('')
                     : '<span class="text-slate-300">—</span>';
 
                 const tr = document.createElement('tr');
@@ -241,28 +502,24 @@
                         <span class="font-medium">${item.name}</span>
                         <span class="text-xs text-slate-400">(${item.gender})</span>
                     </td>
-                    <td class="text-slate-700 text-sm max-w-[150px] break-words">${specialtyList}</td>
-                    <td class="text-slate-700 text-xs max-w-[200px] break-words">${licenseList}</td>
-                    <td class="font-mono text-slate-500 whitespace-nowrap">${item.birth_date}</td>
+                    <td class="text-slate-700 text-sm max-w-[150px] break-words flex flex-wrap">${specialtyList}</td>
                     <td class="font-mono text-slate-500 whitespace-nowrap">${item.phone}</td>
                     <td class="font-mono text-slate-500 min-w-[200px] break-all">${item.email || '<span class="text-slate-300">—</span>'}</td>
                     <td class="text-center whitespace-nowrap">
-                        <span class="badge ${item.dietary_habit === '葷食' ? 'badge-muted' : 'badge-success'}">
-                            ${item.dietary_habit}
-                        </span>
-                    </td>
-                    <td class="font-mono text-slate-500 min-w-[200px] break-all">${item.address || '<span class="text-slate-300">未填</span>'}</td>
-                    <td class="text-slate-500 max-w-[200px] truncate" title="${item.bio || ''}">${item.bio || '<span class="text-slate-300">—</span>'}</td>
-                    <td class="text-slate-500 text-xs whitespace-nowrap">
-                        <div class="font-medium text-slate-700">${item.emergency_contact || '未填'}</div>
-                        <div class="font-mono text-slate-400 mt-0.5">${item.emergency_phone || ''}</div>
-                    </td>
-                    <td class="font-mono text-slate-500">${item.created_at}</td>
-                    <td class="text-center whitespace-nowrap">
-                        <button onclick="deleteInstructor('${item.id_number}')" 
-                                class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
-                            刪除
-                        </button>
+                        <div class="flex gap-1.5 justify-center items-center">
+                            <button onclick="showInstructorDetails(${index})" 
+                                    class="btn btn-secondary text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                詳細資料
+                            </button>
+                            <button onclick="showEditModal(${index})" 
+                                    class="btn btn-primary text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                修改
+                            </button>
+                            <button onclick="deleteInstructor('${item.id_number}')" 
+                                    class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                刪除
+                            </button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -297,7 +554,7 @@
         // ==========================================================
         function resetFilters() {
             document.getElementById('searchKeyword').value = '';
-            document.getElementById('searchGender').value = '全部';
+            document.getElementById('searchSpecialty').value = '全部';
             fetchInstructors();
         }
 
@@ -327,7 +584,7 @@
                 .filter(value => value !== '');
 
             const { error: instructorError } = await _supabase
-                .from('instructors')
+                .from('coach')
                 .insert([
                     { id_number, name, gender, birth_date, phone, email, dietary_habit, address, bio, emergency_contact, emergency_phone }
                 ]);
@@ -340,27 +597,27 @@
             if (specialties.length > 0) {
                 // 將字串陣列轉換成 Supabase 需要的物件格式 [{id_number: 'A1...', specialty: 'SUP'}, ...]
                 const specialtiesData = specialties.map(s => ({ id_number: id_number, specialty: s }));
-                const { error: specError } = await _supabase.from('instructor_specialties').insert(specialtiesData);
+                const { error: specError } = await _supabase.from('coach_specialties').insert(specialtiesData);
                 if (specError) console.error('專長寫入異常:', specError);
             }
 
             if (licenses.length > 0) {
                 const licensesData = licenses.map(l => ({ id_number: id_number, license_name: l }));
-                const { error: licError } = await _supabase.from('instructor_licenses').insert(licensesData);
+                const { error: licError } = await _supabase.from('coach_licenses').insert(licensesData);
                 if (licError) console.error('證照寫入異常:', licError);
             }
 
             // === 全部完成後：重設畫面 ===
             alert('新教練資料建檔成功！');
-            
+
             // 清空基本表單
             document.getElementById('addInstructorForm').reset();
             document.getElementById('iDiet').value = '葷食';
-            
+
             // 將動態輸入區塊還原回最初「各只有一個輸入框」的狀態
             document.getElementById('specialtiesContainer').innerHTML = '<input type="text" name="specialty" placeholder="例如：SUP" class="form-control">';
             document.getElementById('licensesContainer').innerHTML = '<input type="text" name="license" placeholder="例如：PADI OW 專任教練" class="form-control">';
-            
+
             // 重新整理右側列表
             fetchInstructors();
         });
@@ -372,7 +629,7 @@
             if (!confirm(`確定要永久刪除教練 [${id_number}] 的資料嗎？\n請注意：這會連帶刪除該教練的專長與證照紀錄。`)) return;
 
             const { error } = await _supabase
-                .from('instructors')
+                .from('coach')
                 .delete()
                 .eq('id_number', id_number);
 
@@ -383,6 +640,308 @@
                 fetchInstructors();
             }
         }
+
+        // ==========================================================
+        // 📋 【顯示教練詳細資料模態框】
+        // ==========================================================
+        function showInstructorDetails(index) {
+            const item = window.instructorsData[index];
+            if (!item) return;
+
+            document.getElementById('modalName').textContent = item.name || '未填';
+            document.getElementById('modalGender').textContent = item.gender || '未填';
+            document.getElementById('modalIdNumber').textContent = item.id_number || '未填';
+            document.getElementById('modalBirthDate').textContent = item.birth_date || '未填';
+            document.getElementById('modalPhone').textContent = item.phone || '未填';
+            document.getElementById('modalEmail').textContent = item.email || '未填';
+            document.getElementById('modalAddress').textContent = item.address || '未填';
+            document.getElementById('modalDiet').textContent = item.dietary_habit || '未填';
+            document.getElementById('modalEmergencyContact').textContent = item.emergency_contact || '未填';
+            document.getElementById('modalEmergencyPhone').textContent = item.emergency_phone || '';
+            document.getElementById('modalBio').textContent = item.bio || '未填';
+
+            // 建立時間
+            let formattedCreatedAt = '—';
+            if (item.created_at) {
+                const date = new Date(item.created_at);
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                const hh = String(date.getHours()).padStart(2, '0');
+                const mm = String(date.getMinutes()).padStart(2, '0');
+                const ss = String(date.getSeconds()).padStart(2, '0');
+                formattedCreatedAt = `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+            }
+            document.getElementById('modalCreatedAt').textContent = formattedCreatedAt;
+
+            // 專長
+            const specContainer = document.getElementById('modalSpecialtiesContainer');
+            specContainer.innerHTML = '';
+            const coachSpecialties = item.all_specialties || item.coach_specialties;
+            if (coachSpecialties && coachSpecialties.length > 0) {
+                coachSpecialties.forEach(s => {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge badge-info text-xs font-semibold mr-1 mb-1';
+                    badge.textContent = s.specialty;
+                    specContainer.appendChild(badge);
+                });
+            } else {
+                specContainer.innerHTML = '<span class="text-slate-400 text-xs">尚無任何專長紀錄</span>';
+            }
+
+            // 證照
+            const licContainer = document.getElementById('modalLicensesContainer');
+            licContainer.innerHTML = '';
+            if (item.coach_licenses && item.coach_licenses.length > 0) {
+                item.coach_licenses.forEach(l => {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge badge-success text-xs font-semibold mr-1 mb-1';
+                    badge.textContent = l.license_name;
+                    licContainer.appendChild(badge);
+                });
+            } else {
+                licContainer.innerHTML = '<span class="text-slate-400 text-xs">尚無任何證照紀錄</span>';
+            }
+
+            document.getElementById('detailsModal').classList.remove('hidden');
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.add('hidden');
+        }
+
+        // ==========================================================
+        // ✏️ 【編輯教練資料與彈窗管理】
+        // ==========================================================
+        function addEditSpecialtyField(value = '') {
+            const container = document.getElementById('editSpecialtiesContainer');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex gap-2 items-center';
+            wrapper.innerHTML = `
+                <input type="text" name="editSpecialty" value="${value}" placeholder="例如：SUP" class="form-control">
+                <button type="button" onclick="this.parentNode.remove()" class="btn btn-secondary text-xs text-red-500 hover:text-red-700" style="min-height: 36px; padding: 0 10px;">移除</button>
+            `;
+            container.appendChild(wrapper);
+        }
+
+        function addEditLicenseField(value = '') {
+            const container = document.getElementById('editLicensesContainer');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex gap-2 items-center';
+            wrapper.innerHTML = `
+                <input type="text" name="editLicense" value="${value}" placeholder="例如：PADI OW 專任教練" class="form-control">
+                <button type="button" onclick="this.parentNode.remove()" class="btn btn-secondary text-xs text-red-500 hover:text-red-700" style="min-height: 36px; padding: 0 10px;">移除</button>
+            `;
+            container.appendChild(wrapper);
+        }
+
+        function showEditModal(index) {
+            const item = window.instructorsData[index];
+            if (!item) return;
+
+            document.getElementById('editIdNumber').value = item.id_number;
+            document.getElementById('editName').value = item.name || '';
+            document.getElementById('editGender').value = item.gender || '男';
+            document.getElementById('editBirthDate').value = item.birth_date || '';
+            document.getElementById('editPhone').value = item.phone || '';
+            document.getElementById('editEmail').value = item.email || '';
+            document.getElementById('editDiet').value = item.dietary_habit || '';
+            document.getElementById('editAddress').value = item.address || '';
+            document.getElementById('editBio').value = item.bio || '';
+            document.getElementById('editEmergencyContact').value = item.emergency_contact || '';
+            document.getElementById('editEmergencyPhone').value = item.emergency_phone || '';
+
+            // 載入專長
+            const specContainer = document.getElementById('editSpecialtiesContainer');
+            specContainer.innerHTML = '';
+            const coachSpecialties = item.all_specialties || item.coach_specialties;
+            if (coachSpecialties && coachSpecialties.length > 0) {
+                coachSpecialties.forEach(s => {
+                    addEditSpecialtyField(s.specialty);
+                });
+            } else {
+                addEditSpecialtyField();
+            }
+
+            // 載入證照
+            const licContainer = document.getElementById('editLicensesContainer');
+            licContainer.innerHTML = '';
+            if (item.coach_licenses && item.coach_licenses.length > 0) {
+                item.coach_licenses.forEach(l => {
+                    addEditLicenseField(l.license_name);
+                });
+            } else {
+                addEditLicenseField();
+            }
+
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        document.getElementById('editInstructorForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id_number = document.getElementById('editIdNumber').value;
+            const name = document.getElementById('editName').value;
+            const gender = document.getElementById('editGender').value;
+            const birth_date = document.getElementById('editBirthDate').value;
+            const phone = document.getElementById('editPhone').value;
+            const email = document.getElementById('editEmail').value || null;
+            const dietary_habit = document.getElementById('editDiet').value;
+            const address = document.getElementById('editAddress').value || null;
+            const bio = document.getElementById('editBio').value || null;
+            const emergency_contact = document.getElementById('editEmergencyContact').value || null;
+            const emergency_phone = document.getElementById('editEmergencyPhone').value || null;
+
+            // 抓取所有動態輸入的【專長】與【證照】陣列，並過濾掉沒填寫的空字串
+            const specialties = Array.from(document.querySelectorAll('input[name="editSpecialty"]'))
+                .map(input => input.value.trim())
+                .filter(value => value !== '');
+            const licenses = Array.from(document.querySelectorAll('input[name="editLicense"]'))
+                .map(input => input.value.trim())
+                .filter(value => value !== '');
+
+            // 1. 更新基本資料
+            const { error: updateError } = await _supabase
+                .from('coach')
+                .update({ name, gender, birth_date, phone, email, dietary_habit, address, bio, emergency_contact, emergency_phone })
+                .eq('id_number', id_number);
+
+            if (updateError) {
+                alert('修改失敗：' + updateError.message);
+                return;
+            }
+
+            // 2. 更新專長（先刪後增）
+            const { error: deleteSpecError } = await _supabase
+                .from('coach_specialties')
+                .delete()
+                .eq('id_number', id_number);
+
+            if (deleteSpecError) {
+                console.error('刪除舊專長異常:', deleteSpecError);
+            }
+
+            if (specialties.length > 0) {
+                const specialtiesData = specialties.map(s => ({ id_number: id_number, specialty: s }));
+                const { error: specError } = await _supabase.from('coach_specialties').insert(specialtiesData);
+                if (specError) console.error('專長寫入異常:', specError);
+            }
+
+            // 3. 更新證照（先刪後增）
+            const { error: deleteLicError } = await _supabase
+                .from('coach_licenses')
+                .delete()
+                .eq('id_number', id_number);
+
+            if (deleteLicError) {
+                console.error('刪除舊證照異常:', deleteLicError);
+            }
+
+            if (licenses.length > 0) {
+                const licensesData = licenses.map(l => ({ id_number: id_number, license_name: l }));
+                const { error: licError } = await _supabase.from('coach_licenses').insert(licensesData);
+                if (licError) console.error('證照寫入異常:', licError);
+            }
+
+            alert('教練資料修改成功！');
+            closeEditModal();
+            fetchInstructors();
+        });
+
+        // ==========================================================
+        // 📥 【匯出教練資料至 Excel 功能】
+        // ==========================================================
+        async function exportToExcel() {
+            let data = [];
+
+            // 如果當前列表有資料，直接使用列表資料（包含搜尋/篩選過後的結果）
+            if (window.instructorsData && window.instructorsData.length > 0) {
+                data = window.instructorsData;
+            } else {
+                // 如果當前列表無資料，則主動從 Supabase 抓取「所有」教練資料進行匯出
+                try {
+                    const { data: allData, error } = await _supabase
+                        .from('coach')
+                        .select('*, coach_specialties ( specialty ), coach_licenses ( license_name )')
+                        .order('created_at', { ascending: false });
+
+                    if (error) {
+                        alert('自動抓取所有教練資料失敗：' + error.message);
+                        return;
+                    }
+                    data = allData;
+                } catch (err) {
+                    alert("擷取教練資料時發生錯誤：" + err.message);
+                    return;
+                }
+            }
+
+            if (!data || data.length === 0) {
+                alert("目前資料庫中尚無任何教練資料可供匯出！");
+                return;
+            }
+
+            try {
+                // 將資料映射成中文標題的物件
+                const excelData = data.map(item => {
+                    const targetSpecialties = item.all_specialties || item.coach_specialties;
+                    const specialtyList = (targetSpecialties && targetSpecialties.length > 0)
+                        ? targetSpecialties.map(s => s.specialty).join(', ')
+                        : '無';
+
+                    const licenseList = (item.coach_licenses && item.coach_licenses.length > 0)
+                        ? item.coach_licenses.map(l => l.license_name).join(', ')
+                        : '無';
+
+                    let formattedCreatedAt = '—';
+                    if (item.created_at) {
+                        const date = new Date(item.created_at);
+                        const y = date.getFullYear();
+                        const m = String(date.getMonth() + 1).padStart(2, '0');
+                        const d = String(date.getDate()).padStart(2, '0');
+                        const hh = String(date.getHours()).padStart(2, '0');
+                        const mm = String(date.getMinutes()).padStart(2, '0');
+                        const ss = String(date.getSeconds()).padStart(2, '0');
+                        formattedCreatedAt = `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+                    }
+
+                    return {
+                        '身分證字號': item.id_number,
+                        '姓名': item.name,
+                        '性別': item.gender,
+                        '出生年月日': item.birth_date,
+                        '聯絡電話': item.phone,
+                        '電子信箱': item.email || '未填',
+                        '飲食習慣': item.dietary_habit || '葷食',
+                        '通訊地址': item.address || '未填',
+                        '自我介紹': item.bio || '未填',
+                        '緊急聯絡人姓名': item.emergency_contact || '未填',
+                        '緊急聯絡人電話': item.emergency_phone || '未填',
+                        '專長領域': specialtyList,
+                        '專業證照': licenseList,
+                        '登記時間': formattedCreatedAt
+                    };
+                });
+
+                // 建立 Worksheet
+                const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+                // 建立 Workbook
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "教練名冊");
+
+                // 下載 Excel
+                XLSX.writeFile(workbook, "教練名冊.xlsx");
+            } catch (err) {
+                alert("匯出 Excel 時發生錯誤：" + err.message);
+                console.error(err);
+            }
+        }
     </script>
 </body>
+
 </html>

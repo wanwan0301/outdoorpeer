@@ -86,6 +86,10 @@
             <div class="table-panel md:col-span-3">
                 <div class="table-toolbar">
                     <h2 class="table-title">遊客列表</h2>
+                    <button onclick="exportToExcel()" class="btn btn-secondary text-xs"
+                        style="min-height: 32px; padding: 4px 12px; box-shadow: none;">
+                        匯出 Excel
+                    </button>
                 </div>
 
                 <div class="p-5 border-b flex flex-col sm:flex-row gap-3 items-end text-sm">
@@ -190,6 +194,10 @@
                         <div>
                             <span class="text-slate-500 text-xs block">出生年月日</span>
                             <span id="modalBirthDate" class="font-semibold font-mono text-slate-800"></span>
+                        </div>
+                        <div class="col-span-2 border-t border-slate-200/60 pt-2 mt-1">
+                            <span class="text-slate-500 text-xs block">建立時間</span>
+                            <span id="modalCreatedAt" class="font-semibold font-mono text-slate-800"></span>
                         </div>
                     </div>
                 </div>
@@ -352,6 +360,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <script>
         // ==========================================================
@@ -530,6 +539,20 @@
             document.getElementById('modalEmergencyContact').textContent = item.emergency_contact || '未填';
             document.getElementById('modalEmergencyPhone').textContent = item.emergency_phone || '';
 
+            // 建立時間
+            let formattedCreatedAt = '—';
+            if (item.created_at) {
+                const date = new Date(item.created_at);
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                const hh = String(date.getHours()).padStart(2, '0');
+                const mm = String(date.getMinutes()).padStart(2, '0');
+                const ss = String(date.getSeconds()).padStart(2, '0');
+                formattedCreatedAt = `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+            }
+            document.getElementById('modalCreatedAt').textContent = formattedCreatedAt;
+
             // 渲染等級標籤
             const container = document.getElementById('modalLevelsContainer');
             container.innerHTML = '';
@@ -605,6 +628,89 @@
                 fetchTourists();
             }
         });
+
+        // ==========================================================
+        // 📥 【匯出遊客資料至 Excel 功能】
+        // ==========================================================
+        async function exportToExcel() {
+            let data = [];
+
+            // 如果當前列表有資料，直接使用列表資料（包含搜尋/篩選過後的結果）
+            if (window.touristsData && window.touristsData.length > 0) {
+                data = window.touristsData;
+            } else {
+                // 如果當前列表無資料，則主動從 Supabase 抓取「所有」遊客資料進行匯出
+                try {
+                    const { data: allData, error } = await _supabase
+                        .from('tourists')
+                        .select('*, tourist_item_levels(item, level)')
+                        .order('created_at', { ascending: false });
+
+                    if (error) {
+                        alert('自動抓取所有遊客資料失敗：' + error.message);
+                        return;
+                    }
+                    data = allData;
+                } catch (err) {
+                    alert("擷取遊客資料時發生錯誤：" + err.message);
+                    return;
+                }
+            }
+
+            if (!data || data.length === 0) {
+                alert("目前資料庫中尚無任何遊客資料可供匯出！");
+                return;
+            }
+
+            try {
+                // 將資料映射成中文標題的物件
+                const excelData = data.map(item => {
+                    const levelList = (item.tourist_item_levels && item.tourist_item_levels.length > 0)
+                        ? item.tourist_item_levels.map(il => `${il.item}:${il.level}`).join(', ')
+                        : '無';
+
+                    let formattedCreatedAt = '—';
+                    if (item.created_at) {
+                        const date = new Date(item.created_at);
+                        const y = date.getFullYear();
+                        const m = String(date.getMonth() + 1).padStart(2, '0');
+                        const d = String(date.getDate()).padStart(2, '0');
+                        const hh = String(date.getHours()).padStart(2, '0');
+                        const mm = String(date.getMinutes()).padStart(2, '0');
+                        const ss = String(date.getSeconds()).padStart(2, '0');
+                        formattedCreatedAt = `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+                    }
+
+                    return {
+                        '身分證字號': item.id_number,
+                        '姓名': item.name,
+                        '性別': item.gender,
+                        '出生年月日': item.birth_date,
+                        '聯絡電話': item.phone,
+                        '電子信箱': item.email || '未填',
+                        '飲食習慣': item.dietary_habit || '葷食',
+                        '通訊地址': item.address || '未填',
+                        '緊急聯絡人姓名': item.emergency_contact || '未填',
+                        '緊急聯絡人電話': item.emergency_phone || '未填',
+                        '水域活動項目等級': levelList,
+                        '登記時間': formattedCreatedAt
+                    };
+                });
+
+                // 建立 Worksheet
+                const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+                // 建立 Workbook
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "遊客名冊");
+
+                // 下載 Excel
+                XLSX.writeFile(workbook, "遊客名冊.xlsx");
+            } catch (err) {
+                alert("匯出 Excel 時發生錯誤：" + err.message);
+                console.error(err);
+            }
+        }
     </script>
 
     <!-- ==========================================================
