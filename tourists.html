@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="bg-gray-50 min-h-screen font-sans">
 
     <header class="site-header">
@@ -30,14 +32,13 @@
                 <form id="addTouristForm" class="space-y-4">
                     <div class="form-group">
                         <label class="form-label">身分證字號</label>
-                        <input type="text" id="tIdNumber" required pattern="^[A-Z][1-2][0-9]{8}$" placeholder="例如：A123456789" 
-                               class="form-control uppercase">
+                        <input type="text" id="tIdNumber" required pattern="^[A-Z][1-2][0-9]{8}$"
+                            placeholder="例如：A123456789" class="form-control uppercase">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div class="form-group">
                             <label class="form-label">姓名</label>
-                            <input type="text" id="tName" required placeholder="姓名" 
-                                   class="form-control">
+                            <input type="text" id="tName" required placeholder="姓名" class="form-control">
                         </div>
                         <div class="form-group">
                             <label class="form-label">性別</label>
@@ -49,36 +50,31 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">出生年月日</label>
-                        <input type="date" id="tBirthDate" required 
-                               class="form-control">
+                        <input type="date" id="tBirthDate" required class="form-control">
                     </div>
                     <div class="form-group">
                         <label class="form-label">聯絡電話</label>
-                        <input type="text" id="tPhone" required placeholder="例如：0912345678" 
-                               class="form-control">
+                        <input type="text" id="tPhone" required placeholder="例如：0912345678" class="form-control">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Email</label>
-                        <input type="email" id="tEmail" placeholder="example@email.com" 
-                               class="form-control">
+                        <input type="email" id="tEmail" placeholder="example@email.com" class="form-control">
                     </div>
                     <div class="form-group">
                         <label class="form-label">飲食習慣</label>
-                        <input type="text" id="tDiet" value="葷食" placeholder="例如：全素、葷食" 
-                               class="form-control">
+                        <input type="text" id="tDiet" placeholder="例如：全素、葷食" class="form-control">
                     </div>
                     <div class="form-group">
                         <label class="form-label">地址</label>
-                        <input type="text" id="tAddress" placeholder="例如：台北市信義區松仁路123號" 
-                               class="form-control">
+                        <input type="text" id="tAddress" placeholder="例如：台北市信義區松仁路123號" class="form-control">
                     </div>
                     <div class="border-t pt-2 mt-2 space-y-2">
                         <p class="text-xs font-bold text-slate-500">緊急聯絡資訊</p>
                         <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="tEmergencyContact" placeholder="姓名" 
-                                   class="form-control text-xs" style="min-height: 36px;">
-                            <input type="text" id="tEmergencyPhone" placeholder="電話" 
-                                   class="form-control text-xs" style="min-height: 36px;">
+                            <input type="text" id="tEmergencyContact" placeholder="姓名" class="form-control text-xs"
+                                style="min-height: 36px;">
+                            <input type="text" id="tEmergencyPhone" placeholder="電話" class="form-control text-xs"
+                                style="min-height: 36px;">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-full">
@@ -95,15 +91,27 @@
                 <div class="p-5 border-b flex flex-col sm:flex-row gap-3 items-end text-sm">
                     <div class="w-full sm:flex-1">
                         <label class="form-label text-xs">綜合關鍵字搜尋</label>
-                        <input type="text" id="searchKeyword" placeholder="搜尋姓名、身分證、電話..."
-                            class="form-control mt-1">
+                        <input type="text" id="searchKeyword" placeholder="搜尋姓名、身分證、電話..." class="form-control mt-1">
+                    </div>
+                    <div class="w-full sm:w-[150px]">
+                        <label class="form-label text-xs">篩選項目</label>
+                        <select id="searchItem" class="form-control mt-1">
+                            <option value="全部">全部項目</option>
+                            <option value="SUP立槳">SUP立槳</option>
+                            <option value="獨木舟">獨木舟</option>
+                            <option value="衝浪">衝浪</option>
+                            <option value="自由潛水">自由潛水</option>
+                            <option value="水肺潛水">水肺潛水</option>
+                        </select>
                     </div>
                     <div class="w-full sm:w-[130px]">
-                        <label class="form-label text-xs">性別篩選</label>
-                        <select id="searchGender" class="form-control mt-1">
-                            <option value="全部">全部性別</option>
-                            <option value="男">男</option>
-                            <option value="女">女</option>
+                        <label class="form-label text-xs">篩選等級</label>
+                        <select id="searchLevel" class="form-control mt-1">
+                            <option value="全部">全部等級</option>
+                            <option value="初階">初階</option>
+                            <option value="中階">中階</option>
+                            <option value="中高階">中高階</option>
+                            <option value="高階">高階</option>
                         </select>
                     </div>
                     <div class="flex gap-2 w-full sm:w-auto">
@@ -115,26 +123,21 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="table-scroll">
                     <table class="data-table">
                         <thead>
                             <tr>
                                 <th>身分證字號</th>
                                 <th>姓名(性別)</th>
-                                <th>出生日期</th>
                                 <th>電話</th>
                                 <th>電子信箱</th>
-                                <th class="text-center">飲食</th>
-                                <th>地址</th>
-                                <th>緊急聯絡人</th>
-                                <th>加入時間</th>
                                 <th class="text-center">操作</th>
                             </tr>
                         </thead>
                         <tbody id="touristTableBody">
                             <tr>
-                                <td colspan="10" class="p-4 text-center text-slate-400">資料載入中...</td>
+                                <td colspan="5" class="p-4 text-center text-slate-400">請輸入關鍵字進行搜尋</td>
                             </tr>
                         </tbody>
                     </table>
@@ -143,19 +146,224 @@
         </div>
     </main>
 
+    <!-- ==========================================================
+         遊客詳細資料模態框 (Modal)
+         ========================================================== -->
+    <div id="detailsModal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all m-4">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    遊客詳細資料
+                </h3>
+                <button onclick="closeDetailsModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="px-6 py-6 space-y-6 max-h-[70vh] overflow-y-auto text-sm text-left">
+                <!-- 基本資訊 -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">基本資訊</h4>
+                    <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl">
+                        <div>
+                            <span class="text-slate-500 text-xs block">姓名</span>
+                            <span id="modalName" class="font-semibold text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 text-xs block">性別</span>
+                            <span id="modalGender" class="font-semibold text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 text-xs block">身分證字號</span>
+                            <span id="modalIdNumber" class="font-semibold font-mono text-slate-800"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 text-xs block">出生年月日</span>
+                            <span id="modalBirthDate" class="font-semibold font-mono text-slate-800"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 聯絡資訊 -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">聯絡資訊</h4>
+                    <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
+                        <div class="flex justify-between border-b border-slate-200/60 pb-2">
+                            <span class="text-slate-500">聯絡電話</span>
+                            <span id="modalPhone" class="font-semibold font-mono text-slate-800"></span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-200/60 pb-2">
+                            <span class="text-slate-500">Email</span>
+                            <span id="modalEmail" class="font-semibold font-mono text-slate-800"></span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-slate-500 mb-1">通訊地址</span>
+                            <span id="modalAddress" class="font-medium text-slate-800"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 飲食與緊急聯絡 -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">飲食習慣</h4>
+                        <div class="bg-slate-50 p-3 rounded-xl min-h-[58px] flex items-center">
+                            <span id="modalDiet" class="font-semibold text-slate-800"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">緊急聯絡人</h4>
+                        <div class="bg-slate-50 p-3 rounded-xl min-h-[58px]">
+                            <div id="modalEmergencyContact" class="font-semibold text-slate-800"></div>
+                            <div id="modalEmergencyPhone" class="text-xs font-mono text-slate-500 mt-0.5"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 項目等級 -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">水域活動項目等級</h4>
+                    <div id="modalLevelsContainer"
+                        class="flex flex-wrap gap-2 p-4 border border-slate-100 rounded-xl bg-slate-50/50">
+                        <!-- 等級 Badges -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-3 border-t border-slate-100 bg-slate-50 flex justify-end">
+                <button onclick="closeDetailsModal()"
+                    class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
+                    關閉
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+         編輯遊客資料模態框 (Modal)
+         ========================================================== -->
+    <div id="editModal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all m-4">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    編輯遊客資料
+                </h3>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="editTouristForm" class="px-6 py-6 space-y-4 max-h-[70vh] overflow-y-auto text-sm text-left">
+                <!-- 身分證字號 (唯讀) -->
+                <div class="form-group bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <label class="text-slate-500 text-xs block font-bold mb-1">身分證字號 (不可修改)</label>
+                    <input type="text" id="editIdNumber" readonly
+                        class="w-full bg-transparent font-mono font-bold text-slate-500 outline-none border-none p-0 cursor-not-allowed">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">姓名</label>
+                        <input type="text" id="editName" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">性別</label>
+                        <select id="editGender" class="form-control">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">出生年月日</label>
+                        <input type="date" id="editBirthDate" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">聯絡電話</label>
+                        <input type="text" id="editPhone" required class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">Email</label>
+                    <input type="email" id="editEmail" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">飲食習慣</label>
+                    <input type="text" id="editDiet" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">地址</label>
+                    <input type="text" id="editAddress" class="form-control">
+                </div>
+
+                <div class="border-t border-slate-100 pt-3 mt-3 space-y-2">
+                    <p class="text-xs font-bold text-slate-500">緊急聯絡資訊</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="form-group">
+                            <label class="form-label text-[10px] text-slate-400">緊急聯絡人姓名</label>
+                            <input type="text" id="editEmergencyContact" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label text-[10px] text-slate-400">緊急聯絡人電話</label>
+                            <input type="text" id="editEmergencyPhone" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="pt-4 border-t border-slate-100 flex justify-end gap-2">
+                    <button type="button" onclick="closeEditModal()"
+                        class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
+                        取消
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg text-xs transition-colors shadow-sm">
+                        儲存修改
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
         // ==========================================================
         // 🔑 填寫你的 Supabase 連線資訊
         // ==========================================================
-        const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co'; 
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI'; 
+        const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI';
 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         document.addEventListener('DOMContentLoaded', () => {
-            fetchTourists();
+            // 預設無資料，不自動執行查詢，待使用者點擊查詢後才顯示資料
         });
 
         // ==========================================================
@@ -163,12 +371,22 @@
         // ==========================================================
         async function fetchTourists() {
             const tbody = document.getElementById('touristTableBody');
-            tbody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
-            
+            tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
+
             const keyword = document.getElementById('searchKeyword').value.trim();
-            const gender = document.getElementById('searchGender').value;
-            
-            let query = _supabase.from('tourists').select('*'); // 建立 Supabase 基礎查詢物件
+            const itemVal = document.getElementById('searchItem').value;
+            const levelVal = document.getElementById('searchLevel').value;
+
+            // 決定查詢欄位 (若有篩選項目或等級，使用 !inner 做內部聯接以篩選遊客)
+            let selectStr = '*';
+            const hasSkillFilter = (itemVal !== '全部' || levelVal !== '全部');
+            if (hasSkillFilter) {
+                selectStr = '*, tourist_item_levels!inner(item, level)';
+            } else {
+                selectStr = '*, tourist_item_levels(item, level)';
+            }
+
+            let query = _supabase.from('tourists').select(selectStr);
 
             // 關鍵字多欄位模糊搜尋 (使用 Supabase 的 .or 條件)
             if (keyword !== '') {
@@ -176,9 +394,14 @@
                 query = query.or(`name.ilike.%${keyword}%,id_number.ilike.%${keyword}%,phone.ilike.%${keyword}%`);
             }
 
-            // 篩選性別
-            if (gender !== '全部') {
-                query = query.eq('gender', gender);
+            // 項目篩選
+            if (itemVal !== '全部') {
+                query = query.eq('tourist_item_levels.item', itemVal);
+            }
+
+            // 等級篩選
+            if (levelVal !== '全部') {
+                query = query.eq('tourist_item_levels.level', levelVal);
             }
 
             // 執行查詢並排序（新建立的在最前面）
@@ -192,12 +415,15 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-slate-400">找不到符合條件的遊客資料</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">找不到符合條件的遊客資料</td></tr>`;
                 return;
             }
 
+            // 儲存到全域變數，供詳細資料按鈕使用
+            window.touristsData = data;
+
             // 渲染資料至前端
-            data.forEach(item => {
+            data.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="font-mono font-bold text-slate-600 whitespace-nowrap">${item.id_number}</td>
@@ -205,25 +431,23 @@
                         <span class="font-medium">${item.name}</span>
                         <span class="text-xs text-slate-400">(${item.gender})</span>
                     </td>
-                    <td class="font-mono text-slate-500 whitespace-nowrap">${item.birth_date}</td>
                     <td class="font-mono text-slate-500 whitespace-nowrap">${item.phone}</td>
                     <td class="font-mono text-slate-500 min-w-[200px] break-all">${item.email || '<span class="text-slate-300">未填</span>'}</td>
                     <td class="text-center whitespace-nowrap">
-                        <span class="badge ${item.dietary_habit === '葷食' ? 'badge-muted' : 'badge-success'}">
-                            ${item.dietary_habit}
-                        </span>
-                    </td>
-                    <td class="font-mono text-slate-500 min-w-[200px] break-all">${item.address || '<span class="text-slate-300">未填</span>'}</td>
-                    <td class="text-slate-500 text-xs">
-                        <div class="font-medium text-slate-700">${item.emergency_contact || '未填'}</div>
-                        <div class="font-mono text-slate-400 mt-0.5">${item.emergency_phone || ''}</div>
-                    </td>
-                    <td class="font-mono text-slate-500">${item.created_at}</td>
-                    <td class="text-center whitespace-nowrap">
-                        <button onclick="deleteTourist('${item.id_number}')" 
-                                class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
-                            刪除
-                        </button>
+                        <div class="flex gap-1.5 justify-center items-center">
+                            <button onclick="showTouristDetails(${index})" 
+                                    class="btn btn-secondary text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                詳細資料
+                            </button>
+                            <button onclick="showEditModal(${index})" 
+                                    class="btn btn-primary text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                修改
+                            </button>
+                            <button onclick="deleteTourist('${item.id_number}')" 
+                                    class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                刪除
+                            </button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -236,7 +460,8 @@
         function resetFilters() {
             // 清空輸入框與下拉選單
             document.getElementById('searchKeyword').value = '';
-            document.getElementById('searchGender').value = '全部';
+            document.getElementById('searchItem').value = '全部';
+            document.getElementById('searchLevel').value = '全部';
             // 重新載入完整資料
             fetchTourists();
         }
@@ -286,6 +511,202 @@
                 fetchTourists();
             }
         }
+
+        // ==========================================================
+        // 📋 【顯示遊客詳細資料模態框】
+        // ==========================================================
+        function showTouristDetails(index) {
+            const item = window.touristsData[index];
+            if (!item) return;
+
+            document.getElementById('modalName').textContent = item.name || '未填';
+            document.getElementById('modalGender').textContent = item.gender || '未填';
+            document.getElementById('modalIdNumber').textContent = item.id_number || '未填';
+            document.getElementById('modalBirthDate').textContent = item.birth_date || '未填';
+            document.getElementById('modalPhone').textContent = item.phone || '未填';
+            document.getElementById('modalEmail').textContent = item.email || '未填';
+            document.getElementById('modalAddress').textContent = item.address || '未填';
+            document.getElementById('modalDiet').textContent = item.dietary_habit || '未填';
+            document.getElementById('modalEmergencyContact').textContent = item.emergency_contact || '未填';
+            document.getElementById('modalEmergencyPhone').textContent = item.emergency_phone || '';
+
+            // 渲染等級標籤
+            const container = document.getElementById('modalLevelsContainer');
+            container.innerHTML = '';
+
+            if (item.tourist_item_levels && item.tourist_item_levels.length > 0) {
+                item.tourist_item_levels.forEach(il => {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge badge-info text-xs font-semibold mr-1 mb-1';
+                    badge.textContent = `${il.item}: ${il.level}`;
+                    container.appendChild(badge);
+                });
+            } else {
+                container.innerHTML = '<span class="text-slate-400 text-xs">該遊客尚無任何項目等級紀錄</span>';
+            }
+
+            // 顯示 Modal
+            document.getElementById('detailsModal').classList.remove('hidden');
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.add('hidden');
+        }
+
+        // ==========================================================
+        // ✏️ 【編輯遊客資料功能】
+        // ==========================================================
+        function showEditModal(index) {
+            const item = window.touristsData[index];
+            if (!item) return;
+
+            document.getElementById('editIdNumber').value = item.id_number;
+            document.getElementById('editName').value = item.name || '';
+            document.getElementById('editGender').value = item.gender || '男';
+            document.getElementById('editBirthDate').value = item.birth_date || '';
+            document.getElementById('editPhone').value = item.phone || '';
+            document.getElementById('editEmail').value = item.email || '';
+            document.getElementById('editDiet').value = item.dietary_habit || '';
+            document.getElementById('editAddress').value = item.address || '';
+            document.getElementById('editEmergencyContact').value = item.emergency_contact || '';
+            document.getElementById('editEmergencyPhone').value = item.emergency_phone || '';
+
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        document.getElementById('editTouristForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id_number = document.getElementById('editIdNumber').value;
+            const name = document.getElementById('editName').value;
+            const gender = document.getElementById('editGender').value;
+            const birth_date = document.getElementById('editBirthDate').value;
+            const phone = document.getElementById('editPhone').value;
+            const email = document.getElementById('editEmail').value || null;
+            const dietary_habit = document.getElementById('editDiet').value;
+            const address = document.getElementById('editAddress').value || null;
+            const emergency_contact = document.getElementById('editEmergencyContact').value || null;
+            const emergency_phone = document.getElementById('editEmergencyPhone').value || null;
+
+            const { error } = await _supabase
+                .from('tourists')
+                .update({ name, gender, birth_date, phone, email, dietary_habit, address, emergency_contact, emergency_phone })
+                .eq('id_number', id_number);
+
+            if (error) {
+                alert('修改失敗：' + error.message);
+            } else {
+                alert('遊客資料修改成功！');
+                closeEditModal();
+                fetchTourists();
+            }
+        });
     </script>
+
+    <!-- ==========================================================
+         編輯遊客資料模態框 (Modal)
+         ========================================================== -->
+    <div id="editModal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all m-4">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    編輯遊客資料
+                </h3>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="editTouristForm" class="px-6 py-6 space-y-4 max-h-[70vh] overflow-y-auto text-sm text-left">
+                <!-- 身分證字號 (唯讀) -->
+                <div class="form-group bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <label class="text-slate-500 text-xs block font-bold mb-1">身分證字號 (不可修改)</label>
+                    <input type="text" id="editIdNumber" readonly
+                        class="w-full bg-transparent font-mono font-bold text-slate-500 outline-none border-none p-0 cursor-not-allowed">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">姓名</label>
+                        <input type="text" id="editName" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">性別</label>
+                        <select id="editGender" class="form-control">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">出生年月日</label>
+                        <input type="date" id="editBirthDate" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">聯絡電話</label>
+                        <input type="text" id="editPhone" required class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">Email</label>
+                    <input type="email" id="editEmail" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">飲食習慣</label>
+                    <input type="text" id="editDiet" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">地址</label>
+                    <input type="text" id="editAddress" class="form-control">
+                </div>
+
+                <div class="border-t border-slate-100 pt-3 mt-3 space-y-2">
+                    <p class="text-xs font-bold text-slate-500">緊急聯絡資訊</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="form-group">
+                            <label class="form-label text-[10px] text-slate-400">緊急聯絡人姓名</label>
+                            <input type="text" id="editEmergencyContact" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label text-[10px] text-slate-400">緊急聯絡人電話</label>
+                            <input type="text" id="editEmergencyPhone" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="pt-4 border-t border-slate-100 flex justify-end gap-2">
+                    <button type="button" onclick="closeEditModal()"
+                        class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
+                        取消
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg text-xs transition-colors shadow-sm">
+                        儲存修改
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>
