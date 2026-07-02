@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水域活動工作室 - 課程資料管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tabs-nav {
+            display: flex;
+            border-bottom: 2px solid var(--slate-200);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: var(--slate-500);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            color: var(--water-500);
+        }
+
+        .tab-btn.is-active {
+            color: var(--water-600);
+            border-bottom-color: var(--water-500);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.is-active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen font-sans">
+
+    <header class="site-header">
+        <div class="site-header__inner">
+            <div class="brand">
+                <span class="brand__title">水域活動工作室</span>
+                <span class="brand__mode">後端管理系統</span>
+            </div>
+            <nav class="nav">
+                <a href="tourists.html" class="nav-link">遊客資料</a>
+                <a href="coach.html" class="nav-link">教練資料</a>
+                <a href="equip.html" class="nav-link">器材資產</a>
+                <a href="course.html" class="nav-link is-active">課程管理</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container page">
+
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- 左側：新增課程資料 (適用單次活動與常態班直接建立) -->
+            <div class="form-panel h-fit text-sm">
+                <h2 class="text-lg font-semibold text-slate-700 mb-4">新增課程場次</h2>
+                <form id="addCourseForm" class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">課程名稱</label>
+                        <input type="text" id="cName" placeholder="例如：夏日SUP初體驗" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">課程項目</label>
+                        <select id="cItem" class="form-control" required>
+                            <option value="SUP立槳">SUP立槳</option>
+                            <option value="獨木舟">獨木舟</option>
+                            <option value="衝浪">衝浪</option>
+                            <option value="自由潛水">自由潛水</option>
+                            <option value="水肺潛水">水肺潛水</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">課程類型</label>
+                        <select id="cType" class="form-control" required onchange="toggleTypeFields()">
+                            <option value="單次活動">單次活動 (固定排程)</option>
+                            <option value="常態班">常態班 (預約成立)</option>
+                        </select>
+                        <p class="text-[11px] text-slate-400 mt-1">常態班多數由遊客預約教練時段成立，此處亦可供管理員手動直接建立。</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">指派主要教練</label>
+                        <select id="cInstructor" class="form-control" required>
+                            <option value="">載入教練名單中...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">開始時間</label>
+                        <input type="datetime-local" id="cStartTime" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">結束時間</label>
+                        <input type="datetime-local" id="cEndTime" required class="form-control">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="form-group">
+                            <label class="form-label">課程價格 (TWD)</label>
+                            <input type="number" id="cPrice" required min="0" placeholder="例如：2500" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">難易度分類</label>
+                            <select id="cLevel" class="form-control">
+                                <option value="初階">初階</option>
+                                <option value="中階">中階</option>
+                                <option value="中高階">中高階</option>
+                                <option value="高階">高階</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="form-group">
+                            <label class="form-label">人數上限</label>
+                            <input type="number" id="cCapacity" required min="1" placeholder="例如：10" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">開課狀態</label>
+                            <select id="cStatus" class="form-control">
+                                <option value="開放報名中">開放報名中</option>
+                                <option value="已成團">已成團</option>
+                                <option value="已客滿">已客滿</option>
+                                <option value="已取消">已取消</option>
+                                <option value="已結束">已結束</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full">
+                        確認開課 / 新增課程
+                    </button>
+                </form>
+            </div>
+
+            <!-- 右側：主面板（分頁切換課程列表、教練勾選、遊客預約模擬） -->
+            <div class="lg:col-span-3 flex flex-col gap-4">
+                <!-- 頁籤導覽 -->
+                <div class="tabs-nav bg-white px-5 pt-3 rounded-t-xl border border-slate-200 border-b-0 shadow-sm">
+                    <button class="tab-btn is-active" onclick="switchTab('listTab')">課程清單</button>
+                    <button class="tab-btn" onclick="switchTab('availabilityTab')">教練可接客時段</button>
+                </div>
+
+                <!-- 頁籤 A：課程清單 -->
+                <div id="listTab" class="tab-content is-active table-panel mt-0 shadow-sm bg-white rounded-b-xl border border-slate-200">
+                    <div class="table-toolbar">
+                        <h2 class="table-title">課程清單</h2>
+                        <button onclick="exportToExcel()" class="btn btn-secondary text-xs" style="min-height: 32px; padding: 4px 12px; box-shadow: none;">
+                            匯出 Excel
+                        </button>
+                    </div>
+
+                    <!-- 綜合搜尋與篩選列 -->
+                    <div class="p-5 border-b flex flex-col sm:flex-row gap-3 items-end text-sm">
+                        <div class="w-full sm:flex-1">
+                            <label class="form-label text-xs">搜尋教練姓名 / 課程ID</label>
+                            <input type="text" id="searchKeyword" placeholder="搜尋關鍵字..." class="form-control mt-1">
+                        </div>
+                        <div class="w-full sm:w-[150px]">
+                            <label class="form-label text-xs">項目篩選</label>
+                            <select id="filterItem" class="form-control mt-1">
+                                <option value="全部">全部項目</option>
+                                <option value="SUP立槳">SUP立槳</option>
+                                <option value="獨木舟">獨木舟</option>
+                                <option value="衝浪">衝浪</option>
+                                <option value="自由潛水">自由潛水</option>
+                                <option value="水肺潛水">水肺潛水</option>
+                            </select>
+                        </div>
+                        <div class="w-full sm:w-[150px]">
+                            <label class="form-label text-xs">課程類型</label>
+                            <select id="filterType" class="form-control mt-1">
+                                <option value="全部">全部類型</option>
+                                <option value="單次活動">單次活動</option>
+                                <option value="常態班">常態班</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <button onclick="fetchCourses()" class="btn btn-primary">搜尋</button>
+                            <button onclick="resetFilters()" class="btn btn-secondary">顯示所有</button>
+                        </div>
+                    </div>
+
+                    <!-- 表格主體 -->
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>課程 ID</th>
+                                    <th>項目與類型</th>
+                                    <th>主要教練</th>
+                                    <th>時間段</th>
+                                    <th>價格</th>
+                                    <th>難度/人數</th>
+                                    <th>狀態</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="courseTableBody">
+                                <tr>
+                                    <td colspan="8" class="p-4 text-center text-slate-400">正在檢索課程清單...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 頁籤 B：教練可接客時段 -->
+                <div id="availabilityTab" class="tab-content table-panel mt-0 shadow-sm bg-white rounded-b-xl border border-slate-200">
+                    <div class="p-5 border-b bg-slate-50/50">
+                        <h2 class="text-base font-bold text-slate-700">教練可接客時段發布 (常態班來源)</h2>
+                        <p class="text-xs text-slate-500 mt-1">此處為教練勾選可用空檔的後台管理介面。當遊客在前台預約此處的日期與時段時，系統會自動在資料庫生成「常態班」課程。</p>
+                    </div>
+
+                    <div class="p-5 border-b grid grid-cols-1 md:grid-cols-4 gap-4 items-end text-sm">
+                        <div>
+                            <label class="form-label text-xs">選擇教練</label>
+                            <select id="avCoach" class="form-control mt-1">
+                                <option value="">選擇教練...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label text-xs">可接客日期</label>
+                            <input type="date" id="avDate" class="form-control mt-1">
+                        </div>
+                        <div>
+                            <label class="form-label text-xs">可接客時段</label>
+                            <select id="avSlot" class="form-control mt-1">
+                                <option value="上午 (09:00 - 12:00)">上午 (09:00 - 12:00)</option>
+                                <option value="下午 (14:00 - 17:00)">下午 (14:00 - 17:00)</option>
+                                <option value="全天 (09:00 - 17:00)">全天 (09:00 - 17:00)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button onclick="addAvailability()" class="btn btn-primary w-full">發布時段</button>
+                        </div>
+                    </div>
+
+                    <!-- 已發布時段列表 -->
+                    <div class="p-5 border-b bg-slate-50/20 flex justify-between items-center">
+                        <span class="font-bold text-sm text-slate-700">已開放之教練時段</span>
+                        <div class="text-xs text-slate-500 flex gap-2">
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>開放預約</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>已預約</span>
+                        </div>
+                    </div>
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>教練</th>
+                                    <th>開放日期</th>
+                                    <th>接客時段</th>
+                                    <th>目前狀態</th>
+                                    <th>發布日期</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="availabilityTableBody">
+                                <tr>
+                                    <td colspan="6" class="p-4 text-center text-slate-400">目前尚無已發布的教練時段。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </main>
+
+    <!-- 編輯課程彈窗 (Modal) -->
+    <div id="editCourseModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-hidden border border-slate-100 transform transition-all scale-100">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    編輯課程資料
+                </h3>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="editCourseForm" class="px-6 py-6 space-y-4 max-h-[70vh] overflow-y-auto text-sm text-left">
+                <input type="hidden" id="editSessionId">
+                <div class="form-group bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <label class="text-slate-500 text-xs block font-bold mb-1">課程編號 (不可修改)</label>
+                    <input type="text" id="editSessionIdDisplay" readonly class="w-full bg-transparent font-mono font-bold text-slate-500 outline-none border-none p-0 cursor-not-allowed">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">課程名稱</label>
+                    <input type="text" id="editName" required class="form-control">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">課程項目</label>
+                        <select id="editItem" class="form-control" required>
+                            <option value="SUP立槳">SUP立槳</option>
+                            <option value="獨木舟">獨木舟</option>
+                            <option value="衝浪">衝浪</option>
+                            <option value="自由潛水">自由潛水</option>
+                            <option value="水肺潛水">水肺潛水</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">課程類型</label>
+                        <select id="editType" class="form-control" required>
+                            <option value="單次活動">單次活動</option>
+                            <option value="常態班">常態班</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">指派主要教練</label>
+                    <select id="editInstructor" class="form-control" required>
+                        <!-- 動態載入 -->
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">開始時間</label>
+                        <input type="datetime-local" id="editStartTime" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">結束時間</label>
+                        <input type="datetime-local" id="editEndTime" required class="form-control">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">課程價格 (TWD)</label>
+                        <input type="number" id="editPrice" required min="0" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">難易度分類</label>
+                        <select id="editLevel" class="form-control">
+                            <option value="初階">初階</option>
+                            <option value="中階">中階</option>
+                            <option value="中高階">中高階</option>
+                            <option value="高階">高階</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">人數上限</label>
+                        <input type="number" id="editCapacity" required min="1" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">開課狀態</label>
+                        <select id="editStatus" class="form-control">
+                            <option value="開放報名中">開放報名中</option>
+                            <option value="已成團">已成團</option>
+                            <option value="已客滿">已客滿</option>
+                            <option value="已取消">已取消</option>
+                            <option value="已結束">已結束</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="pt-4 border-t border-slate-100 flex justify-end gap-2">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
+                        取消
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg text-xs transition-colors shadow-sm">
+                        儲存修改
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 編輯教練時段彈窗 (Modal) -->
+    <div id="editAvailModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden border border-slate-100 transform transition-all scale-100">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    修改教練接客時段
+                </h3>
+                <button onclick="closeEditAvailModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="editAvailForm" class="px-6 py-6 space-y-4 text-sm text-left">
+                <input type="hidden" id="editAvailId">
+                <input type="hidden" id="editAvailIndex">
+                
+                <div class="form-group">
+                    <label class="form-label text-xs">教練</label>
+                    <select id="editAvailCoach" class="form-control" required>
+                        <!-- 動態載入 -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">可接客日期</label>
+                    <input type="date" id="editAvailDate" required class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">可接客時段</label>
+                    <select id="editAvailSlot" class="form-control" required>
+                        <option value="上午 (09:00 - 12:00)">上午 (09:00 - 12:00)</option>
+                        <option value="下午 (14:00 - 17:00)">下午 (14:00 - 17:00)</option>
+                        <option value="全天 (09:00 - 17:00)">全天 (09:00 - 17:00)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label text-xs">狀態</label>
+                    <select id="editAvailStatus" class="form-control" required>
+                        <option value="開放預約">開放預約</option>
+                        <option value="已預約">已預約</option>
+                        <option value="停用">停用</option>
+                    </select>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="pt-4 border-t border-slate-100 flex justify-end gap-2">
+                    <button type="button" onclick="closeEditAvailModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
+                        取消
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg text-xs transition-colors shadow-sm">
+                        儲存修改
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 腳本引入 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <script>
+        // ==========================================================
+        // 🔑 Supabase 連線資訊
+        // ==========================================================
+        const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI';
+
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // ⚙️ 全域狀態與容錯模式
+        // ==========================================================
+        let isMockMode = false;
+        let coaches = [];
+        let courses = [];
+        let availabilities = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeSystem();
+        });
+
+        // ==========================================================
+        // 🔌 初始化系統與連線偵測
+        // ==========================================================
+        async function initializeSystem() {
+            // 預設設定今天日期
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('avDate').value = today;
+
+            try {
+                // 1. 嘗試讀取基本資料表 (教練)
+                const { data: coachData, error: coachError } = await _supabase.from('coach').select('id_number, name');
+
+                if (coachError) {
+                    throw new Error('Supabase 連線或讀取基礎資料失敗');
+                }
+
+                coaches = coachData || [];
+
+                // 2. 測試新欄位與新資料表
+                const { data: testCourse, error: courseError } = await _supabase.from('course').select('session_id, course_type').limit(1);
+                const { data: testAvail, error: availError } = await _supabase.from('coach_availability').select('availability_id').limit(1);
+
+                if (courseError || availError) {
+                    // 若有 Error 表示 schema 還沒擴充
+                    console.warn('資料庫未更新 schema，切換至 LocalStorage 模擬模式', { courseError, availError });
+                    enableMockMode(true, '尚未更新 Supabase 資料庫 schema');
+                } else {
+                    enableMockMode(false);
+                }
+            } catch (err) {
+                console.error('初始化異常：', err);
+                // 基礎連線失敗，則全部使用 mock
+                enableMockMode(true, '無法連線至 Supabase 資料庫或基礎資料讀取失敗');
+                setupFallbackMockBaseData();
+            }
+
+            // 渲染下拉選單
+            populateDropdowns();
+
+            // 讀取核心數據並顯示
+            await refreshAllData();
+        }
+
+        // 啟用模擬模式
+        function enableMockMode(enabled, reason = '') {
+            isMockMode = enabled;
+        }
+
+        // 填補基礎 LocalStorage 假資料以防 Supabase 空無一物
+        function setupFallbackMockBaseData() {
+            if (coaches.length === 0) {
+                coaches = [
+                    { id_number: 'A123456789', name: '陳立槳教練' },
+                    { id_number: 'H298765432', name: '李衝浪教練' },
+                    { id_number: 'F182736452', name: '王潛水教練' }
+                ];
+            }
+        }
+
+        // 渲染下拉選單
+        function populateDropdowns() {
+            const addCoachSel = document.getElementById('cInstructor');
+            const editCoachSel = document.getElementById('editInstructor');
+            const avCoachSel = document.getElementById('avCoach');
+            const editAvCoachSel = document.getElementById('editAvailCoach');
+
+            addCoachSel.innerHTML = '<option value="">請指派教練...</option>';
+            editCoachSel.innerHTML = '<option value="">請指派教練...</option>';
+            avCoachSel.innerHTML = '<option value="">請選擇教練...</option>';
+            if (editAvCoachSel) {
+                editAvCoachSel.innerHTML = '<option value="">請選擇教練...</option>';
+            }
+
+            coaches.forEach(c => {
+                const opt = `<option value="${c.id_number}">${c.name} (${c.id_number})</option>`;
+                addCoachSel.innerHTML += opt;
+                editCoachSel.innerHTML += opt;
+                avCoachSel.innerHTML += opt;
+                if (editAvCoachSel) {
+                    editAvCoachSel.innerHTML += opt;
+                }
+            });
+        }
+
+        // ==========================================================
+        // 🔄 資料刷新控制器 (DB / Mock)
+        // ==========================================================
+        async function refreshAllData() {
+            if (isMockMode) {
+                // 讀取 LocalStorage
+                courses = JSON.parse(localStorage.getItem('mock_courses') || '[]');
+                availabilities = JSON.parse(localStorage.getItem('mock_availabilities') || '[]');
+
+                // 若 localStorage 空無一物，給予一些初始展示資料
+                if (courses.length === 0 && availabilities.length === 0) {
+                    seedMockData();
+                }
+            } else {
+                // 讀取 Supabase (明確指定 join 關聯欄位名稱，防範 ambiguous 關係導致錯誤)
+                const { data: dbCourses, error: cErr } = await _supabase
+                    .from('course')
+                    .select('*, coach!instructor_id(name)')
+                    .order('session_id', { ascending: false });
+
+                const { data: dbAvails, error: aErr } = await _supabase
+                    .from('coach_availability')
+                    .select('*, coach!coach_id(name)')
+                    .order('available_date', { ascending: true });
+
+                if (!cErr && !aErr) {
+                    courses = dbCourses || [];
+                    availabilities = dbAvails || [];
+                } else {
+                    console.error('Supabase 數據讀取失敗：', { cErr, aErr });
+                    let errMsg = '資料讀取失敗原因：\n';
+                    if (cErr) errMsg += `- 課程表讀取錯誤: ${cErr.message} (代碼: ${cErr.code})\n`;
+                    if (aErr) errMsg += `- 時段表讀取錯誤: ${aErr.message} (代碼: ${aErr.code})\n`;
+                    errMsg += '\n系統已自動改為載入本地快照資料。';
+                    alert(errMsg);
+                }
+            }
+
+            renderCourseTable();
+            renderAvailabilityTable();
+        }
+
+        // Mock 初始測試種子資料
+        function seedMockData() {
+            courses = [
+                {
+                    session_id: 1001,
+                    course_name: '夏日SUP立槳體驗班',
+                    item: 'SUP立槳',
+                    course_type: '單次活動',
+                    instructor_id: coaches[0]?.id_number || 'A123456789',
+                    start_time: '2026-07-05T09:00',
+                    end_time: '2026-07-05T12:00',
+                    price: 2500,
+                    difficulty_level: '初階',
+                    capacity: 8,
+                    session_status: '開放報名中',
+                    coach: { name: coaches[0]?.name || '陳立槳教練' }
+                },
+                {
+                    session_id: 1002,
+                    course_name: '自由潛水基礎培訓常態班',
+                    item: '自由潛水',
+                    course_type: '常態班',
+                    instructor_id: coaches[2]?.id_number || 'F182736452',
+                    start_time: '2026-07-08T14:00',
+                    end_time: '2026-07-08T17:00',
+                    price: 3200,
+                    difficulty_level: '中階',
+                    capacity: 4,
+                    session_status: '已成團',
+                    coach: { name: coaches[2]?.name || '王潛水教練' }
+                }
+            ];
+
+            availabilities = [
+                {
+                    availability_id: 2001,
+                    coach_id: coaches[0]?.id_number || 'A123456789',
+                    available_date: '2026-07-10',
+                    time_slot: '上午 (09:00 - 12:00)',
+                    status: '開放預約',
+                    created_at: new Date().toISOString(),
+                    coach: { name: coaches[0]?.name || '陳立槳教練' }
+                },
+                {
+                    availability_id: 2002,
+                    coach_id: coaches[1]?.id_number || 'H298765432',
+                    available_date: '2026-07-11',
+                    time_slot: '下午 (14:00 - 17:00)',
+                    status: '已預約',
+                    created_at: new Date().toISOString(),
+                    coach: { name: coaches[1]?.name || '李衝浪教練' }
+                },
+                {
+                    availability_id: 2003,
+                    coach_id: coaches[2]?.id_number || 'F182736452',
+                    available_date: '2026-07-12',
+                    time_slot: '全天 (09:00 - 17:00)',
+                    status: '開放預約',
+                    created_at: new Date().toISOString(),
+                    coach: { name: coaches[2]?.name || '王潛水教練' }
+                }
+            ];
+
+            saveMockData();
+        }
+
+        function saveMockData() {
+            localStorage.setItem('mock_courses', JSON.stringify(courses));
+            localStorage.setItem('mock_availabilities', JSON.stringify(availabilities));
+        }
+
+        // ==========================================================
+        // 📑 頁籤切換邏輯
+        // ==========================================================
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('is-active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('is-active');
+            });
+
+            // 尋找按鈕
+            const eventMap = {
+                'listTab': 0,
+                'availabilityTab': 1
+            };
+            if (eventMap[tabId] !== undefined) {
+                document.querySelectorAll('.tab-btn')[eventMap[tabId]].classList.add('is-active');
+                document.getElementById(tabId).classList.add('is-active');
+            }
+        }
+
+        // 新增表單在常態班時自動變更輔助提示
+        function toggleTypeFields() {
+            const type = document.getElementById('cType').value;
+            const statusSel = document.getElementById('cStatus');
+            if (type === '常態班') {
+                statusSel.value = '已成團'; // 常態班一旦手動建立通常已具備預約對象
+            } else {
+                statusSel.value = '開放報名中';
+            }
+        }
+
+        // ==========================================================
+        // ➕ 【新增課程 - Create】
+        // ==========================================================
+        document.getElementById('addCourseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const course_name = document.getElementById('cName').value.trim();
+            const item = document.getElementById('cItem').value;
+            const course_type = document.getElementById('cType').value;
+            const instructor_id = document.getElementById('cInstructor').value;
+            const start_time = document.getElementById('cStartTime').value;
+            const end_time = document.getElementById('cEndTime').value;
+            const price = parseFloat(document.getElementById('cPrice').value);
+            const difficulty_level = document.getElementById('cLevel').value;
+            const capacity = parseInt(document.getElementById('cCapacity').value);
+            const session_status = document.getElementById('cStatus').value;
+
+            if (!instructor_id) {
+                alert('請指派主要教練！');
+                return;
+            }
+
+            const coachObj = coaches.find(c => c.id_number === instructor_id);
+            const coachName = coachObj ? coachObj.name : '未知教練';
+
+            if (isMockMode) {
+                // 模擬寫入
+                const newId = courses.length > 0 ? Math.max(...courses.map(c => c.session_id)) + 1 : 1001;
+                const newCourse = {
+                    session_id: newId,
+                    course_name,
+                    item,
+                    course_type,
+                    instructor_id,
+                    start_time,
+                    end_time,
+                    price,
+                    difficulty_level,
+                    capacity,
+                    session_status,
+                    coach: { name: coachName }
+                };
+
+                courses.unshift(newCourse);
+                saveMockData();
+                alert('課程建立成功 (Mock)！');
+            } else {
+                // Real DB Write
+                const { data, error } = await _supabase.from('course').insert([{
+                    course_name,
+                    item,
+                    course_type,
+                    instructor_id,
+                    start_time: start_time.replace('T', ' '),
+                    end_time: end_time.replace('T', ' '),
+                    price,
+                    difficulty_level,
+                    capacity,
+                    session_status
+                }]).select();
+
+                if (error) {
+                    alert('新增課程失敗：' + error.message);
+                    return;
+                }
+                alert('課程成功建立並儲存至 Supabase！');
+            }
+
+            document.getElementById('addCourseForm').reset();
+            toggleTypeFields();
+            await refreshAllData();
+        });
+
+        // ==========================================================
+        // 🔍 【讀取與渲染課程清單 - Read】
+        // ==========================================================
+        function renderCourseTable() {
+            const tbody = document.getElementById('courseTableBody');
+            tbody.innerHTML = '';
+
+            const search = document.getElementById('searchKeyword').value.trim().toLowerCase();
+            const filterItem = document.getElementById('filterItem').value;
+            const filterType = document.getElementById('filterType').value;
+
+            // 進行前端搜尋過濾
+            let filteredCourses = courses.filter(c => {
+                const coachName = c.coach?.name || '';
+                const coachId = c.instructor_id || '';
+                const sessionId = String(c.session_id);
+                const matchesKeyword = !search || 
+                                       coachName.toLowerCase().includes(search) || 
+                                       coachId.toLowerCase().includes(search) || 
+                                       sessionId.includes(search);
+                const matchesItem = (filterItem === '全部') || (c.item === filterItem);
+                const matchesType = (filterType === '全部') || (c.course_type === filterType);
+
+                return matchesKeyword && matchesItem && matchesType;
+            });
+
+            if (filteredCourses.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400">找不到符合條件的課程資料</td></tr>`;
+                return;
+            }
+
+            filteredCourses.forEach((c, index) => {
+                const formattedStart = c.start_time ? c.start_time.replace('T', ' ').substring(0, 16) : '—';
+                const formattedEnd = c.end_time ? c.end_time.replace('T', ' ').substring(11, 16) : '—';
+
+                // 狀態 Badge 樣式
+                let statusClass = 'badge badge-info';
+                if (c.session_status === '已成團') statusClass = 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800';
+                else if (c.session_status === '開放報名中') statusClass = 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800';
+                else if (c.session_status === '已客滿') statusClass = 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800';
+                else if (c.session_status === '已取消') statusClass = 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500';
+                else if (c.session_status === '已結束') statusClass = 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-slate-600';
+
+                // 類型 Badge
+                const typeBadge = c.course_type === '常態班' 
+                    ? '<span class="ml-1.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-700">常態班</span>'
+                    : '<span class="ml-1.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-100 text-sky-700">單次活動</span>';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="font-mono font-bold text-slate-600 whitespace-nowrap">${c.session_id}</td>
+                    <td class="whitespace-nowrap">
+                        <span class="font-bold text-slate-800 block">${c.course_name || '未命名課程'}</span>
+                        <span class="text-xs text-slate-500">${c.item}</span>
+                        ${typeBadge}
+                    </td>
+                    <td class="whitespace-nowrap">
+                        <span class="font-medium">${c.coach?.name || '未知教練'}</span>
+                        <span class="text-xs text-slate-400 block">${c.instructor_id}</span>
+                    </td>
+                    <td class="text-slate-600 text-xs font-mono">
+                        ${formattedStart} ~ ${formattedEnd}
+                    </td>
+                    <td class="font-mono font-bold text-blue-600">$${c.price}</td>
+                    <td class="text-xs text-slate-600">
+                        <span class="block">等級: <b class="text-slate-700">${c.difficulty_level || '初階'}</b></span>
+                        <span>容量: ${c.capacity} 人</span>
+                    </td>
+                    <td>
+                        <span class="${statusClass}">${c.session_status}</span>
+                    </td>
+                    <td class="text-center whitespace-nowrap">
+                        <div class="flex gap-1 justify-center items-center">
+                            <button onclick="openEditModal(${index})" class="btn btn-primary text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                修改
+                            </button>
+                            <button onclick="deleteCourse(${c.session_id})" class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                刪除
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function fetchCourses() {
+            await refreshAllData();
+        }
+
+        function resetFilters() {
+            document.getElementById('searchKeyword').value = '';
+            document.getElementById('filterItem').value = '全部';
+            document.getElementById('filterType').value = '全部';
+            renderCourseTable();
+        }
+
+        // ==========================================================
+        // ✏️ 【編輯課程與彈窗管理 - Update】
+        // ==========================================================
+        function openEditModal(index) {
+            // 用當下狀態的 courses
+            const course = courses[index];
+            if (!course) return;
+
+            document.getElementById('editSessionId').value = course.session_id;
+            document.getElementById('editSessionIdDisplay').value = course.session_id;
+            document.getElementById('editName').value = course.course_name || '';
+            document.getElementById('editItem').value = course.item;
+            document.getElementById('editType').value = course.course_type || '單次活動';
+            document.getElementById('editInstructor').value = course.instructor_id;
+            document.getElementById('editStartTime').value = course.start_time ? course.start_time.substring(0, 16) : '';
+            document.getElementById('editEndTime').value = course.end_time ? course.end_time.substring(0, 16) : '';
+            document.getElementById('editPrice').value = course.price;
+            document.getElementById('editLevel').value = course.difficulty_level || '初階';
+            document.getElementById('editCapacity').value = course.capacity;
+            document.getElementById('editStatus').value = course.session_status;
+
+            document.getElementById('editCourseModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editCourseModal').classList.add('hidden');
+        }
+
+        document.getElementById('editCourseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const session_id = parseInt(document.getElementById('editSessionId').value);
+            const course_name = document.getElementById('editName').value.trim();
+            const item = document.getElementById('editItem').value;
+            const course_type = document.getElementById('editType').value;
+            const instructor_id = document.getElementById('editInstructor').value;
+            const start_time = document.getElementById('editStartTime').value;
+            const end_time = document.getElementById('editEndTime').value;
+            const price = parseFloat(document.getElementById('editPrice').value);
+            const difficulty_level = document.getElementById('editLevel').value;
+            const capacity = parseInt(document.getElementById('editCapacity').value);
+            const session_status = document.getElementById('editStatus').value;
+
+            const coachObj = coaches.find(c => c.id_number === instructor_id);
+            const coachName = coachObj ? coachObj.name : '未知教練';
+
+            if (isMockMode) {
+                const cIndex = courses.findIndex(c => c.session_id === session_id);
+                if (cIndex !== -1) {
+                    courses[cIndex] = {
+                        ...courses[cIndex],
+                        course_name,
+                        item,
+                        course_type,
+                        instructor_id,
+                        start_time,
+                        end_time,
+                        price,
+                        difficulty_level,
+                        capacity,
+                        session_status,
+                        coach: { name: coachName }
+                    };
+                    saveMockData();
+                    alert('課程修改成功 (Mock)！');
+                }
+            } else {
+                const { error } = await _supabase
+                    .from('course')
+                    .update({
+                        course_name,
+                        item,
+                        course_type,
+                        instructor_id,
+                        start_time: start_time.replace('T', ' '),
+                        end_time: end_time.replace('T', ' '),
+                        price,
+                        difficulty_level,
+                        capacity,
+                        session_status
+                    })
+                    .eq('session_id', session_id);
+
+                if (error) {
+                    alert('更新失敗：' + error.message);
+                    return;
+                }
+                alert('課程資料修改成功！');
+            }
+
+            closeEditModal();
+            await refreshAllData();
+        });
+
+        // ==========================================================
+        // ❌ 【刪除課程 - Delete】
+        // ==========================================================
+        async function deleteCourse(session_id) {
+            if (!confirm(`確定要刪除課程場次 [${session_id}] 嗎？\n此動作將一併刪除對應的報名紀錄。`)) return;
+
+            if (isMockMode) {
+                courses = courses.filter(c => c.session_id !== session_id);
+                saveMockData();
+                alert('已成功刪除課程場次 (Mock)。');
+            } else {
+                // 刪除 bookings
+                const { error: bErr } = await _supabase.from('bookings').delete().eq('session_id', session_id);
+                if (bErr) console.warn('刪除 bookings 異常：', bErr);
+
+                // 刪除 course
+                const { error } = await _supabase.from('course').delete().eq('session_id', session_id);
+                if (error) {
+                    alert('刪除失敗：' + error.message);
+                    return;
+                }
+                alert('課程已成功刪除！');
+            }
+            await refreshAllData();
+        }
+
+        // ==========================================================
+        // 🗓️ 【教練可接客時段邏輯】
+        // ==========================================================
+        function renderAvailabilityTable() {
+            const tbody = document.getElementById('availabilityTableBody');
+            tbody.innerHTML = '';
+
+            if (availabilities.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">目前尚無已開放的教練接客時段</td></tr>`;
+                return;
+            }
+
+            availabilities.forEach((av, index) => {
+                const statusBadge = av.status === '開放預約'
+                    ? '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">開放預約</span>'
+                    : av.status === '已預約'
+                    ? '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">已預約</span>'
+                    : '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">停用</span>';
+
+                const formattedCreated = av.created_at ? av.created_at.substring(0, 10) : '—';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="font-medium text-slate-700 whitespace-nowrap">${av.coach?.name || '未知教練'} <span class="text-xs text-slate-400 block">${av.coach_id}</span></td>
+                    <td class="font-mono text-slate-600 whitespace-nowrap">${av.available_date}</td>
+                    <td class="font-medium text-indigo-700">${av.time_slot}</td>
+                    <td>${statusBadge}</td>
+                    <td class="font-mono text-xs text-slate-400">${formattedCreated}</td>
+                    <td class="text-center whitespace-nowrap">
+                        <div class="flex gap-1 justify-center items-center">
+                            <button onclick="openEditAvailModal(${index})" class="btn btn-primary text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                修改
+                            </button>
+                            <button onclick="deleteAvailability(${av.availability_id})" class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                刪除
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function addAvailability() {
+            const coach_id = document.getElementById('avCoach').value;
+            const available_date = document.getElementById('avDate').value;
+            const time_slot = document.getElementById('avSlot').value;
+
+            if (!coach_id || !available_date) {
+                alert('請填寫完整資訊 (選取教練與日期)！');
+                return;
+            }
+
+            const coachObj = coaches.find(c => c.id_number === coach_id);
+            const coachName = coachObj ? coachObj.name : '未知教練';
+
+            // 檢查重複
+            const isDup = availabilities.some(av => av.coach_id === coach_id && av.available_date === available_date && av.time_slot === time_slot);
+            if (isDup) {
+                alert('該教練此時段已經發布過囉！請勿重複設定。');
+                return;
+            }
+
+            if (isMockMode) {
+                const newId = availabilities.length > 0 ? Math.max(...availabilities.map(a => a.availability_id)) + 1 : 2001;
+                const newAvail = {
+                    availability_id: newId,
+                    coach_id,
+                    available_date,
+                    time_slot,
+                    status: '開放預約',
+                    created_at: new Date().toISOString(),
+                    coach: { name: coachName }
+                };
+
+                availabilities.push(newAvail);
+                saveMockData();
+                alert('可接客時段發布成功 (Mock)！');
+            } else {
+                const { error } = await _supabase.from('coach_availability').insert([{
+                    coach_id,
+                    available_date,
+                    time_slot,
+                    status: '開放預約'
+                }]);
+
+                if (error) {
+                    alert('時段發布失敗：' + error.message);
+                    return;
+                }
+                alert('時段成功發布並連線寫入 Supabase！');
+            }
+
+            await refreshAllData();
+        }
+
+        async function deleteAvailability(availability_id) {
+            if (!confirm('確定要取消此開放接客時段嗎？')) return;
+
+            if (isMockMode) {
+                availabilities = availabilities.filter(av => av.availability_id !== availability_id);
+                saveMockData();
+                alert('已移除該時段 (Mock)。');
+            } else {
+                const { error } = await _supabase.from('coach_availability').delete().eq('availability_id', availability_id);
+                if (error) {
+                    alert('刪除失敗：' + error.message);
+                    return;
+                }
+                alert('時段已成功刪除。');
+            }
+            await refreshAllData();
+        }
+
+        // ==========================================================
+        // ✏️ 【編輯時段與彈窗管理 - Availability Update】
+        // ==========================================================
+        function openEditAvailModal(index) {
+            const av = availabilities[index];
+            if (!av) return;
+
+            document.getElementById('editAvailId').value = av.availability_id;
+            document.getElementById('editAvailIndex').value = index;
+            document.getElementById('editAvailCoach').value = av.coach_id;
+            document.getElementById('editAvailDate').value = av.available_date;
+            document.getElementById('editAvailSlot').value = av.time_slot;
+            document.getElementById('editAvailStatus').value = av.status || '開放預約';
+
+            document.getElementById('editAvailModal').classList.remove('hidden');
+        }
+
+        function closeEditAvailModal() {
+            document.getElementById('editAvailModal').classList.add('hidden');
+        }
+
+        document.getElementById('editAvailForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const availability_id = parseInt(document.getElementById('editAvailId').value);
+            const index = parseInt(document.getElementById('editAvailIndex').value);
+            const coach_id = document.getElementById('editAvailCoach').value;
+            const available_date = document.getElementById('editAvailDate').value;
+            const time_slot = document.getElementById('editAvailSlot').value;
+            const status = document.getElementById('editAvailStatus').value;
+
+            const coachObj = coaches.find(c => c.id_number === coach_id);
+            const coachName = coachObj ? coachObj.name : '未知教練';
+
+            // 檢查重複 (排除自己)
+            const isDup = availabilities.some((av, idx) => 
+                idx !== index && 
+                av.coach_id === coach_id && 
+                av.available_date === available_date && 
+                av.time_slot === time_slot
+            );
+            if (isDup) {
+                alert('該教練此時段已經發布過囉！請勿設定重複時段。');
+                return;
+            }
+
+            if (isMockMode) {
+                if (index !== -1 && availabilities[index]) {
+                    availabilities[index] = {
+                        ...availabilities[index],
+                        coach_id,
+                        available_date,
+                        time_slot,
+                        status,
+                        coach: { name: coachName }
+                    };
+                    saveMockData();
+                    alert('時段修改成功！');
+                }
+            } else {
+                const { error } = await _supabase
+                    .from('coach_availability')
+                    .update({
+                        coach_id,
+                        available_date,
+                        time_slot,
+                        status
+                    })
+                    .eq('availability_id', availability_id);
+
+                if (error) {
+                    alert('時段更新失敗：' + error.message);
+                    return;
+                }
+                alert('時段資料修改成功！');
+            }
+
+            closeEditAvailModal();
+            await refreshAllData();
+        });
+
+
+
+        // ==========================================================
+        // 📥 【匯出 Excel 功能】
+        // ==========================================================
+        function exportToExcel() {
+            if (courses.length === 0) {
+                alert('目前沒有課程資料可供匯出！');
+                return;
+            }
+
+            try {
+                const excelData = courses.map(c => ({
+                    '課程編號': c.session_id,
+                    '課程名稱': c.course_name || '未命名課程',
+                    '課程項目': c.item,
+                    '課程類型': c.course_type || '單次活動',
+                    '教練姓名': c.coach?.name || '未知',
+                    '教練身分證': c.instructor_id,
+                    '開始時間': c.start_time ? c.start_time.replace('T', ' ') : '—',
+                    '結束時間': c.end_time ? c.end_time.replace('T', ' ') : '—',
+                    '價格 (TWD)': c.price,
+                    '難易度': c.difficulty_level || '初階',
+                    '上限人數': c.capacity,
+                    '課程狀態': c.session_status
+                }));
+
+                const worksheet = XLSX.utils.json_to_sheet(excelData);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "開課課程名冊");
+                XLSX.writeFile(workbook, "開課課程名冊.xlsx");
+            } catch (err) {
+                alert("匯出 Excel 時發生錯誤：" + err.message);
+            }
+        }
+    </script>
+</body>
+
+</html>
