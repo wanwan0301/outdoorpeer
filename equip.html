@@ -47,7 +47,7 @@
                     <div class="form-group">
                         <label class="form-label">器材狀態</label>
                         <select id="eqStatus" class="form-control">
-                            <option value="正常">正常</option>
+                            <option value="未出借">未出借</option>
                             <option value="維修中">維修中</option>
                             <option value="報廢">報廢</option>
                         </select>
@@ -58,9 +58,10 @@
                                class="form-control">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">負責人身份證字號</label>
-                        <input type="text" id="eqManagerId" required pattern="^[A-Z][1-2][0-9]{8}$" placeholder="例如：A123456789" 
-                               class="form-control uppercase">
+                        <label class="form-label">負責人</label>
+                        <select id="eqManagerId" class="form-control">
+                            <option value="">-- 請選擇負責人 --</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label class="form-label">使用年限（單位：年）</label>
@@ -76,6 +77,9 @@
             <div class="table-panel md:col-span-3">
                 <div class="table-toolbar">
                     <h2 class="table-title">器材列表</h2>
+                    <button onclick="exportToExcel()" class="btn btn-secondary text-xs" style="min-height: 32px; padding: 4px 12px; box-shadow: none;">
+                        匯出 Excel
+                    </button>
                 </div>
 
                 <div class="p-5 border-b flex flex-col sm:flex-row gap-3 items-end text-sm">
@@ -88,7 +92,8 @@
                         <label class="form-label text-xs">狀態</label>
                         <select id="searchStatus" class="form-control mt-1">
                             <option value="全部狀態">全部狀態</option>
-                            <option value="正常">正常</option>
+                            <option value="未出借">未出借</option>
+                            <option value="出借">出借</option>
                             <option value="維修中">維修中</option>
                             <option value="報廢">報廢</option>
                         </select>
@@ -113,15 +118,16 @@
                                 <th>購買日期</th>
                                 <th class="text-center">狀態</th>
                                 <th>購買單位</th>
-                                <th>負責人身分證字號</th>
+                                <th>負責人</th>
                                 <th class="text-center">使用年限</th>
+                                <th class="text-center">剩餘年限</th>
                                 <th>建立時間</th>
                                 <th class="text-center">操作</th>
                             </tr>
                         </thead>
                         <tbody id="equipmentTableBody">
                             <tr>
-                                <td colspan="10" class="p-4 text-center text-slate-400">資料載入中...</td>
+                                <td colspan="11" class="p-4 text-center text-slate-400">資料載入中...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -130,7 +136,95 @@
         </div>
     </main>
 
+    <!-- ==========================================================
+         編輯器材資料模態框 (Modal)
+         ========================================================== -->
+    <div id="editModal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all m-4">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    修改器材資料
+                </h3>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <form id="editForm" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">器材編號</label>
+                        <input type="text" id="editEqId" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">器材名稱</label>
+                        <input type="text" id="editEqName" required class="form-control">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">器材類別</label>
+                        <input type="text" id="editEqCategory" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">購買日期</label>
+                        <input type="date" id="editEqPurchaseDate" required class="form-control">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">器材狀態</label>
+                        <select id="editEqStatus" class="form-control">
+                            <option value="未出借">未出借</option>
+                            <option value="出借">出借</option>
+                            <option value="維修中">維修中</option>
+                            <option value="報廢">報廢</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">購買單位</label>
+                        <input type="text" id="editEqPurchaseUnit" class="form-control">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-group">
+                        <label class="form-label text-xs">負責人</label>
+                        <select id="editEqManagerId" class="form-control">
+                            <option value="">-- 請選擇負責人 --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-xs">使用年限（單位：年）</label>
+                        <input type="text" id="editEqUsageLimit" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="pt-4 border-t border-slate-100 flex justify-end gap-2">
+                    <button type="button" onclick="closeEditModal()"
+                        class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
+                        取消
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg text-xs transition-colors shadow-sm">
+                        儲存修改
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <script>
         // ==========================================================
@@ -146,20 +240,55 @@
         document.addEventListener('DOMContentLoaded', () => {
             // 預設將購買日期填為今天
             document.getElementById('eqPurchaseDate').valueAsDate = new Date();
+            loadCoachesDropdown();
             fetchEquipment();
         });
+
+        // ==========================================================
+        // 👥 【載入負責人教練下拉選單】
+        // ==========================================================
+        async function loadCoachesDropdown() {
+            try {
+                const { data, error } = await _supabase
+                    .from('coach')
+                    .select('id_number, name')
+                    .order('name');
+
+                if (error) {
+                    console.error('載入教練選單失敗:', error.message);
+                    return;
+                }
+
+                const addSelect = document.getElementById('eqManagerId');
+                const editSelect = document.getElementById('editEqManagerId');
+
+                // 清空並加入預設選項
+                addSelect.innerHTML = '<option value="">-- 請選擇負責人 (未指派) --</option>';
+                editSelect.innerHTML = '<option value="">-- 請選擇負責人 (未指派) --</option>';
+
+                data.forEach(coach => {
+                    const optText = `${coach.name} (${coach.id_number})`;
+                    const opt1 = new Option(optText, coach.id_number);
+                    const opt2 = new Option(optText, coach.id_number);
+                    addSelect.add(opt1);
+                    editSelect.add(opt2);
+                });
+            } catch (err) {
+                console.error('載入教練選單時發生異常:', err);
+            }
+        }
 
         // ==========================================================
         // 🔍 【功能：查詢資料 Read】
         // ==========================================================
         async function fetchEquipment() {
             const tbody = document.getElementById('equipmentTableBody');
-            tbody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
 
             const keyword = document.getElementById('searchKeyword').value.trim();
             const status = document.getElementById('searchStatus').value;
 
-            let query = _supabase.from('equipment').select('*'); // 建立 Supabase 基礎查詢物件
+            let query = _supabase.from('equipment').select('*, coach(name)'); // 建立 Supabase 基礎查詢物件，聯接教練表以獲取負責人姓名
 
             // 關鍵字多欄位模糊搜尋 (使用 Supabase 的 .or 條件)
             if (keyword !== '') {
@@ -167,9 +296,12 @@
                 query = query.or(`name.ilike.%${keyword}%,category.ilike.%${keyword}%,manager_id.ilike.%${keyword}%`);
             }
 
-            // 篩選狀態
+            // 篩選狀態 (將前端的「未出借」、「出借」對照為資料庫的「正常」、「使用中」)
             if (status !== '全部狀態') {
-                query = query.eq('status', status);
+                let dbStatus = status;
+                if (status === '未出借') dbStatus = '正常';
+                else if (status === '出借') dbStatus = '使用中';
+                query = query.eq('status', dbStatus);
             }
 
             // 執行查詢並排序（新建立的在最前面）
@@ -183,18 +315,60 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-slate-400">找不到符合條件的器材資料</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="11" class="p-4 text-center text-slate-400">找不到符合條件的器材資料</td></tr>`;
                 return;
             }
 
+            // 儲存到全域變數，供匯出功能使用
+            window.equipData = data;
+
             // 將資料渲染成表格 HTML
-            data.forEach(item => {
-                // 根據狀態給予不同顏色標籤
-                let statusBadge = `<span class="badge badge-success">${item.status}</span>`;
-                if (item.status === '維修中') {
-                    statusBadge = `<span class="badge badge-warning">${item.status}</span>`;
+            data.forEach((item, index) => {
+                // 根據狀態給予不同顏色與中文字標籤 (資料庫 正常 -> 未出借; 使用中 -> 出借)
+                let displayStatus = item.status;
+                let badgeClass = 'badge-success'; // 預設為未出借 (正常) 綠色
+
+                if (item.status === '正常') {
+                    displayStatus = '未出借';
+                    badgeClass = 'badge-success';
+                } else if (item.status === '使用中') {
+                    displayStatus = '出借';
+                    badgeClass = 'badge-info';
+                } else if (item.status === '維修中') {
+                    displayStatus = '維修中';
+                    badgeClass = 'badge-warning';
                 } else if (item.status === '報廢') {
-                    statusBadge = `<span class="badge badge-danger">${item.status}</span>`;
+                    displayStatus = '報廢';
+                    badgeClass = 'badge-danger';
+                }
+
+                let statusBadge = `<span class="badge ${badgeClass}">${displayStatus}</span>`;
+
+                // 計算剩餘年限
+                let remainingYears = '—';
+                if (item.purchase_date && item.useful_life_years) {
+                    const purchase = new Date(item.purchase_date);
+                    const now = new Date();
+                    const diffTime = now - purchase;
+                    const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+                    const remaining = item.useful_life_years - diffYears;
+                    if (remaining <= 0) {
+                        remainingYears = '<span class="text-red-500 font-bold">已逾期</span>';
+                    } else {
+                        remainingYears = `${Math.ceil(remaining)} 年`;
+                    }
+                }
+
+                let formattedCreatedAt = '—';
+                if (item.created_at) {
+                    const date = new Date(item.created_at);
+                    const y = date.getFullYear();
+                    const m = String(date.getMonth() + 1).padStart(2, '0');
+                    const d = String(date.getDate()).padStart(2, '0');
+                    const hh = String(date.getHours()).padStart(2, '0');
+                    const mm = String(date.getMinutes()).padStart(2, '0');
+                    const ss = String(date.getSeconds()).padStart(2, '0');
+                    formattedCreatedAt = `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
                 }
 
                 const tr = document.createElement('tr');
@@ -205,14 +379,21 @@
                     <td class="text-slate-500">${item.purchase_date}</td>
                     <td class="text-center whitespace-nowrap">${statusBadge}</td>
                     <td class="text-slate-500">${item.purchase_unit}</td>
-                    <td class="text-slate-500">${item.manager_id}</td>
-                    <td class="text-center text-slate-500">${item.useful_life_years}</td>
-                    <td class="text-slate-500">${item.created_at}</td>
+                    <td class="text-slate-500">${item.coach && item.coach.name ? item.coach.name : (item.manager_id || '<span class="text-slate-300">—</span>')}</td>
+                    <td class="text-center text-slate-500">${item.useful_life_years ? item.useful_life_years + ' 年' : '—'}</td>
+                    <td class="text-center text-slate-500">${remainingYears}</td>
+                    <td class="text-slate-500 whitespace-nowrap font-mono">${formattedCreatedAt}</td>
                     <td class="text-center whitespace-nowrap">
-                        <button onclick="deleteEquipment(${item.equipment_id})" 
-                                class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
-                            刪除
-                        </button>
+                        <div class="flex gap-1.5 justify-center items-center">
+                            <button onclick="showEditModal(${index})" 
+                                    class="btn btn-primary text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                修改
+                            </button>
+                            <button onclick="deleteEquipment(${item.equipment_id})" 
+                                    class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
+                                刪除
+                            </button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -239,9 +420,12 @@
             const name = document.getElementById('eqName').value;
             const category = document.getElementById('eqCategory').value;
             const purchase_date = document.getElementById('eqPurchaseDate').value;
-            const status = document.getElementById('eqStatus').value;
+            let status = document.getElementById('eqStatus').value;
+            if (status === '未出借') {
+                status = '正常';
+            }
             const purchase_unit = document.getElementById('eqPurchaseUnit').value;
-            const manager_id = document.getElementById('eqManagerId').value.toUpperCase(); // 將身份證字號轉為大寫
+            const manager_id = document.getElementById('eqManagerId').value || null;
             const useful_life_years = document.getElementById('eqUsageLimit').value;
 
             // 呼叫 Supabase 的 insert 語法寫入資料
@@ -280,6 +464,161 @@
                 fetchEquipment(); // 重新整理列表
             }
         }
+
+        // ==========================================================
+        // 📥 【匯出器材資料至 Excel 功能】
+        // ==========================================================
+        async function exportToExcel() {
+            let data = [];
+
+            // 如果當前列表有資料，直接使用列表資料（包含搜尋/篩選過後的結果）
+            if (window.equipData && window.equipData.length > 0) {
+                data = window.equipData;
+            } else {
+                // 如果當前列表無資料，則主動從 Supabase 抓取「所有」器材資料進行匯出
+                try {
+                    const { data: allData, error } = await _supabase
+                        .from('equipment')
+                        .select('*, coach(name)')
+                        .order('created_at', { ascending: false });
+
+                    if (error) {
+                        alert('自動抓取所有器材資料失敗：' + error.message);
+                        return;
+                    }
+                    data = allData;
+                } catch (err) {
+                    alert("擷取器材資料時發生錯誤：" + err.message);
+                    return;
+                }
+            }
+
+            if (!data || data.length === 0) {
+                alert("目前資料庫中尚無任何器材資料可供匯出！");
+                return;
+            }
+
+            try {
+                // 將資料映射成中文標題的物件
+                const excelData = data.map(item => {
+                    let displayStatus = item.status;
+                    if (item.status === '正常') displayStatus = '未出借';
+                    else if (item.status === '使用中') displayStatus = '出借';
+
+                    // 計算剩餘年限
+                    let remainingYears = '—';
+                    if (item.purchase_date && item.useful_life_years) {
+                        const purchase = new Date(item.purchase_date);
+                        const now = new Date();
+                        const diffTime = now - purchase;
+                        const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+                        const remaining = item.useful_life_years - diffYears;
+                        remainingYears = remaining <= 0 ? '已逾期' : `${Math.ceil(remaining)} 年`;
+                    }
+
+                    let formattedCreatedAt = '—';
+                    if (item.created_at) {
+                        const date = new Date(item.created_at);
+                        const y = date.getFullYear();
+                        const m = String(date.getMonth() + 1).padStart(2, '0');
+                        const d = String(date.getDate()).padStart(2, '0');
+                        const hh = String(date.getHours()).padStart(2, '0');
+                        const mm = String(date.getMinutes()).padStart(2, '0');
+                        const ss = String(date.getSeconds()).padStart(2, '0');
+                        formattedCreatedAt = `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+                    }
+
+                    return {
+                        '器材編號': item.equipment_id,
+                        '器材名稱': item.name,
+                        '類別': item.category,
+                        '購買日期': item.purchase_date,
+                        '狀態': displayStatus,
+                        '購買單位': item.purchase_unit || '無',
+                        '負責人': item.coach && item.coach.name ? item.coach.name : (item.manager_id || '未指派'),
+                        '使用年限': item.useful_life_years ? `${item.useful_life_years} 年` : '—',
+                        '剩餘年限': remainingYears,
+                        '建立時間': formattedCreatedAt
+                    };
+                });
+
+                // 建立 Worksheet
+                const worksheet = XLSX.utils.json_to_sheet(excelData);
+                
+                // 建立 Workbook
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "器材名冊");
+
+                // 下載 Excel
+                XLSX.writeFile(workbook, "器材名冊.xlsx");
+            } catch (err) {
+                alert("匯出 Excel 時發生錯誤：" + err.message);
+                console.error(err);
+            }
+        }
+
+        // ==========================================================
+        // ✏️ 【功能：修改資料與彈窗管理 Update】
+        // ==========================================================
+        function showEditModal(index) {
+            const item = window.equipData[index];
+            if (!item) return;
+
+            document.getElementById('editEqId').value = item.equipment_id;
+            document.getElementById('editEqName').value = item.name || '';
+            document.getElementById('editEqCategory').value = item.category || '';
+            document.getElementById('editEqPurchaseDate').value = item.purchase_date || '';
+            
+            // 將資料庫狀態正常與使用中，轉換為前端的未出借與出借
+            let displayStatus = item.status;
+            if (item.status === '正常') displayStatus = '未出借';
+            else if (item.status === '使用中') displayStatus = '出借';
+            document.getElementById('editEqStatus').value = displayStatus;
+
+            document.getElementById('editEqPurchaseUnit').value = item.purchase_unit || '';
+            document.getElementById('editEqManagerId').value = item.manager_id || '';
+            document.getElementById('editEqUsageLimit').value = item.useful_life_years || '';
+
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('editEqId').value;
+            const name = document.getElementById('editEqName').value;
+            const category = document.getElementById('editEqCategory').value;
+            const purchase_date = document.getElementById('editEqPurchaseDate').value;
+            
+            // 將前端狀態轉換為資料庫儲存的狀態
+            let status = document.getElementById('editEqStatus').value;
+            if (status === '未出借') {
+                status = '正常';
+            } else if (status === '出借') {
+                status = '使用中';
+            }
+
+            const purchase_unit = document.getElementById('editEqPurchaseUnit').value;
+            const manager_id = document.getElementById('editEqManagerId').value || null;
+            const useful_life_years = document.getElementById('editEqUsageLimit').value || null;
+
+            const { error } = await _supabase
+                .from('equipment')
+                .update({ name, category, purchase_date, status, purchase_unit, manager_id, useful_life_years })
+                .eq('equipment_id', id);
+
+            if (error) {
+                alert('修改失敗：' + error.message);
+            } else {
+                alert('器材資料修改成功！');
+                closeEditModal();
+                fetchEquipment();
+            }
+        });
     </script>
 </body>
 </html>
