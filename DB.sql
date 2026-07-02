@@ -133,6 +133,35 @@ CREATE TABLE tourist_item_levels (
     CONSTRAINT chk_level CHECK (level IN ('初階', '中階', '中高階', '高階'))
 );
 
+-- 10. 遊客身體健康調查表 (Tourist Health Survey)
+CREATE TABLE tourist_health_survey (
+    survey_id INT PRIMARY KEY AUTO_INCREMENT,
+    tourist_id VARCHAR(10) NOT NULL,
+    swimming_ability VARCHAR(50) COMMENT '游泳能力',
+    sup_experience VARCHAR(50) COMMENT 'SUP操作經驗',
+    expectations TEXT COMMENT '活動期待',
+    health_limitations VARCHAR(10) COMMENT '是否有身體限制',
+    limitations_detail TEXT COMMENT '限制與建議細節',
+    has_diseases TEXT COMMENT '現有或曾有疾病',
+    recent_injuries VARCHAR(10) COMMENT '三年內受傷或手術',
+    injuries_detail TEXT COMMENT '受傷部位與狀況',
+    heat_illness VARCHAR(10) COMMENT '曾經中暑',
+    heat_illness_detail TEXT COMMENT '中暑狀況與處置',
+    allergies VARCHAR(10) COMMENT '過敏問題',
+    allergies_detail TEXT COMMENT '服藥或藥物過敏細節',
+    other_conditions TEXT COMMENT '其他健康狀況',
+    covid_symptoms TEXT COMMENT '14天內新冠不適症狀',
+    travel_history VARCHAR(10) COMMENT '28天內國外旅遊史',
+    quarantine_type VARCHAR(100) COMMENT '返國檢疫措施',
+    crowded_places VARCHAR(10) COMMENT '近期出入群聚場所',
+    crowded_places_detail TEXT COMMENT '出入時間地點細節',
+    covid_contact VARCHAR(10) COMMENT '是否與確診者接觸',
+    signature_health VARCHAR(100) COMMENT '健康聲明書簽署',
+    signature_consent VARCHAR(100) COMMENT '個人同意書簽署',
+    fill_date DATE DEFAULT CURRENT_DATE COMMENT '填寫日期',
+    FOREIGN KEY (tourist_id) REFERENCES tourists(id_number) ON DELETE CASCADE
+);
+
 -- 建立自動更新遊客等級的 Function
 CREATE OR REPLACE FUNCTION update_tourist_level(t_id VARCHAR, c_item VARCHAR)
 RETURNS VOID AS $$
@@ -252,3 +281,30 @@ EXECUTE FUNCTION trigger_update_tourist_level();
 -- );
 -- ALTER TABLE coach_availability DISABLE ROW LEVEL SECURITY;
 -- ALTER TABLE course ADD COLUMN IF NOT EXISTS course_name VARCHAR(100) DEFAULT '未命名課程';
+-- CREATE TABLE IF NOT EXISTS tourist_health_survey (
+--     survey_id SERIAL PRIMARY KEY,
+--     tourist_id VARCHAR(10) NOT NULL REFERENCES tourists(id_number) ON DELETE CASCADE,
+--     swimming_ability VARCHAR(50),
+--     sup_experience VARCHAR(50),
+--     expectations TEXT,
+--     health_limitations VARCHAR(10),
+--     limitations_detail TEXT,
+--     has_diseases TEXT,
+--     recent_injuries VARCHAR(10),
+--     injuries_detail TEXT,
+--     heat_illness VARCHAR(10),
+--     heat_illness_detail TEXT,
+--     allergies VARCHAR(10),
+--     allergies_detail TEXT,
+--     other_conditions TEXT,
+--     covid_symptoms TEXT,
+--     travel_history VARCHAR(10),
+--     quarantine_type VARCHAR(100),
+--     crowded_places VARCHAR(10),
+--     crowded_places_detail TEXT,
+--     covid_contact VARCHAR(10),
+--     signature_health VARCHAR(100),
+--     signature_consent VARCHAR(100),
+--     fill_date DATE DEFAULT CURRENT_DATE
+-- );
+-- ALTER TABLE tourist_health_survey DISABLE ROW LEVEL SECURITY;
