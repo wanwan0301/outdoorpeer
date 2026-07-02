@@ -21,7 +21,11 @@
                 <a href="tourists.html" class="nav-link is-active">遊客資料</a>
                 <a href="coach.html" class="nav-link">教練資料</a>
                 <a href="equip.html" class="nav-link">器材資產</a>
+<<<<<<< HEAD
                 <a href="courses.html" class="nav-link">開設課程</a>
+=======
+                <a href="course.html" class="nav-link">課程管理</a>
+>>>>>>> d3dff0859243c42fb7fc326197d8399e5aaae057
             </nav>
         </div>
     </header>
@@ -152,20 +156,20 @@
     </main>
 
     <!-- ==========================================================
-         遊客詳細資料模態框 (Modal)
+         遊客詳細資料模態框 (Modal) - 整合個人資料與健康問卷
          ========================================================== -->
     <div id="detailsModal"
         class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all m-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden transform transition-all m-4 border border-slate-100">
             <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
                     <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
-                    遊客詳細資料
+                    遊客詳細資料 - <span id="modalTouristNameTitle" class="text-blue-600 font-bold"></span>
                 </h3>
                 <button onclick="closeDetailsModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -174,97 +178,265 @@
                 </button>
             </div>
 
-            <!-- Modal Body -->
-            <div class="px-6 py-6 space-y-6 max-h-[70vh] overflow-y-auto text-sm text-left">
-                <!-- 基本資訊 -->
-                <div>
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">基本資訊</h4>
-                    <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl">
-                        <div>
-                            <span class="text-slate-500 text-xs block">姓名</span>
-                            <span id="modalName" class="font-semibold text-slate-800"></span>
-                        </div>
-                        <div>
-                            <span class="text-slate-500 text-xs block">性別</span>
-                            <span id="modalGender" class="font-semibold text-slate-800"></span>
-                        </div>
-                        <div>
-                            <span class="text-slate-500 text-xs block">身分證字號</span>
-                            <span id="modalIdNumber" class="font-semibold font-mono text-slate-800"></span>
-                        </div>
-                        <div>
-                            <span class="text-slate-500 text-xs block">出生年月日</span>
-                            <span id="modalBirthDate" class="font-semibold font-mono text-slate-800"></span>
-                        </div>
-                        <div class="col-span-2 border-t border-slate-200/60 pt-2 mt-1">
-                            <span class="text-slate-500 text-xs block">建立時間</span>
-                            <span id="modalCreatedAt" class="font-semibold font-mono text-slate-800"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 聯絡資訊 -->
-                <div>
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">聯絡資訊</h4>
-                    <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
-                        <div class="flex justify-between border-b border-slate-200/60 pb-2">
-                            <span class="text-slate-500">聯絡電話</span>
-                            <span id="modalPhone" class="font-semibold font-mono text-slate-800"></span>
-                        </div>
-                        <div class="flex justify-between border-b border-slate-200/60 pb-2">
-                            <span class="text-slate-500">Email</span>
-                            <span id="modalEmail" class="font-semibold font-mono text-slate-800"></span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-slate-500 mb-1">通訊地址</span>
-                            <span id="modalAddress" class="font-medium text-slate-800"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 飲食與緊急聯絡 -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">飲食習慣</h4>
-                        <div class="bg-slate-50 p-3 rounded-xl min-h-[58px] flex items-center">
-                            <span id="modalDiet" class="font-semibold text-slate-800"></span>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">緊急聯絡人</h4>
-                        <div class="bg-slate-50 p-3 rounded-xl min-h-[58px]">
-                            <div id="modalEmergencyContact" class="font-semibold text-slate-800"></div>
-                            <div id="modalEmergencyPhone" class="text-xs font-mono text-slate-500 mt-0.5"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 項目等級 -->
-                <div>
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">水域活動項目等級</h4>
-                    <div id="modalLevelsContainer"
-                        class="flex flex-wrap gap-2 p-4 border border-slate-100 rounded-xl bg-slate-50/50">
-                        <!-- 等級 Badges -->
-                    </div>
-                </div>
+            <!-- Tab Switcher -->
+            <div class="px-6 pt-3 border-b border-slate-100 flex gap-4 bg-slate-50/50">
+                <button id="tabPersonalInfo" onclick="switchDetailTab('personal')"
+                    class="pb-2 text-sm font-bold border-b-2 border-blue-500 text-blue-600 transition-colors">
+                    個人資料
+                </button>
+                <button id="tabHealthSurvey" onclick="switchDetailTab('survey')"
+                    class="pb-2 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition-colors">
+                    身體健康調查
+                </button>
             </div>
 
-            <!-- Modal Footer -->
-            <div class="px-6 py-3 border-t border-slate-100 bg-slate-50 flex justify-end">
-                <button onclick="closeDetailsModal()"
-                    class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
-                    關閉
-                </button>
+            <!-- Modal Body -->
+            <div class="px-6 py-6 max-h-[65vh] overflow-y-auto text-sm text-left">
+                <!-- Tab 1: 個人資料 -->
+                <div id="personalTabContent" class="space-y-6">
+                    <!-- 基本資訊 -->
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">基本資訊</h4>
+                        <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl">
+                            <div>
+                                <span class="text-slate-500 text-xs block">姓名</span>
+                                <span id="modalName" class="font-semibold text-slate-800"></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 text-xs block">性別</span>
+                                <span id="modalGender" class="font-semibold text-slate-800"></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 text-xs block">身分證字號</span>
+                                <span id="modalIdNumber" class="font-semibold font-mono text-slate-800"></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 text-xs block">出生年月日</span>
+                                <span id="modalBirthDate" class="font-semibold font-mono text-slate-800"></span>
+                            </div>
+                            <div class="col-span-2 border-t border-slate-200/60 pt-2 mt-1">
+                                <span class="text-slate-500 text-xs block">建立時間</span>
+                                <span id="modalCreatedAt" class="font-semibold font-mono text-slate-800"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 聯絡資訊 -->
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">聯絡資訊</h4>
+                        <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
+                            <div class="flex justify-between border-b border-slate-200/60 pb-2">
+                                <span class="text-slate-500">聯絡電話</span>
+                                <span id="modalPhone" class="font-semibold font-mono text-slate-800"></span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-200/60 pb-2">
+                                <span class="text-slate-500">Email</span>
+                                <span id="modalEmail" class="font-semibold font-mono text-slate-800"></span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-slate-500 mb-1">通訊地址</span>
+                                <span id="modalAddress" class="font-medium text-slate-800"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 飲食與緊急聯絡 -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">飲食習慣</h4>
+                            <div class="bg-slate-50 p-3 rounded-xl min-h-[58px] flex items-center">
+                                <span id="modalDiet" class="font-semibold text-slate-800"></span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">緊急聯絡人</h4>
+                            <div class="bg-slate-50 p-3 rounded-xl min-h-[58px]">
+                                <div id="modalEmergencyContact" class="font-semibold text-slate-800"></div>
+                                <div id="modalEmergencyPhone" class="text-xs font-mono text-slate-500 mt-0.5"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 項目等級 -->
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">水域活動項目等級</h4>
+                        <div id="modalLevelsContainer"
+                            class="flex flex-wrap gap-2 p-4 border border-slate-100 rounded-xl bg-slate-50/50">
+                            <!-- 等級 Badges -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: 身體健康調查 -->
+                <div id="surveyTabContent" class="hidden space-y-6">
+                    <!-- 無資料狀態 -->
+                    <div id="surveyEmptyState"
+                        class="hidden py-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                        <p class="text-slate-500 font-medium text-sm">此遊客尚未填寫身體健康調查表</p>
+                        <p class="text-slate-400 mt-1">您可以點擊下方按鈕為其快速建立模擬測試數據。</p>
+                        <button onclick="generateMockSurvey()"
+                            class="mt-4 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg text-xs transition-colors shadow-sm">
+                            建立模擬調查表數據
+                        </button>
+                    </div>
+
+                    <!-- 調查表內容 (有資料時顯示) -->
+                    <div id="surveyContent" class="space-y-6 text-xs">
+                        <!-- 區塊一：基本經驗與期待 -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100">
+                                一、基本水域經驗與期待</h4>
+                            <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl">
+                                <div>
+                                    <span class="text-slate-500 block mb-0.5">游泳能力</span>
+                                    <span id="surveySwimming" class="font-bold text-slate-700"></span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block mb-0.5">SUP立式划槳操作經驗</span>
+                                    <span id="surveySupExp" class="font-bold text-slate-700"></span>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="text-slate-500 block mb-0.5">活動期待與留言</span>
+                                    <div id="surveyExpectations"
+                                        class="bg-white p-3 rounded-lg border border-slate-100 text-slate-700 min-h-[48px] whitespace-pre-line">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 區塊二：身體限制與疾病史 -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100">
+                                二、身體限制與疾病史</h4>
+                            <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
+                                <div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-500 block">1. 是否有任何身體上的限制或健康狀況須提出特殊需求？</span>
+                                        <span id="surveyLimitFlag" class="px-2 py-0.5 rounded font-bold"></span>
+                                    </div>
+                                    <div id="surveyLimitDetail"
+                                        class="mt-2 bg-white p-2.5 rounded border border-slate-100 text-slate-700 hidden whitespace-pre-line">
+                                    </div>
+                                </div>
+                                <div class="border-t border-slate-200/60 pt-2">
+                                    <span class="text-slate-500 block mb-1">2. 現有或曾經有的疾病種類</span>
+                                    <div id="surveyDiseases"
+                                        class="bg-white p-2.5 rounded border border-slate-100 text-slate-700 whitespace-pre-line">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 區塊三：受傷與中暑/過敏紀錄 -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100">
+                                三、受傷、中暑與過敏紀錄</h4>
+                            <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
+                                <div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-500 block">3. 三年內受傷或手術（頭頸膝髖踝肩手背扭傷等）</span>
+                                        <span id="surveyInjuryFlag" class="px-2 py-0.5 rounded font-bold"></span>
+                                    </div>
+                                    <div id="surveyInjuryDetail"
+                                        class="mt-2 bg-white p-2.5 rounded border border-slate-100 text-slate-700 hidden whitespace-pre-line">
+                                    </div>
+                                </div>
+                                <div class="border-t border-slate-200/60 pt-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-500 block">4. 曾經中暑或與熱相關的疾病</span>
+                                        <span id="surveyHeatFlag" class="px-2 py-0.5 rounded font-bold"></span>
+                                    </div>
+                                    <div id="surveyHeatDetail"
+                                        class="mt-2 bg-white p-2.5 rounded border border-slate-100 text-slate-700 hidden whitespace-pre-line">
+                                    </div>
+                                </div>
+                                <div class="border-t border-slate-200/60 pt-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-500 block">5. 敏感性肌膚、蚊蟲叮咬或其他過敏問題</span>
+                                        <span id="surveyAllergyFlag" class="px-2 py-0.5 rounded font-bold"></span>
+                                    </div>
+                                    <div id="surveyAllergyDetail"
+                                        class="mt-2 bg-white p-2.5 rounded border border-slate-100 text-slate-700 hidden whitespace-pre-line">
+                                    </div>
+                                </div>
+                                <div class="border-t border-slate-200/60 pt-2">
+                                    <span class="text-slate-500 block mb-1">其他需讓指導人員了解的健康狀況</span>
+                                    <div id="surveyOtherConditions"
+                                        class="bg-white p-2.5 rounded border border-slate-100 text-slate-700 min-h-[36px] whitespace-pre-line">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 區塊四：防疫與出入場所聲明 -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100">
+                                四、防護與新冠聲明</h4>
+                            <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
+                                <div>
+                                    <span class="text-slate-500 block mb-1">最近 14 天內不適症狀</span>
+                                    <div id="surveyCovidSymptoms"
+                                        class="bg-white p-2.5 rounded border border-slate-100 text-slate-700"></div>
+                                </div>
+                                <div class="border-t border-slate-200/60 pt-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-500 block">28 日內國際旅遊史</span>
+                                        <span id="surveyTravelFlag" class="px-2 py-0.5 rounded font-bold"></span>
+                                    </div>
+                                    <div id="surveyQuarantine"
+                                        class="mt-2 bg-white p-2.5 rounded border border-slate-100 text-slate-700 hidden">
+                                    </div>
+                                </div>
+                                <div class="border-t border-slate-200/60 pt-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-500 block">出入群聚場所或特定娛樂場所</span>
+                                        <span id="surveyCrowdFlag" class="px-2 py-0.5 rounded font-bold"></span>
+                                    </div>
+                                    <div id="surveyCrowdDetail"
+                                        class="mt-2 bg-white p-2.5 rounded border border-slate-100 text-slate-700 hidden whitespace-pre-line">
+                                    </div>
+                                </div>
+                                <div class="border-t border-slate-200/60 pt-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-500 block">是否曾與新冠確診個案接觸</span>
+                                        <span id="surveyContactFlag" class="px-2 py-0.5 rounded font-bold"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 區塊五：個人簽署與同意 -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100">
+                                五、同意書簽署與填寫日期</h4>
+                            <div class="grid grid-cols-3 gap-4 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+                                <div>
+                                    <span class="text-slate-500 block mb-0.5">健康聲明書簽署</span>
+                                    <span id="surveySigHealth" class="font-bold text-emerald-800 text-sm"></span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block mb-0.5">個人同意書簽署</span>
+                                    <span id="surveySigConsent" class="font-bold text-emerald-800 text-sm"></span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block mb-0.5">填寫日期</span>
+                                    <span id="surveyDate" class="font-bold text-slate-700 font-mono text-sm"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
             </div>
         </div>
     </div>
+</div>
 
     <!-- ==========================================================
-         編輯遊客資料模態框 (Modal)
+         編輯遊客資料模態框 (Modal) - 包含編輯個人資料與健康問卷
          ========================================================== -->
     <div id="editModal"
         class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all m-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden transform transition-all m-4 border border-slate-100">
             <!-- Modal Header -->
             <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
@@ -273,7 +445,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
-                    編輯遊客資料
+                    編輯遊客資料 - <span id="editTouristNameTitle" class="text-blue-600 font-bold"></span>
                 </h3>
                 <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -282,71 +454,265 @@
                 </button>
             </div>
 
+            <!-- Tab Switcher -->
+            <div class="px-6 pt-3 border-b border-slate-100 flex gap-4 bg-slate-50/50">
+                <button type="button" id="tabEditPersonal" onclick="switchEditTab('personal')"
+                    class="pb-2 text-sm font-bold border-b-2 border-blue-500 text-blue-600 transition-colors">
+                    編輯個人資料
+                </button>
+                <button type="button" id="tabEditSurvey" onclick="switchEditTab('survey')"
+                    class="pb-2 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition-colors">
+                    編輯身體健康調查
+                </button>
+            </div>
+
             <!-- Modal Body -->
-            <form id="editTouristForm" class="px-6 py-6 space-y-4 max-h-[70vh] overflow-y-auto text-sm text-left">
-                <!-- 身分證字號 (唯讀) -->
-                <div class="form-group bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <label class="text-slate-500 text-xs block font-bold mb-1">身分證字號 (不可修改)</label>
-                    <input type="text" id="editIdNumber" readonly
-                        class="w-full bg-transparent font-mono font-bold text-slate-500 outline-none border-none p-0 cursor-not-allowed">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="form-group">
-                        <label class="form-label text-xs">姓名</label>
-                        <input type="text" id="editName" required class="form-control">
+            <form id="editTouristForm" class="px-6 py-6 max-h-[65vh] overflow-y-auto text-sm text-left">
+                <!-- Tab 1: 編輯個人資料 -->
+                <div id="editPersonalContent" class="space-y-4">
+                    <!-- 身分證字號 (唯讀) -->
+                    <div class="form-group bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <label class="text-slate-500 text-xs block font-bold mb-1">身分證字號 (不可修改)</label>
+                        <input type="text" id="editIdNumber" readonly
+                            class="w-full bg-transparent font-mono font-bold text-slate-500 outline-none border-none p-0 cursor-not-allowed">
                     </div>
-                    <div class="form-group">
-                        <label class="form-label text-xs">性別</label>
-                        <select id="editGender" class="form-control">
-                            <option value="男">男</option>
-                            <option value="女">女</option>
-                        </select>
-                    </div>
-                </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="form-group">
-                        <label class="form-label text-xs">出生年月日</label>
-                        <input type="date" id="editBirthDate" required class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label text-xs">聯絡電話</label>
-                        <input type="text" id="editPhone" required class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label text-xs">Email</label>
-                    <input type="email" id="editEmail" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label text-xs">飲食習慣</label>
-                    <input type="text" id="editDiet" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label text-xs">地址</label>
-                    <input type="text" id="editAddress" class="form-control">
-                </div>
-
-                <div class="border-t border-slate-100 pt-3 mt-3 space-y-2">
-                    <p class="text-xs font-bold text-slate-500">緊急聯絡資訊</p>
                     <div class="grid grid-cols-2 gap-3">
                         <div class="form-group">
-                            <label class="form-label text-[10px] text-slate-400">緊急聯絡人姓名</label>
-                            <input type="text" id="editEmergencyContact" class="form-control">
+                            <label class="form-label text-xs">姓名</label>
+                            <input type="text" id="editName" required class="form-control">
                         </div>
                         <div class="form-group">
-                            <label class="form-label text-[10px] text-slate-400">緊急聯絡人電話</label>
-                            <input type="text" id="editEmergencyPhone" class="form-control">
+                            <label class="form-label text-xs">性別</label>
+                            <select id="editGender" class="form-control">
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="form-group">
+                            <label class="form-label text-xs">出生年月日</label>
+                            <input type="date" id="editBirthDate" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label text-xs">聯絡電話</label>
+                            <input type="text" id="editPhone" required class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label text-xs">Email</label>
+                        <input type="email" id="editEmail" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label text-xs">飲食習慣</label>
+                        <input type="text" id="editDiet" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label text-xs">地址</label>
+                        <input type="text" id="editAddress" class="form-control">
+                    </div>
+
+                    <div class="border-t border-slate-100 pt-3 mt-3 space-y-2">
+                        <p class="text-xs font-bold text-slate-500">緊急聯絡資訊</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="form-group">
+                                <label class="form-label text-[10px] text-slate-400">緊急聯絡人姓名</label>
+                                <input type="text" id="editEmergencyContact" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label text-[10px] text-slate-400">緊急聯絡人電話</label>
+                                <input type="text" id="editEmergencyPhone" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: 編輯身體健康調查 -->
+                <div id="editSurveyContent" class="hidden space-y-6">
+                    <div id="editSurveyEmptyState" class="hidden py-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                        <p class="text-slate-500 font-medium text-sm">該遊客目前尚未填寫健康調查表</p>
+                        <p class="text-slate-400 mt-1">儲存修改後將自動為其新增健康調查資料。</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- 區塊一：基本經驗與期待 -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100">
+                                一、基本水域經驗與期待</h4>
+                            <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl">
+                                <div class="form-group">
+                                    <label class="form-label text-[10px]">游泳能力</label>
+                                    <input type="text" id="editSurveySwimming" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label text-[10px]">SUP 操作經驗</label>
+                                    <input type="text" id="editSurveySupExp" class="form-control">
+                                </div>
+                                <div class="col-span-2 form-group">
+                                    <label class="form-label text-[10px]">活動期待與留言</label>
+                                    <textarea id="editSurveyExpectations" class="form-control" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 區塊二：身體限制與疾病史 -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100">
+                                二、身體限制與疾病史</h4>
+                            <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
+                                <div class="grid grid-cols-3 gap-3 items-end">
+                                    <div class="form-group col-span-1">
+                                        <label class="form-label text-[10px]">身體限制與特殊需求</label>
+                                        <select id="editSurveyLimitFlag" class="form-control"
+                                            onchange="toggleEditDetail('editSurveyLimitFlag', 'editSurveyLimitDetailRow')">
+                                            <option value="否">否</option>
+                                            <option value="是">是</option>
+                                        </select>
+                                    </div>
+                                    <div id="editSurveyLimitDetailRow" class="form-group col-span-2 hidden">
+                                        <label class="form-label text-[10px]">限制與醫生建議細節</label>
+                                        <input type="text" id="editSurveyLimitDetail" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label text-[10px]">現有或曾經有的疾病種類</label>
+                                    <input type="text" id="editSurveyDiseases" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 區塊三：受傷與中暑/過敏紀錄 -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100">
+                                三、受傷、中暑與過敏紀錄</h4>
+                            <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
+                                <div class="grid grid-cols-3 gap-3 items-end">
+                                    <div class="form-group col-span-1">
+                                        <label class="form-label text-[10px]">三年內受傷或手術</label>
+                                        <select id="editSurveyInjuryFlag" class="form-control"
+                                            onchange="toggleEditDetail('editSurveyInjuryFlag', 'editSurveyInjuryDetailRow')">
+                                            <option value="否">否</option>
+                                            <option value="是">是</option>
+                                        </select>
+                                    </div>
+                                    <div id="editSurveyInjuryDetailRow" class="form-group col-span-2 hidden">
+                                        <label class="form-label text-[10px]">受傷部位與狀況</label>
+                                        <input type="text" id="editSurveyInjuriesDetail" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-3 items-end border-t border-slate-200/60 pt-2">
+                                    <div class="form-group col-span-1">
+                                        <label class="form-label text-[10px]">曾經中暑</label>
+                                        <select id="editSurveyHeatFlag" class="form-control"
+                                            onchange="toggleEditDetail('editSurveyHeatFlag', 'editSurveyHeatDetailRow')">
+                                            <option value="否">否</option>
+                                            <option value="是">是</option>
+                                        </select>
+                                    </div>
+                                    <div id="editSurveyHeatDetailRow" class="form-group col-span-2 hidden">
+                                        <label class="form-label text-[10px]">中暑狀況與處置</label>
+                                        <input type="text" id="editSurveyHeatDetail" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-3 items-end border-t border-slate-200/60 pt-2">
+                                    <div class="form-group col-span-1">
+                                        <label class="form-label text-[10px]">過敏問題</label>
+                                        <select id="editSurveyAllergyFlag" class="form-control"
+                                            onchange="toggleEditDetail('editSurveyAllergyFlag', 'editSurveyAllergyDetailRow')">
+                                            <option value="否">否</option>
+                                            <option value="是">是</option>
+                                        </select>
+                                    </div>
+                                    <div id="editSurveyAllergyDetailRow" class="form-group col-span-2 hidden">
+                                        <label class="form-label text-[10px]">服藥或藥物過敏細節</label>
+                                        <input type="text" id="editSurveyAllergiesDetail" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group border-t border-slate-200/60 pt-2">
+                                    <label class="form-label text-[10px]">其他健康狀況說明</label>
+                                    <input type="text" id="editSurveyOther" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 區塊四：防疫與出入場所聲明 -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100">
+                                四、防護與新冠聲明</h4>
+                            <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
+                                <div class="form-group">
+                                    <label class="form-label text-[10px]">最近 14 天內不適症狀</label>
+                                    <input type="text" id="editSurveyCovidSymptoms" class="form-control">
+                                </div>
+                                <div class="grid grid-cols-3 gap-3 items-end border-t border-slate-200/60 pt-2">
+                                    <div class="form-group col-span-1">
+                                        <label class="form-label text-[10px]">28日內旅遊史</label>
+                                        <select id="editSurveyTravelFlag" class="form-control"
+                                            onchange="toggleEditDetail('editSurveyTravelFlag', 'editSurveyQuarantineRow')">
+                                            <option value="否">無</option>
+                                            <option value="有">有</option>
+                                        </select>
+                                    </div>
+                                    <div id="editSurveyQuarantineRow" class="form-group col-span-2 hidden">
+                                        <label class="form-label text-[10px]">返國檢疫措施</label>
+                                        <input type="text" id="editSurveyQuarantine" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-3 items-end border-t border-slate-200/60 pt-2">
+                                    <div class="form-group col-span-1">
+                                        <label class="form-label text-[10px]">出入群聚場所</label>
+                                        <select id="editSurveyCrowdFlag" class="form-control"
+                                            onchange="toggleEditDetail('editSurveyCrowdFlag', 'editSurveyCrowdDetailRow')">
+                                            <option value="否">否</option>
+                                            <option value="是">是</option>
+                                        </select>
+                                    </div>
+                                    <div id="editSurveyCrowdDetailRow" class="form-group col-span-2 hidden">
+                                        <label class="form-label text-[10px]">出入時間地點細節</label>
+                                        <input type="text" id="editSurveyCrowdDetail" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group border-t border-slate-200/60 pt-2">
+                                    <label class="form-label text-[10px]">是否曾與確診者接觸</label>
+                                    <select id="editSurveyContactFlag" class="form-control">
+                                        <option value="無">無</option>
+                                        <option value="有">有</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 區塊五：個人簽署與同意 -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100">
+                                五、同意書簽署與填寫日期</h4>
+                            <div class="space-y-3 bg-slate-50 p-4 rounded-xl">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="form-group">
+                                        <label class="form-label text-[10px]">健康聲明書簽署</label>
+                                        <input type="text" id="editSurveySigHealth" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label text-[10px]">個人同意書簽署</label>
+                                        <input type="text" id="editSurveySigConsent" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label text-[10px]">填寫日期</label>
+                                    <input type="date" id="editSurveyDate" class="form-control">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="pt-4 border-t border-slate-100 flex justify-end gap-2">
+                <div class="pt-4 border-t border-slate-100 flex justify-end gap-2 bg-slate-50 px-6 py-3">
                     <button type="button" onclick="closeEditModal()"
                         class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
                         取消
@@ -453,7 +819,7 @@
                                     class="btn btn-primary text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
                                 修改
                             </button>
-                            <button onclick="deleteTourist('${item.id_number}')" 
+<button onclick="deleteTourist('${item.id_number}')" 
                                     class="btn btn-danger text-xs" style="min-height: 28px; padding: 4px 8px; box-shadow: none;">
                                 刪除
                             </button>
@@ -529,6 +895,7 @@
             const item = window.touristsData[index];
             if (!item) return;
 
+            document.getElementById('modalTouristNameTitle').textContent = item.name || '';
             document.getElementById('modalName').textContent = item.name || '未填';
             document.getElementById('modalGender').textContent = item.gender || '未填';
             document.getElementById('modalIdNumber').textContent = item.id_number || '未填';
@@ -569,6 +936,16 @@
                 container.innerHTML = '<span class="text-slate-400 text-xs">該遊客尚無任何項目等級紀錄</span>';
             }
 
+            // 儲存資料到 Dataset
+            document.getElementById('detailsModal').dataset.idNumber = item.id_number;
+            document.getElementById('detailsModal').dataset.touristName = item.name;
+
+            // 初始化切換至個人資料分頁
+            switchDetailTab('personal');
+
+            // 背景讀取健康調查表
+            fetchHealthSurvey(item.id_number, item.name);
+
             // 顯示 Modal
             document.getElementById('detailsModal').classList.remove('hidden');
         }
@@ -578,12 +955,278 @@
         }
 
         // ==========================================================
-        // ✏️ 【編輯遊客資料功能】
+        // 🏥 【健康調查表與詳細資料分頁管理功能】
         // ==========================================================
-        function showEditModal(index) {
+        let isMockModeSurvey = false;
+        let activeSurveyData = null;
+        let activeTab = 'personal';
+
+        function getYesNoBadgeClass(val) {
+            if (val === '是' || val === '有') {
+                return 'px-2 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800';
+            } else {
+                return 'px-2 py-0.5 rounded font-bold bg-red-100 text-red-800';
+            }
+        }
+
+        function switchDetailTab(tab) {
+            activeTab = tab;
+            const tabPersonal = document.getElementById('tabPersonalInfo');
+            const tabSurvey = document.getElementById('tabHealthSurvey');
+            const personalContent = document.getElementById('personalTabContent');
+            const surveyContent = document.getElementById('surveyTabContent');
+
+            if (tab === 'personal') {
+                tabPersonal.className = "pb-2 text-sm font-bold border-b-2 border-blue-500 text-blue-600 transition-colors";
+                tabSurvey.className = "pb-2 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition-colors";
+                personalContent.classList.remove('hidden');
+                surveyContent.classList.add('hidden');
+            } else {
+                tabPersonal.className = "pb-2 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition-colors";
+                tabSurvey.className = "pb-2 text-sm font-bold border-b-2 border-blue-500 text-blue-600 transition-colors";
+                personalContent.classList.add('hidden');
+                surveyContent.classList.remove('hidden');
+            }
+        }
+
+        async function fetchHealthSurvey(idNumber, touristName) {
+            document.getElementById('surveyContent').classList.add('hidden');
+            document.getElementById('surveyEmptyState').classList.add('hidden');
+
+            try {
+                let survey = null;
+                if (!isMockModeSurvey) {
+                    const { data, error } = await _supabase
+                        .from('tourist_health_survey')
+                        .select('*')
+                        .eq('tourist_id', idNumber)
+                        .maybeSingle();
+
+                    if (error) {
+                        // 判斷是否為資料表不存在的錯誤 (42P01 或類似)
+                        if (error.code === '42P01' || error.message.includes('relation') || error.message.includes('missing')) {
+                            console.warn('Supabase 未建立 tourist_health_survey 表，切換至 LocalStorage 模擬模式');
+                            isMockModeSurvey = true;
+                        } else {
+                            throw error;
+                        }
+                    } else {
+                        survey = data;
+                    }
+                }
+
+                if (isMockModeSurvey) {
+                    const localSurveys = JSON.parse(localStorage.getItem('mock_health_surveys') || '[]');
+                    survey = localSurveys.find(s => s.tourist_id === idNumber) || null;
+                }
+
+                if (survey) {
+                    activeSurveyData = survey;
+                    renderSurveyData(survey);
+                } else {
+                    activeSurveyData = null;
+                    document.getElementById('surveyEmptyState').classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('讀取健康調查表失敗：', err);
+                isMockModeSurvey = true;
+
+                // 再次讀取 Mock
+                const localSurveys = JSON.parse(localStorage.getItem('mock_health_surveys') || '[]');
+                const survey = localSurveys.find(s => s.tourist_id === idNumber) || null;
+                if (survey) {
+                    activeSurveyData = survey;
+                    renderSurveyData(survey);
+                } else {
+                    activeSurveyData = null;
+                    document.getElementById('surveyEmptyState').classList.remove('hidden');
+                }
+            }
+        }
+
+        function renderSurveyData(s) {
+            document.getElementById('surveyEmptyState').classList.add('hidden');
+            document.getElementById('surveyContent').classList.remove('hidden');
+
+            // 1. 基本經驗
+            document.getElementById('surveySwimming').textContent = s.swimming_ability || '未填寫';
+            document.getElementById('surveySupExp').textContent = s.sup_experience || '未填寫';
+            document.getElementById('surveyExpectations').textContent = s.expectations || '無特別期待';
+
+            // 2. 限制與病史
+            document.getElementById('surveyLimitFlag').textContent = s.health_limitations || '否';
+            document.getElementById('surveyLimitFlag').className = getYesNoBadgeClass(s.health_limitations);
+
+            const limitDetailDiv = document.getElementById('surveyLimitDetail');
+            if (s.health_limitations === '是' && s.limitations_detail) {
+                limitDetailDiv.textContent = s.limitations_detail;
+                limitDetailDiv.classList.remove('hidden');
+            } else {
+                limitDetailDiv.classList.add('hidden');
+            }
+
+            document.getElementById('surveyDiseases').textContent = s.has_diseases || '無上述疾病';
+
+            // 3. 受傷、中暑、過敏
+            document.getElementById('surveyInjuryFlag').textContent = s.recent_injuries || '否';
+            document.getElementById('surveyInjuryFlag').className = getYesNoBadgeClass(s.recent_injuries);
+
+            const injuryDetailDiv = document.getElementById('surveyInjuryDetail');
+            if (s.recent_injuries === '是' && s.injuries_detail) {
+                injuryDetailDiv.textContent = s.injuries_detail;
+                injuryDetailDiv.classList.remove('hidden');
+            } else {
+                injuryDetailDiv.classList.add('hidden');
+            }
+
+            document.getElementById('surveyHeatFlag').textContent = s.heat_illness || '否';
+            document.getElementById('surveyHeatFlag').className = getYesNoBadgeClass(s.heat_illness);
+
+            const heatDetailDiv = document.getElementById('surveyHeatDetail');
+            if (s.heat_illness === '是' && s.heat_illness_detail) {
+                heatDetailDiv.textContent = s.heat_illness_detail;
+                heatDetailDiv.classList.remove('hidden');
+            } else {
+                heatDetailDiv.classList.add('hidden');
+            }
+
+            document.getElementById('surveyAllergyFlag').textContent = s.allergies || '否';
+            document.getElementById('surveyAllergyFlag').className = getYesNoBadgeClass(s.allergies);
+
+            const allergyDetailDiv = document.getElementById('surveyAllergyDetail');
+            if (s.allergies === '是' && s.allergies_detail) {
+                allergyDetailDiv.textContent = s.allergies_detail;
+                allergyDetailDiv.classList.remove('hidden');
+            } else {
+                allergyDetailDiv.classList.add('hidden');
+            }
+
+            document.getElementById('surveyOtherConditions').textContent = s.other_conditions || '無其他特殊狀況';
+
+            // 4. 新冠/防疫
+            document.getElementById('surveyCovidSymptoms').textContent = s.covid_symptoms || '無不適症狀';
+
+            document.getElementById('surveyTravelFlag').textContent = s.travel_history || '無';
+            document.getElementById('surveyTravelFlag').className = getYesNoBadgeClass(s.travel_history);
+
+            const quarantineDiv = document.getElementById('surveyQuarantine');
+            if (s.travel_history === '有' && s.quarantine_type) {
+                quarantineDiv.textContent = `返國檢疫措施：${s.quarantine_type}`;
+                quarantineDiv.classList.remove('hidden');
+            } else {
+                quarantineDiv.classList.add('hidden');
+            }
+
+            document.getElementById('surveyCrowdFlag').textContent = s.crowded_places || '否';
+            document.getElementById('surveyCrowdFlag').className = getYesNoBadgeClass(s.crowded_places);
+
+            const crowdDetailDiv = document.getElementById('surveyCrowdDetail');
+            if (s.crowded_places === '是' && s.crowded_places_detail) {
+                crowdDetailDiv.textContent = s.crowded_places_detail;
+                crowdDetailDiv.classList.remove('hidden');
+            } else {
+                crowdDetailDiv.classList.add('hidden');
+            }
+
+            document.getElementById('surveyContactFlag').textContent = s.covid_contact || '無';
+            document.getElementById('surveyContactFlag').className = getYesNoBadgeClass(s.covid_contact);
+
+            // 5. 簽名與填寫日期
+            document.getElementById('surveySigHealth').textContent = s.signature_health || '已簽名同意';
+            document.getElementById('surveySigConsent').textContent = s.signature_consent || '已簽名同意';
+            document.getElementById('surveyDate').textContent = s.fill_date || '—';
+        }
+
+        async function generateMockSurvey() {
+            const idNumber = document.getElementById('detailsModal').dataset.idNumber;
+            const touristName = document.getElementById('detailsModal').dataset.touristName;
+
+            const mockSurvey = {
+                tourist_id: idNumber,
+                swimming_ability: '良好 (可游 50 公尺以上)',
+                sup_experience: '無經驗 (初次接觸)',
+                expectations: '希望能一邊划槳一邊欣賞夕陽，教練能協助拍一些漂亮照片！',
+                health_limitations: '否',
+                limitations_detail: '',
+                has_diseases: '無上述慢性疾病',
+                recent_injuries: '是',
+                injuries_detail: '一年前曾有右腳踝輕微扭傷，目前已完全康復且運動正常。',
+                heat_illness: '否',
+                heat_illness_detail: '',
+                allergies: '是',
+                allergies_detail: '對蚊蟲叮咬較易過敏紅腫，備有個人隨身止癢藥膏。',
+                other_conditions: '無其他特殊健康狀況，體力良好。',
+                covid_symptoms: '無任何發燒、咳嗽、呼吸急促等不適症狀',
+                travel_history: '否',
+                quarantine_type: '',
+                crowded_places: '否',
+                crowded_places_detail: '',
+                covid_contact: '無',
+                signature_health: `聲明人：${touristName} (已簽署)`,
+                signature_consent: `聲明人：${touristName} (已簽署)`,
+                fill_date: new Date().toISOString().split('T')[0]
+            };
+
+            if (isMockModeSurvey) {
+                const localSurveys = JSON.parse(localStorage.getItem('mock_health_surveys') || '[]');
+                localSurveys.push(mockSurvey);
+                localStorage.setItem('mock_health_surveys', JSON.stringify(localSurveys));
+                alert('模擬健康問卷數據已寫入本地儲存區 (Mock)！');
+            } else {
+                const { error } = await _supabase
+                    .from('tourist_health_survey')
+                    .insert([mockSurvey]);
+
+                if (error) {
+                    alert('寫入資料庫失敗：' + error.message + '\n自動轉為以 LocalStorage 寫入。');
+                    isMockModeSurvey = true;
+                    // 寫入本地
+                    const localSurveys = JSON.parse(localStorage.getItem('mock_health_surveys') || '[]');
+                    localSurveys.push(mockSurvey);
+                    localStorage.setItem('mock_health_surveys', JSON.stringify(localSurveys));
+                } else {
+                    alert('模擬健康問卷數據已成功寫入 Supabase 資料庫！');
+                }
+            }
+
+            // 重新刷新檢視
+            fetchHealthSurvey(idNumber, touristName);
+        }
+
+
+
+        // ==========================================================
+        // ✏️ 【編輯遊客資料功能與健康問卷編輯】
+        // ==========================================================
+        let activeEditSurveyData = null;
+        let activeEditTab = 'personal';
+
+        function switchEditTab(tab) {
+            activeEditTab = tab;
+            const tabPersonal = document.getElementById('tabEditPersonal');
+            const tabSurvey = document.getElementById('tabEditSurvey');
+            const personalContent = document.getElementById('editPersonalContent');
+            const surveyContent = document.getElementById('editSurveyContent');
+
+            if (tab === 'personal') {
+                tabPersonal.className = "pb-2 text-sm font-bold border-b-2 border-blue-500 text-blue-600 transition-colors";
+                tabSurvey.className = "pb-2 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition-colors";
+                personalContent.classList.remove('hidden');
+                surveyContent.classList.add('hidden');
+            } else {
+                tabPersonal.className = "pb-2 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition-colors";
+                tabSurvey.className = "pb-2 text-sm font-bold border-b-2 border-blue-500 text-blue-600 transition-colors";
+                personalContent.classList.add('hidden');
+                surveyContent.classList.remove('hidden');
+            }
+        }
+
+        async function showEditModal(index) {
             const item = window.touristsData[index];
             if (!item) return;
 
+            // 1. 填寫基本資料欄位
+            document.getElementById('editTouristNameTitle').textContent = item.name || '';
             document.getElementById('editIdNumber').value = item.id_number;
             document.getElementById('editName').value = item.name || '';
             document.getElementById('editGender').value = item.gender || '男';
@@ -595,7 +1238,152 @@
             document.getElementById('editEmergencyContact').value = item.emergency_contact || '';
             document.getElementById('editEmergencyPhone').value = item.emergency_phone || '';
 
+            // 2. 切換至預設的個人資料 Tab
+            switchEditTab('personal');
+
+            // 3. 讀取身體健康調查表數據
+            document.getElementById('editSurveyEmptyState').classList.add('hidden');
+            activeEditSurveyData = null;
+
+            try {
+                let survey = null;
+                if (!isMockModeSurvey) {
+                    const { data, error } = await _supabase
+                        .from('tourist_health_survey')
+                        .select('*')
+                        .eq('tourist_id', item.id_number)
+                        .maybeSingle();
+
+                    if (error) {
+                        if (error.code === '42P01' || error.message.includes('relation') || error.message.includes('missing')) {
+                            isMockModeSurvey = true;
+                        } else {
+                            throw error;
+                        }
+                    } else {
+                        survey = data;
+                    }
+                }
+
+                if (isMockModeSurvey) {
+                    const localSurveys = JSON.parse(localStorage.getItem('mock_health_surveys') || '[]');
+                    survey = localSurveys.find(s => s.tourist_id === item.id_number) || null;
+                }
+
+                if (survey) {
+                    activeEditSurveyData = survey;
+                    populateEditSurveyForm(survey);
+                } else {
+                    resetEditSurveyForm();
+                    document.getElementById('editSurveyEmptyState').classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('讀取健康問卷以進行編輯失敗：', err);
+                isMockModeSurvey = true;
+                const localSurveys = JSON.parse(localStorage.getItem('mock_health_surveys') || '[]');
+                const survey = localSurveys.find(s => s.tourist_id === item.id_number) || null;
+                if (survey) {
+                    activeEditSurveyData = survey;
+                    populateEditSurveyForm(survey);
+                } else {
+                    resetEditSurveyForm();
+                    document.getElementById('editSurveyEmptyState').classList.remove('hidden');
+                }
+            }
+
             document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function populateEditSurveyForm(s) {
+            document.getElementById('editSurveySwimming').value = s.swimming_ability || '';
+            document.getElementById('editSurveySupExp').value = s.sup_experience || '';
+            document.getElementById('editSurveyExpectations').value = s.expectations || '';
+
+            document.getElementById('editSurveyLimitFlag').value = s.health_limitations || '否';
+            document.getElementById('editSurveyLimitDetail').value = s.limitations_detail || '';
+            toggleEditDetail('editSurveyLimitFlag', 'editSurveyLimitDetailRow');
+
+            document.getElementById('editSurveyDiseases').value = s.has_diseases || '';
+
+            document.getElementById('editSurveyInjuryFlag').value = s.recent_injuries || '否';
+            document.getElementById('editSurveyInjuriesDetail').value = s.injuries_detail || '';
+            toggleEditDetail('editSurveyInjuryFlag', 'editSurveyInjuryDetailRow');
+
+            document.getElementById('editSurveyHeatFlag').value = s.heat_illness || '否';
+            document.getElementById('editSurveyHeatDetail').value = s.heat_illness_detail || '';
+            toggleEditDetail('editSurveyHeatFlag', 'editSurveyHeatDetailRow');
+
+            document.getElementById('editSurveyAllergyFlag').value = s.allergies || '否';
+            document.getElementById('editSurveyAllergiesDetail').value = s.allergies_detail || '';
+            toggleEditDetail('editSurveyAllergyFlag', 'editSurveyAllergyDetailRow');
+
+            document.getElementById('editSurveyOther').value = s.other_conditions || '';
+            document.getElementById('editSurveyCovidSymptoms').value = s.covid_symptoms || '';
+
+            document.getElementById('editSurveyTravelFlag').value = s.travel_history || '否';
+            document.getElementById('editSurveyQuarantine').value = s.quarantine_type || '';
+            toggleEditDetail('editSurveyTravelFlag', 'editSurveyQuarantineRow');
+
+            document.getElementById('editSurveyCrowdFlag').value = s.crowded_places || '否';
+            document.getElementById('editSurveyCrowdDetail').value = s.crowded_places_detail || '';
+            toggleEditDetail('editSurveyCrowdFlag', 'editSurveyCrowdDetailRow');
+
+            document.getElementById('editSurveyContactFlag').value = s.covid_contact || '無';
+
+            document.getElementById('editSurveySigHealth').value = s.signature_health || '';
+            document.getElementById('editSurveySigConsent').value = s.signature_consent || '';
+            document.getElementById('editSurveyDate').value = s.fill_date || '';
+        }
+
+        function resetEditSurveyForm() {
+            document.getElementById('editSurveySwimming').value = '';
+            document.getElementById('editSurveySupExp').value = '';
+            document.getElementById('editSurveyExpectations').value = '';
+
+            document.getElementById('editSurveyLimitFlag').value = '否';
+            document.getElementById('editSurveyLimitDetail').value = '';
+            toggleEditDetail('editSurveyLimitFlag', 'editSurveyLimitDetailRow');
+
+            document.getElementById('editSurveyDiseases').value = '無上述疾病';
+
+            document.getElementById('editSurveyInjuryFlag').value = '否';
+            document.getElementById('editSurveyInjuriesDetail').value = '';
+            toggleEditDetail('editSurveyInjuryFlag', 'editSurveyInjuryDetailRow');
+
+            document.getElementById('editSurveyHeatFlag').value = '否';
+            document.getElementById('editSurveyHeatDetail').value = '';
+            toggleEditDetail('editSurveyHeatFlag', 'editSurveyHeatDetailRow');
+
+            document.getElementById('editSurveyAllergyFlag').value = '否';
+            document.getElementById('editSurveyAllergiesDetail').value = '';
+            toggleEditDetail('editSurveyAllergyFlag', 'editSurveyAllergyDetailRow');
+
+            document.getElementById('editSurveyOther').value = '';
+            document.getElementById('editSurveyCovidSymptoms').value = '';
+
+            document.getElementById('editSurveyTravelFlag').value = '否';
+            document.getElementById('editSurveyQuarantine').value = '';
+            toggleEditDetail('editSurveyTravelFlag', 'editSurveyQuarantineRow');
+
+            document.getElementById('editSurveyCrowdFlag').value = '否';
+            document.getElementById('editSurveyCrowdDetail').value = '';
+            toggleEditDetail('editSurveyCrowdFlag', 'editSurveyCrowdDetailRow');
+
+            document.getElementById('editSurveyContactFlag').value = '無';
+
+            document.getElementById('editSurveySigHealth').value = '';
+            document.getElementById('editSurveySigConsent').value = '';
+            document.getElementById('editSurveyDate').value = '';
+        }
+
+        function toggleEditDetail(flagId, targetRowId) {
+            const flagVal = document.getElementById(flagId).value;
+            const targetRow = document.getElementById(targetRowId);
+            if (flagVal === '是' || flagVal === '有') {
+                targetRow.classList.remove('hidden');
+            } else {
+                targetRow.classList.add('hidden');
+            }
         }
 
         function closeEditModal() {
@@ -616,18 +1404,75 @@
             const emergency_contact = document.getElementById('editEmergencyContact').value || null;
             const emergency_phone = document.getElementById('editEmergencyPhone').value || null;
 
-            const { error } = await _supabase
+            // 1. 更新遊客基本資料
+            const { error: profileError } = await _supabase
                 .from('tourists')
                 .update({ name, gender, birth_date, phone, email, dietary_habit, address, emergency_contact, emergency_phone })
                 .eq('id_number', id_number);
 
-            if (error) {
-                alert('修改失敗：' + error.message);
-            } else {
-                alert('遊客資料修改成功！');
-                closeEditModal();
-                fetchTourists();
+            if (profileError) {
+                alert('遊客基本資料修改失敗：' + profileError.message);
+                return;
             }
+
+            // 2. 獲取並儲存身體健康問卷數據
+            const updatedSurvey = {
+                tourist_id: id_number,
+                swimming_ability: document.getElementById('editSurveySwimming').value,
+                sup_experience: document.getElementById('editSurveySupExp').value,
+                expectations: document.getElementById('editSurveyExpectations').value,
+                health_limitations: document.getElementById('editSurveyLimitFlag').value,
+                limitations_detail: document.getElementById('editSurveyLimitDetail').value,
+                has_diseases: document.getElementById('editSurveyDiseases').value,
+                recent_injuries: document.getElementById('editSurveyInjuryFlag').value,
+                injuries_detail: document.getElementById('editSurveyInjuriesDetail').value,
+                heat_illness: document.getElementById('editSurveyHeatFlag').value,
+                heat_illness_detail: document.getElementById('editSurveyHeatDetail').value,
+                allergies: document.getElementById('editSurveyAllergyFlag').value,
+                allergies_detail: document.getElementById('editSurveyAllergiesDetail').value,
+                other_conditions: document.getElementById('editSurveyOther').value,
+                covid_symptoms: document.getElementById('editSurveyCovidSymptoms').value,
+                travel_history: document.getElementById('editSurveyTravelFlag').value,
+                quarantine_type: document.getElementById('editSurveyQuarantine').value,
+                crowded_places: document.getElementById('editSurveyCrowdFlag').value,
+                crowded_places_detail: document.getElementById('editSurveyCrowdDetail').value,
+                covid_contact: document.getElementById('editSurveyContactFlag').value,
+                signature_health: document.getElementById('editSurveySigHealth').value,
+                signature_consent: document.getElementById('editSurveySigConsent').value,
+                fill_date: document.getElementById('editSurveyDate').value
+            };
+
+            // 檢查問卷是否有填寫任何內容（如果所有欄位都是空字串，且原來沒有問卷，則不強制寫入）
+            const hasAnyInput = Object.values(updatedSurvey).some((val, idx) => {
+                if (idx === 0) return false; // 忽略 tourist_id
+                return val && val.trim() !== '' && val !== '否' && val !== '無' && val !== '無上述疾病';
+            });
+
+            if (hasAnyInput || activeEditSurveyData) {
+                if (isMockModeSurvey) {
+                    const localSurveys = JSON.parse(localStorage.getItem('mock_health_surveys') || '[]');
+                    const idx = localSurveys.findIndex(s => s.tourist_id === id_number);
+                    if (idx !== -1) {
+                        localSurveys[idx] = updatedSurvey;
+                    } else {
+                        localSurveys.push(updatedSurvey);
+                    }
+                    localStorage.setItem('mock_health_surveys', JSON.stringify(localSurveys));
+                } else {
+                    const { error: surveyError } = await _supabase
+                        .from('tourist_health_survey')
+                        .upsert([updatedSurvey]);
+
+                    if (surveyError) {
+                        alert('基本資料已更新，但健康調查表儲存失敗：' + surveyError.message);
+                        return;
+                    }
+                }
+            }
+
+            alert('遊客基本資料及健康調查表修改成功！');
+            closeEditModal();
+            fetchTourists();
         });
 
         // ==========================================================
@@ -664,6 +1509,18 @@
             }
 
             try {
+                // 1. 讀取問卷狀態
+                const localSurveys = JSON.parse(localStorage.getItem('mock_health_surveys') || '[]');
+                let dbSurveys = [];
+                try {
+                    const { data: sData, error: sErr } = await _supabase.from('tourist_health_survey').select('tourist_id');
+                    if (!sErr) {
+                        dbSurveys = sData || [];
+                    }
+                } catch (e) {
+                    console.warn('無法從 Supabase 讀取健康問卷列表，使用本地 Mock：', e);
+                }
+
                 // 將資料映射成中文標題的物件
                 const excelData = data.map(item => {
                     const levelList = (item.tourist_item_levels && item.tourist_item_levels.length > 0)
@@ -682,6 +1539,9 @@
                         formattedCreatedAt = `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
                     }
 
+                    const hasSurvey = dbSurveys.some(s => s.tourist_id === item.id_number) ||
+                        localSurveys.some(s => s.tourist_id === item.id_number);
+
                     return {
                         '身分證字號': item.id_number,
                         '姓名': item.name,
@@ -694,6 +1554,7 @@
                         '緊急聯絡人姓名': item.emergency_contact || '未填',
                         '緊急聯絡人電話': item.emergency_phone || '未填',
                         '水域活動項目等級': levelList,
+                        '健康調查表狀態': hasSurvey ? '已填寫' : '尚未填寫',
                         '登記時間': formattedCreatedAt
                     };
                 });
@@ -714,106 +1575,7 @@
         }
     </script>
 
-    <!-- ==========================================================
-         編輯遊客資料模態框 (Modal)
-         ========================================================== -->
-    <div id="editModal"
-        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all m-4">
-            <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
-                    編輯遊客資料
-                </h3>
-                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
 
-            <!-- Modal Body -->
-            <form id="editTouristForm" class="px-6 py-6 space-y-4 max-h-[70vh] overflow-y-auto text-sm text-left">
-                <!-- 身分證字號 (唯讀) -->
-                <div class="form-group bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <label class="text-slate-500 text-xs block font-bold mb-1">身分證字號 (不可修改)</label>
-                    <input type="text" id="editIdNumber" readonly
-                        class="w-full bg-transparent font-mono font-bold text-slate-500 outline-none border-none p-0 cursor-not-allowed">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="form-group">
-                        <label class="form-label text-xs">姓名</label>
-                        <input type="text" id="editName" required class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label text-xs">性別</label>
-                        <select id="editGender" class="form-control">
-                            <option value="男">男</option>
-                            <option value="女">女</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="form-group">
-                        <label class="form-label text-xs">出生年月日</label>
-                        <input type="date" id="editBirthDate" required class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label text-xs">聯絡電話</label>
-                        <input type="text" id="editPhone" required class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label text-xs">Email</label>
-                    <input type="email" id="editEmail" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label text-xs">飲食習慣</label>
-                    <input type="text" id="editDiet" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label text-xs">地址</label>
-                    <input type="text" id="editAddress" class="form-control">
-                </div>
-
-                <div class="border-t border-slate-100 pt-3 mt-3 space-y-2">
-                    <p class="text-xs font-bold text-slate-500">緊急聯絡資訊</p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="form-group">
-                            <label class="form-label text-[10px] text-slate-400">緊急聯絡人姓名</label>
-                            <input type="text" id="editEmergencyContact" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label text-[10px] text-slate-400">緊急聯絡人電話</label>
-                            <input type="text" id="editEmergencyPhone" class="form-control">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal Footer -->
-                <div class="pt-4 border-t border-slate-100 flex justify-end gap-2">
-                    <button type="button" onclick="closeEditModal()"
-                        class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-colors">
-                        取消
-                    </button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg text-xs transition-colors shadow-sm">
-                        儲存修改
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
 </body>
 
 </html>
