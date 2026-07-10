@@ -21,7 +21,11 @@
                 <a href="tourists.html" class="nav-link">遊客資料</a>
                 <a href="coach.html" class="nav-link is-active">教練資料</a>
                 <a href="equip.html" class="nav-link">器材資產</a>
+<<<<<<< HEAD
+                <a href="courses.html" class="nav-link">開設課程</a>
+=======
                 <a href="course.html" class="nav-link">課程管理</a>
+>>>>>>> d3dff0859243c42fb7fc326197d8399e5aaae057
             </nav>
         </div>
     </header>
@@ -442,6 +446,13 @@
             const tbody = document.getElementById('instructorTableBody');
             tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">正在檢索名冊...</td></tr>';
 
+<<<<<<< HEAD
+            let query = _supabase.from('coach').select(`
+                *,
+                coach_specialties ( specialty ),
+                coach_licenses ( license_name )
+            `);
+=======
             const keyword = document.getElementById('searchKeyword').value.trim();
             const specialtyVal = document.getElementById('searchSpecialty').value;
 
@@ -461,6 +472,7 @@
             }
 
             let query = _supabase.from('coach').select(selectStr);
+>>>>>>> b40615f112ee0474ceb12fd06d65c781bdd3787d
 
             // 支援 姓名、身分證、電話 的萬用模糊搜尋
             if (keyword !== '') {
@@ -486,6 +498,16 @@
                 return;
             }
 
+<<<<<<< HEAD
+            // 渲染表格
+            data.forEach(item => {
+                const specialtyList = (item.coach_specialties && item.coach_specialties.length > 0)
+                    ? `<div class="flex flex-col gap-1 items-start">` + item.coach_specialties.map(s => `<span class="badge badge-info">${s.specialty}</span>`).join('') + `</div>`
+                    : '<span class="text-slate-300">—</span>';
+
+                const licenseList = (item.coach_licenses && item.coach_licenses.length > 0)
+                    ? `<div class="flex flex-col gap-1 items-start">` + item.coach_licenses.map(l => `<span class="badge badge-muted">${l.license_name}</span>`).join('') + `</div>`
+=======
             // 儲存到全域變數，供詳細資料按鈕使用
             window.instructorsData = data;
 
@@ -494,6 +516,7 @@
                 const targetSpecialties = item.all_specialties || item.coach_specialties;
                 const specialtyList = (targetSpecialties && targetSpecialties.length > 0)
                     ? targetSpecialties.map(s => `<span class="badge badge-info mr-1 mb-1">${s.specialty}</span>`).join('')
+>>>>>>> b40615f112ee0474ceb12fd06d65c781bdd3787d
                     : '<span class="text-slate-300">—</span>';
 
                 const tr = document.createElement('tr');
@@ -503,7 +526,13 @@
                         <span class="font-medium">${item.name}</span>
                         <span class="text-xs text-slate-400">(${item.gender})</span>
                     </td>
+<<<<<<< HEAD
+                    <td class="text-slate-700 text-sm min-w-[100px] break-words">${specialtyList}</td>
+                    <td class="text-slate-700 text-xs min-w-[170px] break-words">${licenseList}</td>
+                    <td class="font-mono text-slate-500 whitespace-nowrap">${item.birth_date}</td>
+=======
                     <td class="text-slate-700 text-sm max-w-[150px] break-words flex flex-wrap">${specialtyList}</td>
+>>>>>>> b40615f112ee0474ceb12fd06d65c781bdd3787d
                     <td class="font-mono text-slate-500 whitespace-nowrap">${item.phone}</td>
                     <td class="font-mono text-slate-500 min-w-[200px] break-all">${item.email || '<span class="text-slate-300">—</span>'}</td>
                     <td class="text-center whitespace-nowrap">
