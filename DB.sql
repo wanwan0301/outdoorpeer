@@ -36,19 +36,20 @@ CREATE TABLE coach_licenses (
 
 -- 2. 建立遊客表 (Tourists)
 CREATE TABLE tourists (
-    id_number VARCHAR(10) PRIMARY KEY,
-    name VARCHAR(50) NOT NULL COMMENT '姓名',
-    gender ENUM('男', '女') NOT NULL COMMENT '性別',
-    birth_date DATE NOT NULL COMMENT '出生年月日',
-    phone VARCHAR(20) NOT NULL COMMENT '聯絡電話',
-    email VARCHAR(100),
-    address VARCHAR(255) COMMENT '通訊地址',
-    dietary_habit VARCHAR(100) DEFAULT '葷食' COMMENT '例如：葷食、全素、蛋奶素、海鮮過敏等',
-    emergency_contact VARCHAR(50) COMMENT '水域活動建議保留緊急聯絡人',
-    emergency_phone VARCHAR(20),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT chk_id_number CHECK (id_number REGEXP '^[A-Z][1-2][0-9]{8}$'),
-    CONSTRAINT chk_email CHECK (email LIKE '%@%')
+    id_number VARCHAR(10) PRIMARY KEY,
+    name VARCHAR(50) NOT NULL COMMENT '姓名',
+    gender ENUM('男', '女') NOT NULL COMMENT '性別',
+    birth_date DATE NOT NULL COMMENT '出生年月日',
+    phone VARCHAR(20) NOT NULL COMMENT '聯絡電話',
+    email VARCHAR(100) UNIQUE COMMENT '電子信箱 (登入帳號)',
+    password VARCHAR(100) DEFAULT 'password123' COMMENT '登入密碼',
+    address VARCHAR(255) COMMENT '通訊地址',
+    dietary_habit VARCHAR(100) DEFAULT '葷食' COMMENT '例如：葷食、全素、蛋奶素、海鮮過敏等',
+    emergency_contact VARCHAR(50) COMMENT '水域活動建議保留緊急聯絡人',
+    emergency_phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_id_number CHECK (id_number REGEXP '^[A-Z][1-2][0-9]{8}$'),
+    CONSTRAINT chk_email CHECK (email LIKE '%@%')
 );
 
 -- 4. 建立報名紀錄表 (Bookings) - 處理遊客與課程的「多對多」關係
@@ -270,6 +271,8 @@ EXECUTE FUNCTION trigger_update_tourist_level();
 -- ==========================================================
 -- 10. 資料庫升級指令 (針對已建立原 Schema 之資料庫)
 -- ==========================================================
+-- ALTER TABLE tourists ADD COLUMN IF NOT EXISTS password VARCHAR(100) DEFAULT 'password123';
+-- ALTER TABLE tourists ADD CONSTRAINT unique_email UNIQUE (email);
 -- ALTER TABLE course ADD COLUMN IF NOT EXISTS course_type VARCHAR(20) DEFAULT '單次活動' CHECK (course_type IN ('常態班', '單次活動'));
 -- CREATE TABLE IF NOT EXISTS coach_availability (
 --     availability_id SERIAL PRIMARY KEY,
@@ -307,4 +310,17 @@ EXECUTE FUNCTION trigger_update_tourist_level();
 --     signature_consent VARCHAR(100),
 --     fill_date DATE DEFAULT CURRENT_DATE
 -- );
--- ALTER TABLE tourist_health_survey DISABLE ROW LEVEL SECURITY;
+-- 3. 升級資訊：遊客資料庫新增登入資訊 (以 Email 為帳號，自訂英數密碼)
+-- ALTER TABLE tourists ADD COLUMN IF NOT EXISTS email VARCHAR(100) UNIQUE COMMENT '電子信箱 (登入帳號)';
+-- ALTER TABLE tourists ADD COLUMN IF NOT EXISTS password VARCHAR(100) DEFAULT 'password123' COMMENT '登入密碼';
+
+-- 4. 建立購物車資料表 (Cart) 儲存使用者購物車內資料
+-- CREATE TABLE IF NOT EXISTS cart (
+--     id SERIAL PRIMARY KEY,
+--     tourist_id VARCHAR(10) NOT NULL REFERENCES tourists(id_number) ON DELETE CASCADE,
+--     session_id INT NOT NULL REFERENCES course(session_id) ON DELETE CASCADE,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     CONSTRAINT uq_tourist_session UNIQUE (tourist_id, session_id)
+-- );
+-- ALTER TABLE cart DISABLE ROW LEVEL SECURITY;
+

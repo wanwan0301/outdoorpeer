@@ -1,511 +1,85 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>水域活動工作室 - 遊客首頁</title>
+  <title>OutdoorPeer活動網</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <style>
-    body {
-      background: #f6fbff;
-    }
-
-    /* 水域主視覺背景 */
-    .water-hero {
-      position: relative;
-      overflow: hidden;
-      min-height: 520px;
-      background: #eaf8ff;
-      border-radius: 28px;
-      border: 1px solid #d7eef8;
-    }
-
-    .water-hero * {
-      pointer-events: none;
-    }
-
-    /* 天空 */
-    .sky {
-      position: absolute;
-      inset: 0;
-      background: #eaf8ff;
-    }
-
-    /* 雲朵 */
-    .cloud {
-      position: absolute;
-      background: #ffffff;
-      opacity: 0.9;
-      border-radius: 999px;
-    }
-
-    .cloud::before,
-    .cloud::after {
-      content: "";
-      position: absolute;
-      background: #ffffff;
-      border-radius: 999px;
-    }
-
-    .cloud-left {
-      width: 170px;
-      height: 42px;
-      left: 40px;
-      top: 155px;
-    }
-
-    .cloud-left::before {
-      width: 88px;
-      height: 88px;
-      left: 10px;
-      bottom: 0;
-    }
-
-    .cloud-left::after {
-      width: 68px;
-      height: 68px;
-      left: 85px;
-      bottom: 0;
-    }
-
-    .cloud-right {
-      width: 210px;
-      height: 48px;
-      right: 55px;
-      top: 125px;
-    }
-
-    .cloud-right::before {
-      width: 92px;
-      height: 92px;
-      left: 30px;
-      bottom: 0;
-    }
-
-    .cloud-right::after {
-      width: 116px;
-      height: 116px;
-      right: 10px;
-      bottom: 0;
-    }
-
-    /* 遠山 */
-    .hill {
-      position: absolute;
-      bottom: 210px;
-      border-radius: 999px 999px 0 0;
-    }
-
-    .hill-left {
-      width: 360px;
-      height: 135px;
-      left: -70px;
-      background: #8acfb3;
-    }
-
-    .hill-mid {
-      width: 380px;
-      height: 110px;
-      left: 310px;
-      background: #9fd7c6;
-    }
-
-    .hill-right {
-      width: 410px;
-      height: 155px;
-      right: -85px;
-      background: #61b9b8;
-    }
-
-    .hill-back {
-      width: 320px;
-      height: 95px;
-      right: 220px;
-      bottom: 215px;
-      background: #9ed6ee;
-      opacity: 0.9;
-      border-radius: 999px 999px 0 0;
-    }
-
-    /* 水面 */
-    .water {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 260px;
-      background: #78d4ee;
-    }
-
-    .water::before {
-      content: "";
-      position: absolute;
-      left: -8%;
-      top: -34px;
-      width: 116%;
-      height: 70px;
-      background: #78d4ee;
-      border-radius: 50% 50% 0 0;
-    }
-
-    /* 水波色塊 */
-    .wave {
-      position: absolute;
-      height: 28px;
-      background: rgba(255, 255, 255, 0.35);
-      border-radius: 999px;
-    }
-
-    .wave-1 {
-      width: 250px;
-      left: 70px;
-      bottom: 172px;
-      transform: rotate(-2deg);
-    }
-
-    .wave-2 {
-      width: 300px;
-      left: 310px;
-      bottom: 120px;
-      background: rgba(48, 169, 211, 0.25);
-      transform: rotate(3deg);
-    }
-
-    .wave-3 {
-      width: 230px;
-      right: 80px;
-      bottom: 165px;
-      background: rgba(255, 255, 255, 0.28);
-      transform: rotate(2deg);
-    }
-
-    .wave-4 {
-      width: 430px;
-      right: 280px;
-      bottom: 45px;
-      background: rgba(49, 169, 211, 0.22);
-      transform: rotate(5deg);
-    }
-
-    /* 左下獨木舟 */
-    .kayak {
-      position: absolute;
-      left: 70px;
-      bottom: 55px;
-      width: 170px;
-      height: 36px;
-      background: #ffc43d;
-      border-radius: 10px 10px 40px 40px;
-      transform: rotate(-4deg);
-    }
-
-    .kayak::before {
-      content: "";
-      position: absolute;
-      left: 45px;
-      top: -35px;
-      width: 32px;
-      height: 45px;
-      background: #ff785a;
-      border-radius: 16px 16px 8px 8px;
-    }
-
-    .kayak::after {
-      content: "";
-      position: absolute;
-      left: 50px;
-      top: -50px;
-      width: 28px;
-      height: 22px;
-      background: #5d4bc4;
-      border-radius: 50% 50% 45% 45%;
-    }
-
-    .kayak-paddle {
-      position: absolute;
-      left: 90px;
-      bottom: 90px;
-      width: 150px;
-      height: 7px;
-      background: #364059;
-      border-radius: 999px;
-      transform: rotate(-32deg);
-    }
-
-    .kayak-paddle::before,
-    .kayak-paddle::after {
-      content: "";
-      position: absolute;
-      width: 38px;
-      height: 18px;
-      background: #ffbf2f;
-      border-radius: 70% 30% 70% 30%;
-    }
-
-    .kayak-paddle::before {
-      left: -28px;
-      top: -6px;
-    }
-
-    .kayak-paddle::after {
-      right: -28px;
-      top: -6px;
-      transform: rotate(180deg);
-    }
-
-    /* 右側 SUP */
-    .sup-board {
-      position: absolute;
-      right: 70px;
-      bottom: 85px;
-      width: 230px;
-      height: 32px;
-      background: #ff9eb3;
-      border-radius: 999px;
-      transform: rotate(2deg);
-      box-shadow: 0 12px 0 rgba(255, 255, 255, 0.35);
-    }
-
-    .adult-body {
-      position: absolute;
-      right: 110px;
-      bottom: 130px;
-      width: 36px;
-      height: 95px;
-      background: #ffb061;
-      border-radius: 999px 999px 8px 8px;
-    }
-
-    .adult-head {
-      position: absolute;
-      right: 112px;
-      bottom: 225px;
-      width: 32px;
-      height: 32px;
-      background: #ffb061;
-      border-radius: 50%;
-    }
-
-    .adult-hair {
-      position: absolute;
-      right: 128px;
-      bottom: 244px;
-      width: 30px;
-      height: 20px;
-      background: #3f3d78;
-      border-radius: 20px 18px 10px 10px;
-      transform: rotate(15deg);
-    }
-
-    .adult-shorts {
-      position: absolute;
-      right: 104px;
-      bottom: 128px;
-      width: 50px;
-      height: 38px;
-      background: #ef4444;
-      border-radius: 4px 4px 12px 12px;
-    }
-
-    .child-body {
-      position: absolute;
-      right: 185px;
-      bottom: 123px;
-      width: 26px;
-      height: 62px;
-      background: #ff6b79;
-      border-radius: 999px 999px 8px 8px;
-    }
-
-    .child-head {
-      position: absolute;
-      right: 184px;
-      bottom: 185px;
-      width: 25px;
-      height: 25px;
-      background: #ffb061;
-      border-radius: 50%;
-    }
-
-    .child-hair {
-      position: absolute;
-      right: 190px;
-      bottom: 203px;
-      width: 27px;
-      height: 18px;
-      background: #3f3d78;
-      border-radius: 50%;
-    }
-
-    .sup-paddle {
-      position: absolute;
-      right: 78px;
-      bottom: 122px;
-      width: 120px;
-      height: 7px;
-      background: #364059;
-      border-radius: 999px;
-      transform: rotate(62deg);
-    }
-
-    .sup-paddle::after {
-      content: "";
-      position: absolute;
-      right: -22px;
-      top: -8px;
-      width: 36px;
-      height: 20px;
-      background: #364059;
-      border-radius: 70% 30% 70% 30%;
-    }
-
-    /* 文字卡片 */
-    .hero-content {
-      position: relative;
-      z-index: 10;
-      max-width: 520px;
-      margin: 72px 0 0 58px;
-      padding: 34px;
-      background: rgba(255, 255, 255, 0.82);
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      border-radius: 24px;
-      box-shadow: 0 18px 45px rgba(30, 91, 120, 0.12);
-      backdrop-filter: blur(8px);
-      pointer-events: auto;
-    }
-
-    .hero-content * {
-      pointer-events: auto;
-    }
-
-    @media (max-width: 768px) {
-      .water-hero {
-        min-height: 650px;
-      }
-
-      .hero-content {
-        margin: 28px 18px 0 18px;
-        padding: 26px;
-      }
-
-      .cloud-right {
-        right: -60px;
-      }
-
-      .hill-left {
-        left: -160px;
-      }
-
-      .hill-mid {
-        left: 120px;
-      }
-
-      .hill-right {
-        right: -180px;
-      }
-
-      .kayak {
-        left: 30px;
-        bottom: 40px;
-        transform: scale(0.8) rotate(-4deg);
-      }
-
-      .kayak-paddle {
-        left: 55px;
-        bottom: 74px;
-        transform: scale(0.8) rotate(-32deg);
-      }
-
-      .sup-board,
-      .adult-body,
-      .adult-head,
-      .adult-hair,
-      .adult-shorts,
-      .child-body,
-      .child-head,
-      .child-hair,
-      .sup-paddle {
-        transform-origin: bottom right;
-      }
-
-      .sup-board {
-        right: 18px;
-        bottom: 105px;
-        transform: scale(0.72) rotate(2deg);
-      }
-
-      .adult-body {
-        right: 44px;
-        bottom: 137px;
-        transform: scale(0.72);
-      }
-
-      .adult-head {
-        right: 46px;
-        bottom: 206px;
-        transform: scale(0.72);
-      }
-
-      .adult-hair {
-        right: 57px;
-        bottom: 220px;
-        transform: scale(0.72) rotate(15deg);
-      }
-
-      .adult-shorts {
-        right: 39px;
-        bottom: 136px;
-        transform: scale(0.72);
-      }
-
-      .child-body {
-        right: 98px;
-        bottom: 132px;
-        transform: scale(0.72);
-      }
-
-      .child-head {
-        right: 98px;
-        bottom: 177px;
-        transform: scale(0.72);
-      }
-
-      .child-hair {
-        right: 102px;
-        bottom: 191px;
-        transform: scale(0.72);
-      }
-
-      .sup-paddle {
-        right: 23px;
-        bottom: 133px;
-        transform: scale(0.72) rotate(62deg);
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blue: {
+              50: '#f0fafb',
+              100: '#e0f4f5',
+              200: '#c0e4e4', // 主色
+              300: '#a3d8d8',
+              400: '#7ac5c5',
+              500: '#c0e4e4', // 主色
+              600: '#ffaa39', // 橘色 (主要強烈色/按鈕等)
+              700: '#7b7c80', // 灰
+              800: '#545558',
+              900: '#1e293b',
+            },
+            cyan: {
+              500: '#c0e4e4',
+            },
+            slate: {
+              600: '#7b7c80',
+              700: '#7b7c80',
+            },
+            yellow: {
+              100: '#fff1c2', // 淺黃
+              200: '#fecd67', // 暖黃
+              300: '#fecd67',
+              400: '#fecd67',
+              500: '#fecd67',
+            },
+            orange: {
+              500: '#ffaa39', // 亮橘
+            }
+          }
+        }
       }
     }
-  </style>
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="bg-slate-50 min-h-screen font-sans text-slate-800">
+<body class="min-h-screen font-sans text-slate-800">
 
   <!-- Header -->
   <header class="bg-white/90 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div>
-        <h1 class="text-xl md:text-2xl font-bold text-blue-700">水域活動工作室</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-blue-700">OutdoorPeer活動網</h1>
         <p class="text-xs text-slate-500 mt-1">遊客模式</p>
       </div>
 
-      <nav class="hidden md:flex items-center gap-2 text-sm">
-        <a href="tourist-home.html" class="px-4 py-2 rounded-md bg-blue-600 text-white font-medium">首頁</a>
-        <a href="course.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">課程管理</a>
-        <a href="tours.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">遊程</a>
-        <a href="cart.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">
-          購物車
-          <span id="cartCount" class="ml-1 text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">0</span>
-        </a>
-        <button onclick="logout()" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">登出</button>
-      </nav>
+      <div class="md:flex max-md:hidden items-center gap-4 text-sm">
+        <nav class="flex items-center gap-2">
+          <a href="tourist-home.html" class="px-4 py-2 rounded-md bg-blue-600 text-white font-medium">首頁</a>
+          <a href="tourist-bookings.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">我的歷程</a>
+          <a href="cart.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">
+            購物車
+            <span id="cartCount" class="ml-1 text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">0</span>
+          </a>
+          <a href="tourist-profile.html"
+            class="p-2 rounded-md text-slate-600 hover:bg-slate-100 flex items-center justify-center" title="個人檔案">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+          </a>
+          <button onclick="logout()" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">登出</button>
+        </nav>
+      </div>
 
       <button id="mobileMenuBtn" class="md:hidden text-slate-600 border px-3 py-2 rounded-md">
         選單
@@ -514,127 +88,83 @@
 
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="hidden md:hidden border-t bg-white px-6 py-3 space-y-2 text-sm">
+      <div class="px-3 py-2 text-xs text-slate-500 font-bold border-b"><span id="welcomeUserNameMobile"></span></div>
       <a href="tourist-home.html" class="block px-3 py-2 rounded-md bg-blue-600 text-white">首頁</a>
-      <a href="course.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">課程管理</a>
-      <a href="tours.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">遊程</a>
+      <a href="tourist-bookings.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">我的歷程</a>
       <a href="cart.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">購物車</a>
+      <a href="tourist-profile.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">個人檔案</a>
       <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md hover:bg-slate-100">登出</button>
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-6 py-8">
-
-    <!-- Hero：改成 HTML + CSS 水域色塊背景 -->
-    <section class="water-hero mb-8">
-      <div class="sky"></div>
-
-      <div class="cloud cloud-left"></div>
-      <div class="cloud cloud-right"></div>
-
-      <div class="hill hill-back"></div>
-      <div class="hill hill-left"></div>
-      <div class="hill hill-mid"></div>
-      <div class="hill hill-right"></div>
-
-      <div class="water"></div>
-      <div class="wave wave-1"></div>
-      <div class="wave wave-2"></div>
-      <div class="wave wave-3"></div>
-      <div class="wave wave-4"></div>
-
-      <div class="kayak"></div>
-      <div class="kayak-paddle"></div>
-
-      <div class="sup-board"></div>
-      <div class="adult-body"></div>
-      <div class="adult-head"></div>
-      <div class="adult-hair"></div>
-      <div class="adult-shorts"></div>
-      <div class="child-body"></div>
-      <div class="child-head"></div>
-      <div class="child-hair"></div>
-      <div class="sup-paddle"></div>
-
-      <div class="hero-content">
-        <p class="text-sm text-blue-700 font-semibold mb-3">水域活動報名與器材租借平台</p>
-        <h2 class="text-3xl md:text-4xl font-bold leading-tight mb-4 text-slate-800">
-          找一趟適合你的水域活動
+  <!-- Full-Width Premium Hero & Search Section -->
+  <section class="w-full py-12 px-6 md:py-20 text-slate-800" style="background-color: #c0e4e4;">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="relative z-10 max-w-3xl mx-auto text-center">
+        <span
+          class="inline-block bg-slate-800/10 text-slate-700 font-bold text-xs uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">
+          Outdoor Water Adventures
+        </span>
+        <h2
+          class="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight mb-4 text-slate-900 drop-shadow-none">
+          探索海洋，開啟您的水域冒險旅程
         </h2>
-        <p class="text-slate-600 leading-relaxed mb-6">
-          依照時段、活動類型與上手程度，快速找到適合自己的 SUP、浮潛、自由潛水或其他水域體驗活動。
+        <p class="text-slate-700 text-sm md:text-base mb-8 max-w-xl mx-auto leading-relaxed">
+          精選 SUP 立槳、獨木舟、衝浪及潛水體驗。依照時段、項目與上手難度，快速找到最適合您的水域活動。
         </p>
 
-        <div class="flex flex-col sm:flex-row gap-3">
-          <a href="tours.html" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-lg text-center transition">
-            查看所有遊程
-          </a>
-          <a href="#activities" class="bg-white border border-blue-200 text-blue-700 font-semibold px-5 py-3 rounded-lg text-center hover:bg-blue-50 transition">
-            瀏覽近期活動
-          </a>
+        <!-- Integrated Search & Filter Card -->
+        <div class="bg-white/90 backdrop-blur-lg rounded-2xl p-4 md:p-6 text-slate-800 shadow-2xl max-w-2xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <!-- Search Keyword -->
+            <div class="md:col-span-2 text-left">
+              <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">搜尋活動</label>
+              <div class="relative">
+                <input id="searchInput" type="text" placeholder="例如：SUP、浮潛、初階"
+                  class="w-full pl-4 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition text-sm text-slate-800" />
+              </div>
+            </div>
+
+            <!-- Difficulty Level -->
+            <div class="text-left">
+              <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">難易度</label>
+              <select id="difficultyFilter"
+                class="w-full px-3 py-3 bg-slate-50/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition text-sm text-slate-800 bg-white">
+                <option value="">全部級別</option>
+                <option value="初階">初階</option>
+                <option value="中階">中階</option>
+                <option value="進階">進階</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Action Button & Quick Filter tags -->
+          <div
+            class="mt-4 pt-4 border-t border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center gap-1.5 text-left">
+              <span class="text-xs font-bold text-slate-400 mr-1 uppercase">熱門探索:</span>
+              <button onclick="quickFilter('初階')"
+                class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold px-2.5 py-1.5 rounded-lg transition">初學者友善</button>
+              <button onclick="quickFilter('SUP')"
+                class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold px-2.5 py-1.5 rounded-lg transition">SUP
+                立槳</button>
+              <button onclick="quickFilter('浮潛')"
+                class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold px-2.5 py-1.5 rounded-lg transition">浮潛活動</button>
+              <button onclick="quickFilter('開放報名中')"
+                class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold px-2.5 py-1.5 rounded-lg transition">開放報名中</button>
+            </div>
+
+            <button onclick="applyFilter()"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-6 py-3 rounded-xl transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5 whitespace-nowrap">
+              立即搜尋
+            </button>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Quick Filters -->
-    <section class="mb-8">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-bold text-slate-800">快速探索</h3>
-        <a href="tours.html" class="text-sm text-blue-600 hover:underline">進階篩選</a>
-      </div>
-
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <button onclick="quickFilter('初階')" class="bg-white border border-slate-200 rounded-xl p-5 text-left hover:shadow-md hover:border-blue-300 transition">
-          <p class="font-semibold text-slate-800">初學者友善</p>
-          <p class="text-sm text-slate-500 mt-1">第一次參加也適合</p>
-        </button>
-
-        <button onclick="quickFilter('SUP')" class="bg-white border border-slate-200 rounded-xl p-5 text-left hover:shadow-md hover:border-blue-300 transition">
-          <p class="font-semibold text-slate-800">SUP 體驗</p>
-          <p class="text-sm text-slate-500 mt-1">熱門水上活動</p>
-        </button>
-
-        <button onclick="quickFilter('浮潛')" class="bg-white border border-slate-200 rounded-xl p-5 text-left hover:shadow-md hover:border-blue-300 transition">
-          <p class="font-semibold text-slate-800">浮潛活動</p>
-          <p class="text-sm text-slate-500 mt-1">探索水下風景</p>
-        </button>
-
-        <button onclick="quickFilter('開放報名中')" class="bg-white border border-slate-200 rounded-xl p-5 text-left hover:shadow-md hover:border-blue-300 transition">
-          <p class="font-semibold text-slate-800">即將開課</p>
-          <p class="text-sm text-slate-500 mt-1">目前可報名場次</p>
-        </button>
-      </div>
-    </section>
-
-    <!-- Search Bar -->
-    <section class="bg-white border border-slate-200 rounded-xl p-5 mb-8 shadow-sm">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="md:col-span-2">
-          <label class="block text-sm font-medium text-slate-600 mb-1">搜尋活動</label>
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="例如：SUP、浮潛、初階"
-            class="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-600 mb-1">難易度</label>
-          <select id="difficultyFilter" class="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            <option value="">全部</option>
-            <option value="初階">初階</option>
-            <option value="中階">中階</option>
-            <option value="進階">進階</option>
-          </select>
-        </div>
-
-        <div class="flex items-end">
-          <button onclick="applyFilter()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium p-3 rounded-md transition">
-            搜尋
-          </button>
-        </div>
-      </div>
-    </section>
+  <main class="max-w-6xl mx-auto px-6 py-8">
 
     <!-- Activity List -->
     <section id="activities" class="mb-10">
@@ -644,7 +174,8 @@
           <p class="text-sm text-slate-500 mt-1">目前開放報名與即將開始的水域活動</p>
         </div>
 
-        <button onclick="fetchActivities()" class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-2 rounded-md transition">
+        <button onclick="fetchActivities()"
+          class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-2 rounded-md transition">
           重新整理
         </button>
       </div>
@@ -684,23 +215,34 @@
 
   <footer class="border-t bg-white">
     <div class="max-w-6xl mx-auto px-6 py-5 text-sm text-slate-500">
-      © 2026 水域活動工作室
+      © 2026 OutdoorPeer活動網
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    // 請換成你的 Supabase 專案資料
-    const SUPABASE_URL = "你的 Supabase URL";
-    const SUPABASE_ANON_KEY = "你的 Supabase anon key";
+    // 權限檢查，防護未登入遊客
+    const loginRole = localStorage.getItem("loginRole");
+    const touristId = localStorage.getItem("touristId");
+    if (loginRole !== "tourist" || !touristId) {
+      window.location.href = "login.html";
+    }
 
+    const userName = localStorage.getItem("userName") || touristId;
+
+    // 🔑 Supabase 連線資訊
+    const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let allActivities = [];
 
-    document.addEventListener("DOMContentLoaded", () => {
-      updateCartCount();
+    document.addEventListener("DOMContentLoaded", async () => {
+      const welcomeEl = document.getElementById("welcomeUserName");
+      if (welcomeEl) welcomeEl.textContent = userName;
+
+      await syncCartFromDb();
       fetchActivities();
 
       document.getElementById("mobileMenuBtn").addEventListener("click", () => {
@@ -717,40 +259,83 @@
         </div>
       `;
 
-      const { data, error } = await supabaseClient
-        .from("course_sessions")
-        .select(`
-          session_id,
-          start_time,
-          end_time,
-          capacity,
-          session_status,
-          courses (
-            course_id,
-            course_name,
-            description,
-            price,
-            difficulty_level
-          ),
-          instructors (
-            id_number,
-            name
-          )
-        `)
-        .gte("end_time", new Date().toISOString())
-        .order("start_time", { ascending: true });
+      let data = [];
+      let isMock = false;
 
-      if (error) {
-        console.error(error);
-        activityList.innerHTML = `
-          <div class="bg-white border border-red-200 rounded-xl p-6 text-red-500">
-            活動資料讀取失敗，請確認 Supabase 欄位與關聯設定是否正確。
-          </div>
-        `;
-        return;
+      // 檢查是否使用本地模擬
+      if (SUPABASE_URL.includes("你的") || !SUPABASE_URL) {
+        isMock = true;
       }
 
-      allActivities = data || [];
+      if (!isMock) {
+        try {
+          const { data: dbCourses, error } = await supabaseClient
+            .from("course")
+            .select("*, coach!instructor_id(name)")
+            .order("start_time", { ascending: true });
+
+          if (!error && dbCourses) {
+            data = dbCourses.map(item => ({
+              session_id: item.session_id,
+              start_time: item.start_time,
+              end_time: item.end_time,
+              capacity: item.capacity,
+              session_status: item.session_status,
+              courses: {
+                course_name: item.course_name,
+                description: `${item.difficulty_level || "初階"}水域課程 - 項目: ${item.item}`,
+                price: item.price,
+                difficulty_level: item.difficulty_level
+              },
+              instructors: {
+                id_number: item.instructor_id,
+                name: item.coach ? item.coach.name : "未指派"
+              }
+            }));
+          } else {
+            console.warn("Supabase 查詢錯誤，自動切換至模擬模式:", error);
+            isMock = true;
+          }
+        } catch (err) {
+          console.warn("連線異常，自動切換至模擬模式:", err);
+          isMock = true;
+        }
+      }
+
+      if (isMock) {
+        // 從 LocalStorage 載入課程資料
+        const mockCourses = JSON.parse(localStorage.getItem("mock_courses") || "[]");
+
+        // 若 localStorage 沒有資料，預載一些 Mock 資料
+        if (mockCourses.length === 0) {
+          const defaultMock = [
+            { session_id: 1001, course_name: 'SUP立槳初體驗', item: 'SUP立槳', course_type: '單次活動', instructor_id: 'H298765432', start_time: '2026-08-01T09:00', end_time: '2026-08-01T12:00', price: 1500, difficulty_level: '初階', capacity: 10, session_status: '開放報名中', coach: { name: '陳立槳教練' } },
+            { session_id: 1002, course_name: '衝浪進階技巧班', item: '衝浪', course_type: '單次活動', instructor_id: 'H298765432', start_time: '2026-08-05T14:00', end_time: '2026-08-05T17:00', price: 2200, difficulty_level: '中階', capacity: 8, session_status: '開放報名中', coach: { name: '陳立槳教練' } }
+          ];
+          localStorage.setItem("mock_courses", JSON.stringify(defaultMock));
+          mockCourses.push(...defaultMock);
+        }
+
+        data = mockCourses.map(item => ({
+          session_id: item.session_id,
+          start_time: item.start_time,
+          end_time: item.end_time,
+          capacity: item.capacity,
+          session_status: item.session_status,
+          courses: {
+            course_name: item.course_name,
+            description: `${item.difficulty_level || "初階"}水域課程 - 項目: ${item.item}`,
+            price: item.price,
+            difficulty_level: item.difficulty_level
+          },
+          instructors: {
+            id_number: item.instructor_id,
+            name: item.coach ? item.coach.name : "未指派"
+          }
+        }));
+      }
+
+      allActivities = data;
       renderActivities(allActivities);
     }
 
@@ -775,15 +360,7 @@
 
         return `
           <article class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col">
-            <div class="h-36 bg-blue-50 flex items-center justify-center relative overflow-hidden">
-              <div class="absolute bottom-0 left-0 right-0 h-16 bg-cyan-200 rounded-t-[50%]"></div>
-              <div class="absolute bottom-8 left-8 w-28 h-10 bg-emerald-200 rounded-t-full"></div>
-              <div class="absolute bottom-8 right-8 w-32 h-12 bg-teal-200 rounded-t-full"></div>
-              <div class="relative text-center px-4">
-                <p class="text-blue-700 font-bold text-lg">${escapeHtml(course.course_name || "未命名活動")}</p>
-                <p class="text-sm text-blue-500 mt-1">${escapeHtml(course.difficulty_level || "未設定難度")}</p>
-              </div>
-            </div>
+            <div class="h-36 bg-slate-100"></div>
 
             <div class="p-5 flex-1 flex flex-col">
               <div class="flex items-center gap-2 mb-3">
@@ -868,17 +445,58 @@
       document.getElementById("activities").scrollIntoView({ behavior: "smooth" });
     }
 
-    function addToCart(sessionId) {
+    async function syncCartFromDb() {
+      if (!touristId) return;
+      let isMock = false;
+      if (SUPABASE_URL.includes("你的") || !SUPABASE_URL) {
+        isMock = true;
+      }
+      if (!isMock) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('cart')
+            .select('session_id')
+            .eq('tourist_id', touristId);
+          if (!error && data) {
+            const sessionIds = data.map(item => item.session_id);
+            localStorage.setItem("touristCart", JSON.stringify(sessionIds));
+          }
+        } catch (e) {
+          console.error("Cart sync failed, fallback to localStorage:", e);
+        }
+      }
+      updateCartCount();
+    }
+
+    async function addToCart(sessionId) {
       const cart = JSON.parse(localStorage.getItem("touristCart")) || [];
 
-      if (!cart.includes(sessionId)) {
-        cart.push(sessionId);
-        localStorage.setItem("touristCart", JSON.stringify(cart));
-        alert("已加入購物車");
-      } else {
+      if (cart.includes(sessionId)) {
         alert("此活動已經在購物車中");
+        return;
       }
 
+      let isMock = false;
+      if (SUPABASE_URL.includes("你的") || !SUPABASE_URL) {
+        isMock = true;
+      }
+
+      if (!isMock) {
+        try {
+          const { error } = await supabaseClient
+            .from('cart')
+            .insert({ tourist_id: touristId, session_id: sessionId });
+          if (error) {
+            console.error("Failed to add to DB cart:", error);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      cart.push(sessionId);
+      localStorage.setItem("touristCart", JSON.stringify(cart));
+      alert("已加入購物車");
       updateCartCount();
     }
 
@@ -953,4 +571,5 @@
   </script>
 
 </body>
+
 </html>

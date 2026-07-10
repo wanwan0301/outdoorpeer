@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OutdoorPeer活動網 - 購物車</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blue: {
+              50: '#f0fafb',
+              100: '#e0f4f5',
+              200: '#c0e4e4', // 主色
+              300: '#a3d8d8',
+              400: '#7ac5c5',
+              500: '#c0e4e4', // 主色
+              600: '#ffaa39', // 橘色 (主要強烈色/按鈕等)
+              700: '#7b7c80', // 灰
+              800: '#545558',
+              900: '#1e293b',
+            },
+            cyan: {
+              500: '#c0e4e4',
+            },
+            slate: {
+              600: '#7b7c80',
+              700: '#7b7c80',
+            },
+            yellow: {
+              100: '#fff1c2', // 淺黃
+              200: '#fecd67', // 暖黃
+              300: '#fecd67',
+              400: '#fecd67',
+              500: '#fecd67',
+            },
+            orange: {
+              500: '#ffaa39', // 亮橘
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold text-blue-700">OutdoorPeer活動網</h1>
+        <p class="text-xs text-slate-500 mt-1">遊客模式</p>
+      </div>
+
+      <div class="md:flex max-md:hidden items-center gap-4 text-sm">
+        <nav class="flex items-center gap-2">
+          <a href="tourist-home.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">首頁</a>
+          <a href="tourist-bookings.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">我的歷程</a>
+          <a href="cart.html" class="px-4 py-2 rounded-md bg-blue-600 text-white font-medium">
+            購物車
+            <span id="cartCount" class="ml-1 text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">0</span>
+          </a>
+          <a href="tourist-profile.html"
+            class="p-2 rounded-md text-slate-600 hover:bg-slate-100 flex items-center justify-center" title="個人檔案">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+          </a>
+          <button onclick="logout()" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">登出</button>
+        </nav>
+      </div>
+
+      <button id="mobileMenuBtn" class="md:hidden text-slate-600 border px-3 py-2 rounded-md">
+        選單
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden border-t bg-white px-6 py-3 space-y-2 text-sm">
+      <div class="px-3 py-2 text-xs text-slate-500 font-bold border-b"><span id="welcomeUserNameMobile"></span></div>
+      <a href="tourist-home.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">首頁</a>
+      <a href="tourist-bookings.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">我的歷程</a>
+      <a href="cart.html" class="block px-3 py-2 rounded-md bg-blue-600 text-white">購物車</a>
+      <a href="tourist-profile.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">個人檔案</a>
+      <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md hover:bg-slate-100">登出</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-6 py-8">
+    <div class="flex items-center gap-2 mb-6">
+
+      <h2 class="text-2xl font-extrabold text-slate-800">您的活動購物車</h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- 購物車清單 -->
+      <div class="lg:col-span-2 space-y-4">
+        <div id="cartItemsContainer" class="space-y-3">
+          <!-- 項目載入中 / 空的 -->
+          <div class="bg-white border rounded-2xl p-8 text-center text-slate-400">
+            購物車載入中...
+          </div>
+        </div>
+      </div>
+
+      <!-- 結帳面板 -->
+      <div class="h-fit bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b">訂單摘要</h3>
+
+        <div class="space-y-3 text-sm text-slate-600 mb-6">
+          <div class="flex justify-between">
+            <span>選擇場次數量</span>
+            <span id="summaryCount" class="font-bold text-slate-800">0 場</span>
+          </div>
+          <div class="flex justify-between">
+            <span>小計金額</span>
+            <span id="summarySubtotal" class="font-bold text-slate-800">NT$ 0</span>
+          </div>
+          <div class="flex justify-between text-base font-bold text-blue-700 pt-3 border-t">
+            <span>應付總額</span>
+            <span id="summaryTotal">NT$ 0</span>
+          </div>
+        </div>
+
+        <button id="checkoutBtn" onclick="handleCheckout()"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-md disabled:bg-slate-300 disabled:cursor-not-allowed">
+          確認報名課程
+        </button>
+        <p class="text-center text-[11px] text-slate-400 mt-3 leading-relaxed">
+          點擊確認報名後，系統將為您登記課程名額，並引導至報名紀錄頁面進行繳費與保險處理。
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t bg-white mt-12">
+    <div class="max-w-6xl mx-auto px-6 py-5 text-sm text-slate-500">
+      © 2026 OutdoorPeer活動網
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // 權限檢查
+    const loginRole = localStorage.getItem("loginRole");
+    const touristId = localStorage.getItem("touristId");
+    if (loginRole !== "tourist" || !touristId) {
+      window.location.href = "login.html";
+    }
+    const userName = localStorage.getItem("userName") || touristId;
+
+    // 🔑 Supabase 連線資訊
+    const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let isMockMode = false;
+    let cartCourses = []; // 儲存購物車中的課程詳細資料
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      document.getElementById("mobileMenuBtn").addEventListener("click", () => {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+      });
+
+      await checkMockMode();
+      await syncCartFromDb();
+      await loadCart();
+    });
+
+    async function checkMockMode() {
+      try {
+        const { error } = await supabaseClient.from('coach').select('id_number').limit(1);
+        if (error) isMockMode = true;
+      } catch (e) {
+        isMockMode = true;
+      }
+    }
+
+    async function loadCart() {
+      const cart = JSON.parse(localStorage.getItem("touristCart")) || [];
+      updateCartCount(cart.length);
+
+      const container = document.getElementById("cartItemsContainer");
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center text-slate-400">
+            <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            您的購物車目前是空的喔！快去 <a href="tourist-home.html" class="text-blue-500 font-bold hover:underline">遊客首頁</a> 逛逛吧！
+          </div>
+        `;
+        updateSummary(0, 0);
+        document.getElementById("checkoutBtn").disabled = true;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center text-slate-400">
+          正在載入購物車課程明細...
+        </div>
+      `;
+
+      let fetchedCourses = [];
+
+      if (!isMockMode) {
+        try {
+          const { data, error } = await supabaseClient
+            .from("course")
+            .select("*, coach!instructor_id(name)")
+            .in("session_id", cart);
+
+          if (!error && data) {
+            fetchedCourses = data;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      // 如果從資料庫沒撈到 (或者是 mock 模式)
+      if (fetchedCourses.length === 0) {
+        const mockCourses = JSON.parse(localStorage.getItem("mock_courses") || "[]");
+        fetchedCourses = mockCourses.filter(c => cart.includes(c.session_id));
+      }
+
+      cartCourses = fetchedCourses;
+      renderCartList();
+    }
+
+    function renderCartList() {
+      const container = document.getElementById("cartItemsContainer");
+      let totalAmount = 0;
+
+      if (cartCourses.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center text-slate-400">
+            找不到購物車中的課程明細。可能已被刪除。
+          </div>
+        `;
+        updateSummary(0, 0);
+        document.getElementById("checkoutBtn").disabled = true;
+        return;
+      }
+
+      container.innerHTML = cartCourses.map(course => {
+        totalAmount += Number(course.price || 0);
+        const coachName = course.coach ? course.coach.name : (course.coach_name || "未指定");
+
+        return `
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition hover:shadow-md">
+            <div>
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold">${course.item}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold">${course.difficulty_level}</span>
+                <span class="text-xs text-slate-400 font-mono">ID: ${course.session_id}</span>
+              </div>
+              <h4 class="text-lg font-bold text-slate-800">${course.course_name}</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1 mt-2 text-xs text-slate-500">
+                <p><span class="font-medium text-slate-700">帶隊教練：</span>${coachName}</p>
+                <p><span class="font-medium text-slate-700">時間時段：</span>${formatDateTime(course.start_time)}</p>
+                <p><span class="font-medium text-slate-700">課程類型：</span>${course.course_type || "單次活動"}</p>
+                <p><span class="font-medium text-slate-700">剩餘名額：</span>${course.capacity || 0} 人</p>
+              </div>
+            </div>
+
+            <div class="flex md:flex-col justify-between items-center md:items-end w-full md:w-auto pt-3 md:pt-0 border-t md:border-t-0 border-slate-100">
+              <span class="text-lg font-extrabold text-blue-600">NT$ ${Number(course.price || 0).toLocaleString()}</span>
+              <button onclick="removeFromCart(${course.session_id})" class="text-xs text-red-500 hover:text-red-700 font-medium md:mt-2 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors">
+                移除
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      updateSummary(cartCourses.length, totalAmount);
+      document.getElementById("checkoutBtn").disabled = false;
+    }
+
+    async function syncCartFromDb() {
+      if (!touristId) return;
+      if (!isMockMode) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('cart')
+            .select('session_id')
+            .eq('tourist_id', touristId);
+          if (!error && data) {
+            const sessionIds = data.map(item => item.session_id);
+            localStorage.setItem("touristCart", JSON.stringify(sessionIds));
+          }
+        } catch (e) {
+          console.error("Cart sync failed, fallback to localStorage:", e);
+        }
+      }
+    }
+
+    async function removeFromCart(sessionId) {
+      let cart = JSON.parse(localStorage.getItem("touristCart")) || [];
+      cart = cart.filter(id => id !== sessionId);
+
+      if (!isMockMode) {
+        try {
+          await supabaseClient
+            .from('cart')
+            .delete()
+            .eq('tourist_id', touristId)
+            .eq('session_id', sessionId);
+        } catch (e) {
+          console.error("Failed to delete from DB cart:", e);
+        }
+      }
+
+      localStorage.setItem("touristCart", JSON.stringify(cart));
+
+      // 更新狀態
+      cartCourses = cartCourses.filter(c => c.session_id !== sessionId);
+      renderCartList();
+      updateCartCount(cart.length);
+
+      if (cart.length === 0) {
+        loadCart();
+      }
+    }
+
+    function updateSummary(count, total) {
+      document.getElementById("summaryCount").textContent = `${count} 場`;
+      document.getElementById("summarySubtotal").textContent = `NT$ ${total.toLocaleString()}`;
+      document.getElementById("summaryTotal").textContent = `NT$ ${total.toLocaleString()}`;
+    }
+
+    function updateCartCount(count) {
+      const cartCount = document.getElementById("cartCount");
+      if (cartCount) cartCount.textContent = count;
+    }
+
+    // ==========================================================
+    // 💳 確認報名 (Checkout)
+    // ==========================================================
+    async function handleCheckout() {
+      if (cartCourses.length === 0) return;
+
+      if (!confirm(`確定要報名這 ${cartCourses.length} 堂水域課程嗎？`)) return;
+
+      const btn = document.getElementById("checkoutBtn");
+      btn.disabled = true;
+      btn.textContent = "正在送出報名...";
+
+      let success = true;
+      const bookingIds = [];
+
+      for (const course of cartCourses) {
+        const newBooking = {
+          session_id: course.session_id,
+          tourist_id: touristId,
+          payment_status: '未繳費',
+          insurance_status: '未投保'
+        };
+
+        if (!isMockMode) {
+          try {
+            const { data, error } = await supabaseClient
+              .from("bookings")
+              .insert([newBooking])
+              .select();
+
+            if (error) {
+              console.error("Supabase booking insert error:", error);
+              success = false;
+            }
+          } catch (err) {
+            console.error(err);
+            success = false;
+          }
+        }
+
+        // Mock 寫入
+        if (isMockMode || !success) {
+          const mockBookings = JSON.parse(localStorage.getItem("mock_bookings") || "[]");
+          const nextId = mockBookings.length > 0 ? Math.max(...mockBookings.map(b => b.booking_id)) + 1 : 3001;
+
+          const bookingMock = {
+            booking_id: nextId,
+            session_id: course.session_id,
+            tourist_id: touristId,
+            payment_status: '未繳費',
+            insurance_status: '未投保',
+            booking_time: new Date().toISOString()
+          };
+
+          mockBookings.push(bookingMock);
+          localStorage.setItem("mock_bookings", JSON.stringify(mockBookings));
+
+          // 模擬扣減課程容納人數
+          const mockCourses = JSON.parse(localStorage.getItem("mock_courses") || "[]");
+          const cIdx = mockCourses.findIndex(c => c.session_id === course.session_id);
+          if (cIdx !== -1 && mockCourses[cIdx].capacity > 0) {
+            mockCourses[cIdx].capacity--;
+            localStorage.setItem("mock_courses", JSON.stringify(mockCourses));
+          }
+
+          // 模擬自動升級邏輯：
+          // 計算該遊客此項目的報名次數
+          const itemType = course.item;
+          const userBookedCount = mockBookings.filter(b => {
+            const cInfo = mockCourses.find(c => c.session_id === b.session_id);
+            return b.tourist_id === touristId && cInfo && cInfo.item === itemType && b.payment_status !== '已退款';
+          }).length;
+
+          // 升級規則：1次即初階，3次升中階，6次升中高，9次升高階
+          let newLevel = "初階";
+          if (userBookedCount >= 9) newLevel = "高階";
+          else if (userBookedCount >= 6) newLevel = "中高階";
+          else if (userBookedCount >= 3) newLevel = "中階";
+
+          // 更新等級表
+          const mockLevels = JSON.parse(localStorage.getItem("mock_tourist_levels") || "[]");
+          const lvlIdx = mockLevels.findIndex(l => l.tourist_id === touristId && l.item === itemType);
+          if (lvlIdx !== -1) {
+            mockLevels[lvlIdx].level = newLevel;
+          } else {
+            mockLevels.push({ tourist_id: touristId, item: itemType, level: newLevel });
+          }
+          localStorage.setItem("mock_tourist_levels", JSON.stringify(mockLevels));
+
+          success = true; // 標記為成功
+        }
+      }
+
+      if (success) {
+        if (!isMockMode) {
+          try {
+            await supabaseClient.from('cart').delete().eq('tourist_id', touristId);
+          } catch (e) {
+            console.error("Failed to clear DB cart:", e);
+          }
+        }
+        alert("報名成功！感謝您的參與，請至「我的歷程」查看明細並完成付款！");
+        localStorage.removeItem("touristCart");
+        window.location.href = "tourist-bookings.html";
+      } else {
+        alert("報名過程中發生錯誤，請稍後再試。");
+        btn.disabled = false;
+        btn.textContent = "確認報名課程";
+      }
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "未設定";
+      const date = new Date(value);
+      return date.toLocaleString("zh-TW", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem("loginRole");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("touristId");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+
+</html>

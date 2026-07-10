@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OutdoorPeer活動網 - 活動詳情</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blue: {
+              50: '#f0fafb',
+              100: '#e0f4f5',
+              200: '#c0e4e4', // 主色
+              300: '#a3d8d8',
+              400: '#7ac5c5',
+              500: '#c0e4e4', // 主色
+              600: '#ffaa39', // 橘色 (主要強烈色/按鈕等)
+              700: '#7b7c80', // 灰
+              800: '#545558',
+              900: '#1e293b',
+            },
+            cyan: {
+              500: '#c0e4e4',
+            },
+            slate: {
+              600: '#7b7c80',
+              700: '#7b7c80',
+            },
+            yellow: {
+              100: '#fff1c2', // 淺黃
+              200: '#fecd67', // 暖黃
+              300: '#fecd67',
+              400: '#fecd67',
+              500: '#fecd67',
+            },
+            orange: {
+              500: '#ffaa39', // 亮橘
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold text-blue-700">OutdoorPeer活動網</h1>
+        <p class="text-xs text-slate-500 mt-1">遊客模式</p>
+      </div>
+      <div class="md:flex max-md:hidden items-center gap-4 text-sm">
+        <nav class="flex items-center gap-2">
+          <a href="tourist-home.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">首頁</a>
+          <a href="tourist-bookings.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">我的歷程</a>
+          <a href="cart.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">
+            購物車
+            <span id="cartCount" class="ml-1 text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">0</span>
+          </a>
+          <a href="tourist-profile.html"
+            class="p-2 rounded-md text-slate-600 hover:bg-slate-100 flex items-center justify-center" title="個人檔案">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+          </a>
+          <button onclick="logout()" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">登出</button>
+        </nav>
+      </div>
+
+      <button id="mobileMenuBtn" class="md:hidden text-slate-600 border px-3 py-2 rounded-md">
+        選單
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden border-t bg-white px-6 py-3 space-y-2 text-sm">
+      <div class="px-3 py-2 text-xs text-slate-500 font-bold border-b"><span id="welcomeUserNameMobile"></span></div>
+      <a href="tourist-home.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">首頁</a>
+      <a href="tourist-bookings.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">我的歷程</a>
+      <a href="cart.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">購物車</a>
+      <a href="tourist-profile.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">個人檔案</a>
+      <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md hover:bg-slate-100">登出</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-6 py-8">
+    <div class="mb-4">
+      <a href="tourist-home.html" class="text-sm text-blue-600 hover:underline flex items-center gap-1">
+        ← 返回活動列表
+      </a>
+    </div>
+
+    <div id="detailContainer" class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+      <!-- 詳情載入中 -->
+      <div class="p-12 text-center text-slate-400">
+        正在載入活動詳情...
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t bg-white mt-12">
+    <div class="max-w-6xl mx-auto px-6 py-5 text-sm text-slate-500">
+      © 2026 OutdoorPeer活動網
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // 權限檢查
+    const loginRole = localStorage.getItem("loginRole");
+    const touristId = localStorage.getItem("touristId");
+    if (loginRole !== "tourist" || !touristId) {
+      window.location.href = "login.html";
+    }
+    const userName = localStorage.getItem("userName") || touristId;
+
+    // 🔑 Supabase 連線資訊
+    const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let isMockMode = false;
+    let currentSessionId = null;
+    let courseInfo = null;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const welcomeEl = document.getElementById("welcomeUserName");
+      if (welcomeEl) welcomeEl.textContent = userName;
+      document.getElementById("welcomeUserNameMobile").textContent = userName + " 您好";
+
+      document.getElementById("mobileMenuBtn").addEventListener("click", () => {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      currentSessionId = parseInt(params.get("session_id"));
+
+      if (!currentSessionId) {
+        alert("無效的活動 ID！");
+        window.location.href = "tourist-home.html";
+        return;
+      }
+
+      await checkMockMode();
+      await syncCartFromDb();
+      await loadActivityDetail();
+    });
+
+    async function checkMockMode() {
+      try {
+        const { error } = await supabaseClient.from('coach').select('id_number').limit(1);
+        if (error) isMockMode = true;
+      } catch (e) {
+        isMockMode = true;
+      }
+    }
+
+    async function syncCartFromDb() {
+      if (!touristId) return;
+      if (!isMockMode) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('cart')
+            .select('session_id')
+            .eq('tourist_id', touristId);
+          if (!error && data) {
+            const sessionIds = data.map(item => item.session_id);
+            localStorage.setItem("touristCart", JSON.stringify(sessionIds));
+          }
+        } catch (e) {
+          console.error("Cart sync failed, fallback to localStorage:", e);
+        }
+      }
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("touristCart")) || [];
+      const cartCount = document.getElementById("cartCount");
+      if (cartCount) cartCount.textContent = cart.length;
+    }
+
+    async function loadActivityDetail() {
+      let info = null;
+
+      if (!isMockMode) {
+        try {
+          const { data, error } = await supabaseClient
+            .from("course")
+            .select("*, coach!instructor_id(*)")
+            .eq("session_id", currentSessionId)
+            .maybeSingle();
+
+          if (!error && data) {
+            info = data;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (isMockMode || !info) {
+        const mockCourses = JSON.parse(localStorage.getItem("mock_courses") || "[]");
+        info = mockCourses.find(c => c.session_id === currentSessionId);
+      }
+
+      if (!info) {
+        document.getElementById("detailContainer").innerHTML = `
+          <div class="p-12 text-center text-slate-400">
+            抱歉，找不到該活動詳情。
+          </div>
+        `;
+        return;
+      }
+
+      courseInfo = info;
+      renderDetail();
+    }
+
+    function renderDetail() {
+      const container = document.getElementById("detailContainer");
+      const coach = courseInfo.coach || {};
+      const coachName = coach.name || (courseInfo.coach_name || "未指定");
+      const isAvailable = courseInfo.session_status === "開放報名中";
+
+      container.innerHTML = `
+        <div class="h-48 bg-gradient-to-r from-blue-400 to-cyan-500 relative flex items-end p-8 text-white">
+          <div class="absolute inset-0 bg-black/10"></div>
+          <div class="relative z-10">
+            <span class="text-xs px-2.5 py-1 rounded-full bg-white/20 font-bold backdrop-blur-sm mr-2">${courseInfo.item}</span>
+            <span class="text-xs px-2.5 py-1 rounded-full bg-white/20 font-bold backdrop-blur-sm">${courseInfo.difficulty_level}</span>
+            <h3 class="text-2xl md:text-3xl font-extrabold mt-3">${courseInfo.course_name}</h3>
+          </div>
+        </div>
+
+        <div class="p-6 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- 左側：詳細資訊 -->
+          <div class="md:col-span-2 space-y-6">
+            <div>
+              <h4 class="text-sm font-bold text-slate-700 border-l-4 border-blue-500 pl-2.5 mb-3">活動說明</h4>
+              <p class="text-slate-600 text-sm leading-relaxed">
+                本課程為 ${courseInfo.difficulty_level} 水域活動項目「${courseInfo.item}」，主要由資深的 ${coachName} 教練親自帶領，不論您是第一次接觸還是想提升技巧，教練都會提供最專業的指導，讓您在安全的環境下盡情享受水域樂趣。
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-slate-50 p-5 rounded-2xl">
+              <div>
+                <p class="text-slate-400 text-xs">開課時段</p>
+                <p class="font-bold text-slate-700 mt-1">${formatDateTime(courseInfo.start_time)}</p>
+              </div>
+              <div>
+                <p class="text-slate-400 text-xs">預計結束時段</p>
+                <p class="font-bold text-slate-700 mt-1">${formatDateTime(courseInfo.end_time)}</p>
+              </div>
+              <div>
+                <p class="text-slate-400 text-xs">人數上限</p>
+                <p class="font-bold text-slate-700 mt-1">${courseInfo.capacity || 0} 人</p>
+              </div>
+              <div>
+                <p class="text-slate-400 text-xs">目前狀態</p>
+                <span class="inline-block text-xs font-bold px-2 py-0.5 rounded mt-1 ${getStatusBadgeClass(courseInfo.session_status)}">${courseInfo.session_status}</span>
+              </div>
+            </div>
+
+            <!-- 教練簡介 -->
+            <div class="border-t pt-5">
+              <h4 class="text-sm font-bold text-slate-700 border-l-4 border-blue-500 pl-2.5 mb-3">關於教練 — ${coachName}</h4>
+              <div class="bg-blue-50/50 p-4 rounded-xl text-xs text-slate-600 space-y-2">
+                <p><span class="font-bold text-slate-700">教練姓名：</span>${coachName}</p>
+                <p><span class="font-bold text-slate-700">自我介紹：</span>${coach.bio || "教練很低調，目前尚無簡介內容。"}</p>
+                <p><span class="font-bold text-slate-700">專長項目：</span>${coach.specialties ? coach.specialties.join(", ") : (courseInfo.item || "水域運動")}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側：報名卡片 -->
+          <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm h-fit space-y-4">
+            <div>
+              <p class="text-slate-400 text-xs">體驗價格 (TWD)</p>
+              <h3 class="text-3xl font-extrabold text-blue-600 mt-1">NT$ ${Number(courseInfo.price || 0).toLocaleString()}</h3>
+            </div>
+
+            <button 
+              id="addToCartBtn" 
+              onclick="addToCart()" 
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2 disabled:bg-slate-300 disabled:cursor-not-allowed"
+              ${!isAvailable ? "disabled" : ""}
+            >
+              ${isAvailable ? "加入購物車" : "此活動暫不開放報名"}
+            </button>
+
+            <div class="text-[11px] text-slate-400 leading-relaxed space-y-1">
+              <p>✔️ 本課程為前台工作室所安排的安全課程，並配置安全救生衣與裝備。</p>
+              <p>✔️ 完成報名後，請於「我的報名」分頁簽署健康聲明書。</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function addToCart() {
+      const cart = JSON.parse(localStorage.getItem("touristCart")) || [];
+
+      if (cart.includes(currentSessionId)) {
+        alert("此活動已經在購物車中");
+        return;
+      }
+
+      if (!isMockMode) {
+        try {
+          const { error } = await supabaseClient
+            .from('cart')
+            .insert({ tourist_id: touristId, session_id: currentSessionId });
+          if (error) {
+            console.error("Failed to add to DB cart:", error);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      cart.push(currentSessionId);
+      localStorage.setItem("touristCart", JSON.stringify(cart));
+      alert("已加入購物車");
+      updateCartCount();
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "未設定";
+      const date = new Date(value);
+      return date.toLocaleString("zh-TW", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function getStatusBadgeClass(status) {
+      switch (status) {
+        case "開放報名中":
+          return "bg-green-100 text-green-700";
+        case "已成團":
+          return "bg-blue-100 text-blue-700";
+        case "已客滿":
+          return "bg-orange-100 text-orange-700";
+        default:
+          return "bg-slate-100 text-slate-600";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("loginRole");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("touristId");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+
+</html>

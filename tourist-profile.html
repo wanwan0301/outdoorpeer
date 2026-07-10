@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OutdoorPeer活動網 - 個人檔案</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blue: {
+              50: '#f0fafb',
+              100: '#e0f4f5',
+              200: '#c0e4e4', // 主色
+              300: '#a3d8d8',
+              400: '#7ac5c5',
+              500: '#c0e4e4', // 主色
+              600: '#ffaa39', // 橘色 (主要強烈色/按鈕等)
+              700: '#7b7c80', // 灰
+              800: '#545558',
+              900: '#1e293b',
+            },
+            cyan: {
+              500: '#c0e4e4',
+            },
+            slate: {
+              600: '#7b7c80',
+              700: '#7b7c80',
+            },
+            yellow: {
+              100: '#fff1c2', // 淺黃
+              200: '#fecd67', // 暖黃
+              300: '#fecd67',
+              400: '#fecd67',
+              500: '#fecd67',
+            },
+            orange: {
+              500: '#ffaa39', // 亮橘
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="min-h-screen flex flex-col bg-slate-50">
+
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold text-blue-700">OutdoorPeer活動網</h1>
+        <p class="text-xs text-slate-500 mt-1">遊客模式</p>
+      </div>
+
+      <div class="md:flex max-md:hidden items-center gap-4 text-sm">
+        <nav class="flex items-center gap-2">
+          <a href="tourist-home.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">首頁</a>
+          <a href="tourist-bookings.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">我的歷程</a>
+          <a href="cart.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">
+            購物車
+            <span id="cartCount" class="ml-1 text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">0</span>
+          </a>
+          <a href="tourist-profile.html"
+            class="p-2 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center" title="個人檔案">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+          </a>
+          <button onclick="logout()" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">登出</button>
+        </nav>
+      </div>
+
+      <button id="mobileMenuBtn" class="md:hidden text-slate-600 border px-3 py-2 rounded-md">
+        選單
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden border-t bg-white px-6 py-3 space-y-2 text-sm">
+      <div class="px-3 py-2 text-xs text-slate-500 font-bold border-b"><span id="welcomeUserNameMobile"></span></div>
+      <a href="tourist-home.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">首頁</a>
+      <a href="tourist-bookings.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">我的歷程</a>
+      <a href="cart.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">購物車</a>
+      <a href="tourist-profile.html" class="block px-3 py-2 rounded-md bg-blue-50 text-blue-600">個人檔案</a>
+      <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md hover:bg-slate-100">登出</button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-3xl mx-auto px-6 py-8 flex-1 w-full">
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-md">
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-5 mb-6">
+        <div class="p-3 bg-blue-50 rounded-2xl text-blue-600">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+            stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">個人檔案設定</h2>
+          <p class="text-xs text-slate-500 mt-1">管理您的基本資料與登入密碼</p>
+        </div>
+      </div>
+
+      <form id="profileForm" class="space-y-6">
+        <!-- ID Number (Hidden from UI) -->
+        <input type="hidden" id="idNumber" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Name -->
+          <div>
+            <label class="block text-sm font-bold text-slate-600 mb-1.5">姓名</label>
+            <input type="text" id="name" required
+              class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-800" />
+          </div>
+
+          <!-- Gender -->
+          <div>
+            <label class="block text-sm font-bold text-slate-600 mb-1.5">性別</label>
+            <select id="gender" required
+              class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-800 bg-white">
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Birthday -->
+          <div>
+            <label class="block text-sm font-bold text-slate-600 mb-1.5">出生年月日</label>
+            <input type="date" id="birthDate" required
+              class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-800" />
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <label class="block text-sm font-bold text-slate-600 mb-1.5">聯絡電話</label>
+            <input type="text" id="phone" required
+              class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-800" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Email / Account -->
+          <div>
+            <label class="block text-sm font-bold text-slate-600 mb-1.5">Email (登入帳號)</label>
+            <input type="email" id="email" required
+              class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-800" />
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label class="block text-sm font-bold text-slate-600 mb-1.5">登入密碼 (需含英數字，至少6碼)</label>
+            <input type="password" id="password" required minlength="6" pattern="^(?=.*[A-Za-z])(?=.*\d).{6,}$"
+              title="密碼需至少 6 碼，且必須包含英文與數字" placeholder="輸入新密碼以修改"
+              class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-800" />
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div>
+          <label class="block text-sm font-bold text-slate-600 mb-1.5">通訊地址</label>
+          <input type="text" id="address"
+            class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-800" />
+        </div>
+
+        <!-- Dietary Habit -->
+        <div>
+          <label class="block text-sm font-bold text-slate-600 mb-1.5">飲食習慣</label>
+          <input type="text" id="diet" placeholder="例如：葷食、全素、海鮮過敏等"
+            class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-800" />
+        </div>
+
+        <div class="border-t border-slate-100 pt-6 mt-6">
+          <h3 class="text-sm font-bold text-slate-700 mb-4">緊急聯絡人資訊</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Emergency Contact -->
+            <div>
+              <label class="block text-sm font-bold text-slate-500 mb-1.5">緊急聯絡人姓名</label>
+              <input type="text" id="emergencyContact"
+                class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-800" />
+            </div>
+
+            <!-- Emergency Phone -->
+            <div>
+              <label class="block text-sm font-bold text-slate-500 mb-1.5">緊急聯絡人電話</label>
+              <input type="text" id="emergencyPhone"
+                class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-800" />
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 flex gap-4">
+          <button type="submit"
+            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            儲存修改
+          </button>
+          <a href="tourist-home.html"
+            class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-6 rounded-xl transition text-center">
+            取消
+          </a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t bg-white mt-10">
+    <div class="max-w-6xl mx-auto px-6 py-5 text-sm text-slate-500">
+      © 2026 OutdoorPeer活動網
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // 檢查登入身分
+    const loginRole = localStorage.getItem("loginRole");
+    const touristId = localStorage.getItem("touristId");
+    if (loginRole !== "tourist" || !touristId) {
+      window.location.href = "login.html";
+    }
+
+    const userName = localStorage.getItem("userName") || touristId;
+
+    // 🔑 Supabase 連線資訊
+    const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      await syncCartFromDb();
+      loadProfileData();
+
+      document.getElementById("mobileMenuBtn").addEventListener("click", () => {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+      });
+    });
+
+    async function loadProfileData() {
+      let isMock = SUPABASE_URL.includes("你的") || !SUPABASE_URL;
+      let userData = null;
+
+      if (!isMock) {
+        try {
+          const { data, error } = await supabaseClient
+            .from("tourists")
+            .select("*")
+            .eq("id_number", touristId)
+            .maybeSingle();
+
+          if (!error && data) {
+            userData = data;
+          } else {
+            console.warn("Supabase 載入遊客個人檔案失敗，使用 LocalStorage Mock：", error);
+            isMock = true;
+          }
+        } catch (err) {
+          console.warn("Supabase 連線異常，使用 LocalStorage Mock：", err);
+          isMock = true;
+        }
+      }
+
+      if (isMock || !userData) {
+        const mockTourists = JSON.parse(localStorage.getItem("mock_tourists") || "[]");
+        userData = mockTourists.find(t => t.id_number === touristId);
+
+        // 如果 LocalStorage 也沒有，則建立一個空白預設
+        if (!userData) {
+          const email = localStorage.getItem("touristEmail") || "xiaoming@email.com";
+          const passwords = JSON.parse(localStorage.getItem("user_passwords") || "{}");
+          const password = passwords[email] || "password123";
+          userData = {
+            id_number: touristId,
+            name: userName,
+            gender: "男",
+            birth_date: "1995-01-01",
+            phone: "0912345678",
+            email: email,
+            password: password,
+            address: "",
+            dietary_habit: "葷食",
+            emergency_contact: "",
+            emergency_phone: ""
+          };
+        }
+      }
+
+      // 填入表單
+      document.getElementById("idNumber").value = userData.id_number;
+      document.getElementById("name").value = userData.name || "";
+      document.getElementById("gender").value = userData.gender || "男";
+      document.getElementById("birthDate").value = userData.birth_date || "";
+      document.getElementById("phone").value = userData.phone || "";
+      document.getElementById("email").value = userData.email || "";
+      document.getElementById("address").value = userData.address || "";
+      document.getElementById("diet").value = userData.dietary_habit || "";
+      document.getElementById("emergencyContact").value = userData.emergency_contact || "";
+      document.getElementById("emergencyPhone").value = userData.emergency_phone || "";
+
+      // 讀取密碼
+      let pwd = userData.password;
+      if (!pwd) {
+        const passwords = JSON.parse(localStorage.getItem("user_passwords") || "{}");
+        pwd = passwords[userData.email ? userData.email.toLowerCase() : ""] || "password123";
+      }
+      document.getElementById("password").value = pwd;
+    }
+
+    document.getElementById("profileForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const gender = document.getElementById("gender").value;
+      const birth_date = document.getElementById("birthDate").value;
+      const phone = document.getElementById("phone").value;
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const password = document.getElementById("password").value.trim();
+      const address = document.getElementById("address").value;
+      const dietary_habit = document.getElementById("diet").value;
+      const emergency_contact = document.getElementById("emergencyContact").value;
+      const emergency_phone = document.getElementById("emergencyPhone").value;
+
+      let isMock = SUPABASE_URL.includes("你的") || !SUPABASE_URL;
+      let updateSuccess = false;
+
+      if (!isMock) {
+        try {
+          const { error } = await supabaseClient
+            .from("tourists")
+            .update({
+              name,
+              gender,
+              birth_date,
+              phone,
+              email,
+              password,
+              address,
+              dietary_habit,
+              emergency_contact,
+              emergency_phone
+            })
+            .eq("id_number", touristId);
+
+          if (!error) {
+            updateSuccess = true;
+          } else {
+            console.warn("Supabase 修改失敗，切換至 LocalStorage：", error);
+          }
+        } catch (err) {
+          console.warn("Supabase 更新異常，切換至 LocalStorage：", err);
+        }
+      }
+
+      // 同步/寫入 LocalStorage
+      const mockTourists = JSON.parse(localStorage.getItem("mock_tourists") || "[]");
+      const idx = mockTourists.findIndex(t => t.id_number === touristId);
+      const updatedData = {
+        id_number: touristId,
+        name,
+        gender,
+        birth_date,
+        phone,
+        email,
+        password,
+        address,
+        dietary_habit,
+        emergency_contact,
+        emergency_phone
+      };
+
+      if (idx !== -1) {
+        mockTourists[idx] = updatedData;
+      } else {
+        mockTourists.push(updatedData);
+      }
+      localStorage.setItem("mock_tourists", JSON.stringify(mockTourists));
+
+      // 同步密碼到 user_passwords 雜湊對照表
+      const passwords = JSON.parse(localStorage.getItem("user_passwords") || "{}");
+      passwords[email] = password;
+      localStorage.setItem("user_passwords", JSON.stringify(passwords));
+
+      // 更新目前網頁迎賓姓名與 LocalStorage 快照
+      localStorage.setItem("userName", name);
+
+      alert("個人檔案修改成功！");
+      window.location.href = "tourist-home.html";
+    });
+
+    async function syncCartFromDb() {
+      if (!touristId) return;
+      let isMock = SUPABASE_URL.includes("你的") || !SUPABASE_URL;
+      if (!isMock) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('cart')
+            .select('session_id')
+            .eq('tourist_id', touristId);
+          if (!error && data) {
+            const sessionIds = data.map(item => item.session_id);
+            localStorage.setItem("touristCart", JSON.stringify(sessionIds));
+          }
+        } catch (e) {
+          console.error("Cart sync failed, fallback to localStorage:", e);
+        }
+      }
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("touristCart")) || [];
+      const cartCount = document.getElementById("cartCount");
+      if (cartCount) cartCount.textContent = cart.length;
+    }
+
+    function logout() {
+      localStorage.removeItem("loginRole");
+      localStorage.removeItem("touristId");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+
+</html>

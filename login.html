@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>水域活動工作室 - 註冊與登入</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="p-4 md:p-8 min-h-screen flex items-center justify-center relative overflow-x-hidden">
+
+
+  <div class="w-full max-w-2xl glass-card rounded-3xl overflow-hidden p-6 md:p-8 relative">
+    
+    <!-- 標題 -->
+    <div class="text-center mb-6">
+      
+      <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-wide">水域活動工作室</h1>
+      <p class="text-slate-500 text-sm mt-1">探索精彩體驗，開啟您的冒險旅程</p>
+    </div>
+
+    <!-- 身分切換 (遊客 / 教練) -->
+    <div class="flex bg-slate-100 p-1.5 rounded-2xl mb-6">
+      <button id="tabTourist" onclick="setRole('tourist')" class="role-tab flex-1 py-3 text-center rounded-xl font-bold text-slate-600 active text-sm">
+        遊客身分 (Tourist)
+      </button>
+      <button id="tabCoach" onclick="setRole('coach')" class="role-tab flex-1 py-3 text-center rounded-xl font-bold text-slate-600 text-sm">
+        教練身分 (Coach)
+      </button>
+    </div>
+
+    <!-- 切換 登入/註冊 模式 -->
+    <div class="flex justify-center gap-6 border-b border-slate-200 mb-6 text-sm">
+      <button id="modeLoginBtn" onclick="setMode('login')" class="pb-3 px-4 font-bold text-blue-600 border-b-2 border-blue-500 transition-colors">
+        會員登入
+      </button>
+      <button id="modeRegisterBtn" onclick="setMode('register')" class="pb-3 px-4 font-medium text-slate-400 hover:text-slate-600 transition-colors">
+        註冊新帳號
+      </button>
+    </div>
+
+    <!-- 1. 登入區塊 -->
+    <div id="loginSection" class="space-y-4">
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+        <div class="form-group">
+          <label class="form-label block text-xs font-bold text-slate-600 mb-1">電子信箱 (Email)</label>
+          <input type="email" id="loginId" required placeholder="例如：example@email.com" class="form-control w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none">
+        </div>
+        <div class="mb-4">
+          <label class="block text-slate-600 text-xs font-bold mb-1.5">密碼</label>
+          <input type="password" id="loginPassword" required placeholder="請輸入密碼" class="form-control w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none">
+        </div>
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition transform hover:-translate-y-0.5">
+          確認登入
+        </button>
+      </form>
+      <div class="text-center text-xs text-slate-400 mt-4">
+        💡 模擬提示：系統提供預載帳號供直接測試：<br>
+        遊客：<code class="font-mono font-bold text-blue-500 select-all">xiaoming@email.com</code> / 密碼：<code class="font-mono font-bold text-blue-500 select-all">password123</code><br>
+        教練：<code class="font-mono font-bold text-blue-500 select-all">H298765432</code> / 密碼：<code class="font-mono font-bold text-blue-500 select-all">123456</code>
+      </div>
+    </div>
+
+    <!-- 2. 註冊區塊 (遊客) -->
+    <div id="registerTouristSection" class="hidden">
+      <form id="registerTouristForm" onsubmit="handleRegisterTourist(event)" class="space-y-4 max-h-[50vh] overflow-y-auto pr-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">身分證字號 (必填，不可修改)</label>
+            <input type="text" id="regTId" required pattern="^[A-Z][1-2][0-9]{8}$" placeholder="例如：A123456789" class="form-control uppercase w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">密碼 (必填，需含英數字)</label>
+            <input type="password" id="regTPass" required minlength="6" pattern="^(?=.*[A-Za-z])(?=.*\d).{6,}$" title="密碼需至少 6 碼，且必須包含英文與數字" placeholder="密碼需至少 6 碼且含英數字" class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="form-group md:col-span-2">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">姓名 (必填)</label>
+            <input type="text" id="regTName" required placeholder="請輸入姓名" class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">性別 (必填)</label>
+            <select id="regTGender" class="form-control w-full p-2.5 border rounded-lg text-sm bg-white">
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">出生年月日 (必填)</label>
+            <input type="date" id="regTBirth" required class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">聯絡電話 (必填)</label>
+            <input type="text" id="regTPhone" required placeholder="例如：0912345678" class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label block text-xs font-bold text-slate-600 mb-1">Email (必填，做為登入帳號)</label>
+          <input type="email" id="regTEmail" required placeholder="example@email.com" class="form-control w-full p-2.5 border rounded-lg text-sm">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="form-group md:col-span-2">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">通訊地址</label>
+            <input type="text" id="regTAddress" placeholder="例如：台北市信義區..." class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">飲食習慣</label>
+            <input type="text" id="regTDiet" value="葷食" placeholder="例如：葷食、全素" class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+        </div>
+
+        <div class="border-t pt-3 mt-3">
+          <p class="text-xs font-bold text-blue-600 mb-2">🚨 緊急聯絡人資訊 (水域活動建議填寫)</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="form-label block text-xs font-bold text-slate-600 mb-1">緊急聯絡人姓名</label>
+              <input type="text" id="regTEmergencyName" placeholder="聯絡人姓名" class="form-control w-full p-2.5 border rounded-lg text-sm">
+            </div>
+            <div class="form-group">
+              <label class="form-label block text-xs font-bold text-slate-600 mb-1">緊急聯絡人電話</label>
+              <input type="text" id="regTEmergencyPhone" placeholder="聯絡人電話" class="form-control w-full p-2.5 border rounded-lg text-sm">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition transform hover:-translate-y-0.5 mt-2">
+          註冊為遊客
+        </button>
+      </form>
+    </div>
+
+    <!-- 3. 註冊區塊 (教練) -->
+    <div id="registerCoachSection" class="hidden">
+      <form id="registerCoachForm" onsubmit="handleRegisterCoach(event)" class="space-y-4 max-h-[50vh] overflow-y-auto pr-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">身分證字號 (必填，不可修改)</label>
+            <input type="text" id="regCId" required pattern="^[A-Z][1-2][0-9]{8}$" placeholder="例如：H298765432" class="form-control uppercase w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">密碼 (必填)</label>
+            <input type="password" id="regCPass" required minlength="6" placeholder="密碼需至少 6 碼" class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="form-group md:col-span-2">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">姓名 (必填)</label>
+            <input type="text" id="regCName" required placeholder="請輸入姓名" class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">性別 (必填)</label>
+            <select id="regCGender" class="form-control w-full p-2.5 border rounded-lg text-sm bg-white">
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">出生年月日 (必填)</label>
+            <input type="date" id="regCBirth" required class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">聯絡電話 (必填)</label>
+            <input type="text" id="regCPhone" required placeholder="例如：0912345678" class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label block text-xs font-bold text-slate-600 mb-1">Email</label>
+          <input type="email" id="regCEmail" placeholder="coach@studio.com" class="form-control w-full p-2.5 border rounded-lg text-sm">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="form-group md:col-span-2">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">通訊地址</label>
+            <input type="text" id="regCAddress" placeholder="例如：台北市信義區..." class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">飲食習慣</label>
+            <input type="text" id="regCDiet" value="葷食" placeholder="例如：葷食、全素" class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+        </div>
+
+        <!-- 專長項目與證照 -->
+        <div class="border-t pt-3 mt-3 space-y-3">
+          <div>
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1.5">專長項目 (可多選)</label>
+            <div class="flex flex-wrap gap-2.5">
+              <label class="inline-flex items-center bg-white px-3 py-1.5 border rounded-lg text-xs cursor-pointer hover:bg-blue-50">
+                <input type="checkbox" name="specialty" value="SUP立槳" class="mr-1.5"> SUP立槳
+              </label>
+              <label class="inline-flex items-center bg-white px-3 py-1.5 border rounded-lg text-xs cursor-pointer hover:bg-blue-50">
+                <input type="checkbox" name="specialty" value="獨木舟" class="mr-1.5"> 獨木舟
+              </label>
+              <label class="inline-flex items-center bg-white px-3 py-1.5 border rounded-lg text-xs cursor-pointer hover:bg-blue-50">
+                <input type="checkbox" name="specialty" value="衝浪" class="mr-1.5"> 衝浪
+              </label>
+              <label class="inline-flex items-center bg-white px-3 py-1.5 border rounded-lg text-xs cursor-pointer hover:bg-blue-50">
+                <input type="checkbox" name="specialty" value="自由潛水" class="mr-1.5"> 自由潛水
+              </label>
+              <label class="inline-flex items-center bg-white px-3 py-1.5 border rounded-lg text-xs cursor-pointer hover:bg-blue-50">
+                <input type="checkbox" name="specialty" value="水肺潛水" class="mr-1.5"> 水肺潛水
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">專業證照說明 (複數證照請以逗號區隔)</label>
+            <input type="text" id="regCLicenses" placeholder="例如：PADI OW 專任教練, ISA 衝浪教練" class="form-control w-full p-2.5 border rounded-lg text-sm">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label block text-xs font-bold text-slate-600 mb-1">個人簡介 / 自我介紹</label>
+            <textarea id="regCBio" rows="2" placeholder="簡述您的教學理念或經歷..." class="form-control w-full p-2.5 border rounded-lg text-sm"></textarea>
+          </div>
+        </div>
+
+        <div class="border-t pt-3 mt-3">
+          <p class="text-xs font-bold text-blue-600 mb-2">🚨 緊急聯絡人資訊</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="form-label block text-xs font-bold text-slate-600 mb-1">緊急聯絡人姓名</label>
+              <input type="text" id="regCEmergencyName" placeholder="聯絡人姓名" class="form-control w-full p-2.5 border rounded-lg text-sm">
+            </div>
+            <div class="form-group">
+              <label class="form-label block text-xs font-bold text-slate-600 mb-1">緊急聯絡人電話</label>
+              <input type="text" id="regCEmergencyPhone" placeholder="聯絡人電話" class="form-control w-full p-2.5 border rounded-lg text-sm">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition transform hover:-translate-y-0.5 mt-2">
+          註冊為教練
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // ==========================================================
+    // 🔑 Supabase 連線資訊
+    // ==========================================================
+    const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentRole = 'tourist'; // 'tourist' or 'coach'
+    let currentMode = 'login';   // 'login' or 'register'
+    let isMockMode = false;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 初始化預載的密碼帳號
+      initDefaultPasswords();
+      // 偵測資料庫連線狀況
+      testDatabaseConnection();
+      // 初始化角色為遊客，設定 Email 登入欄位
+      setRole('tourist');
+    });
+
+    async function testDatabaseConnection() {
+      try {
+        const { data, error } = await _supabase.from('coach').select('id_number').limit(1);
+        if (error) {
+          isMockMode = true;
+          console.warn('無法連結 Supabase，進入 LocalStorage 模擬模式：', error);
+        }
+      } catch (err) {
+        isMockMode = true;
+        console.warn('Supabase 連線失敗，進入 LocalStorage 模擬模式。');
+      }
+    }
+
+    function initDefaultPasswords() {
+      const passwords = JSON.parse(localStorage.getItem('user_passwords') || '{}');
+      // 設定預設的測試密碼
+      if (!passwords['xiaoming@email.com']) passwords['xiaoming@email.com'] = 'password123';
+      if (!passwords['H298765432']) passwords['H298765432'] = '123456';
+      localStorage.setItem('user_passwords', JSON.stringify(passwords));
+
+      // 若在 Mock 模式下，也初始化一些遊客與教練的基本資料
+      const mockTourists = JSON.parse(localStorage.getItem('mock_tourists') || '[]');
+      if (mockTourists.length === 0) {
+        mockTourists.push({
+          id_number: 'A123456789',
+          name: '王小明',
+          gender: '男',
+          birth_date: '1995-05-15',
+          phone: '0912345678',
+          email: 'xiaoming@email.com',
+          password: 'password123',
+          dietary_habit: '葷食',
+          address: '台北市信義區市府路1號',
+          emergency_contact: '王爸爸',
+          emergency_phone: '0988776655'
+        });
+        localStorage.setItem('mock_tourists', JSON.stringify(mockTourists));
+      }
+
+      const mockCoaches = JSON.parse(localStorage.getItem('mock_coaches') || '[]');
+      if (mockCoaches.length === 0) {
+        mockCoaches.push({
+          id_number: 'H298765432',
+          name: '陳立槳教練',
+          gender: '男',
+          birth_date: '1988-10-10',
+          phone: '0933445566',
+          email: 'supcoach@email.com',
+          dietary_habit: '葷食',
+          address: '宜蘭縣頭城鎮港口路100號',
+          bio: '從事水域運動與SUP教學已達8年，熱愛海洋。',
+          emergency_contact: '陳媽媽',
+          emergency_phone: '0911223344'
+        });
+        localStorage.setItem('mock_coaches', JSON.stringify(mockCoaches));
+      }
+    }
+
+    function setRole(role) {
+      currentRole = role;
+      document.getElementById('tabTourist').classList.toggle('active', role === 'tourist');
+      document.getElementById('tabCoach').classList.toggle('active', role === 'coach');
+
+      // 動態更新登入帳號欄位
+      const loginIdLabel = document.querySelector('#loginForm label.form-label') || document.querySelector('#loginSection label.form-label') || document.querySelector('#loginForm label') || document.querySelector('#loginSection label');
+      const loginIdInput = document.getElementById('loginId');
+      if (loginIdLabel && loginIdInput) {
+        if (role === 'tourist') {
+          loginIdLabel.textContent = '電子信箱 (Email)';
+          loginIdInput.type = 'email';
+          loginIdInput.placeholder = '例如：example@email.com';
+          loginIdInput.removeAttribute('pattern');
+          loginIdInput.classList.remove('uppercase');
+        } else {
+          loginIdLabel.textContent = '身分證字號';
+          loginIdInput.type = 'text';
+          loginIdInput.placeholder = '例如：H298765432';
+          loginIdInput.setAttribute('pattern', '^[A-Z][1-2][0-9]{8}$');
+          loginIdInput.classList.add('uppercase');
+        }
+      }
+
+      updateUI();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      
+      const loginBtn = document.getElementById('modeLoginBtn');
+      const regBtn = document.getElementById('modeRegisterBtn');
+      
+      if (mode === 'login') {
+        loginBtn.className = "pb-3 px-4 font-bold text-blue-600 border-b-2 border-blue-500 transition-colors";
+        regBtn.className = "pb-3 px-4 font-medium text-slate-400 hover:text-slate-600 transition-colors";
+      } else {
+        loginBtn.className = "pb-3 px-4 font-medium text-slate-400 hover:text-slate-600 transition-colors";
+        regBtn.className = "pb-3 px-4 font-bold text-blue-600 border-b-2 border-blue-500 transition-colors";
+      }
+      
+      updateUI();
+    }
+
+    function updateUI() {
+      const loginSec = document.getElementById('loginSection');
+      const regT = document.getElementById('registerTouristSection');
+      const regC = document.getElementById('registerCoachSection');
+
+      loginSec.classList.add('hidden');
+      regT.classList.add('hidden');
+      regC.classList.add('hidden');
+
+      if (currentMode === 'login') {
+        loginSec.classList.remove('hidden');
+      } else {
+        if (currentRole === 'tourist') {
+          regT.classList.remove('hidden');
+        } else {
+          regC.classList.remove('hidden');
+        }
+      }
+    }
+
+    // ==========================================================
+    // 🔐 登入處理
+    // ==========================================================
+    async function handleLogin(e) {
+      e.preventDefault();
+      const id = document.getElementById('loginId').value.trim();
+      const pass = document.getElementById('loginPassword').value;
+
+      // 1. 驗證密碼
+      const passwords = JSON.parse(localStorage.getItem('user_passwords') || '{}');
+      
+      // 我們允許密碼的 fallback，如果在 database 中存在該人，但 LocalStorage 沒密碼，預設為 '123456'
+      let isPasswordCorrect = false;
+      let userExists = false;
+      let userName = '';
+      let touristIdNumber = '';
+
+      if (currentRole === 'tourist') {
+        const emailLower = id.toLowerCase();
+        let dbPassword = null;
+        let dbName = '';
+        let dbIdNumber = '';
+
+        if (!isMockMode) {
+          const { data, error } = await _supabase.from('tourists').select('name, id_number, password').eq('email', emailLower).maybeSingle();
+          if (data && !error) {
+            userExists = true;
+            userName = data.name;
+            dbPassword = data.password;
+            dbIdNumber = data.id_number;
+          }
+        }
+        
+        // 若 Supabase 查不到或處於 Mock 模式，查詢 LocalStorage
+        if (!userExists) {
+          const mockTourists = JSON.parse(localStorage.getItem('mock_tourists') || '[]');
+          const tourist = mockTourists.find(t => t.email && t.email.toLowerCase() === emailLower);
+          if (tourist) {
+            userExists = true;
+            userName = tourist.name;
+            dbPassword = tourist.password;
+            dbIdNumber = tourist.id_number;
+          }
+        }
+
+        if (userExists) {
+          touristIdNumber = dbIdNumber;
+          const localPass = passwords[emailLower];
+          const activePass = dbPassword || localPass || 'password123';
+          if (activePass === pass) {
+            isPasswordCorrect = true;
+          }
+        }
+      } else {
+        const coachIdUpper = id.toUpperCase();
+        if (!isMockMode) {
+          const { data, error } = await _supabase.from('coach').select('name').eq('id_number', coachIdUpper).maybeSingle();
+          if (data && !error) {
+            userExists = true;
+            userName = data.name;
+          }
+        }
+
+        if (!userExists) {
+          const mockCoaches = JSON.parse(localStorage.getItem('mock_coaches') || '[]');
+          const coach = mockCoaches.find(c => c.id_number === coachIdUpper);
+          if (coach) {
+            userExists = true;
+            userName = coach.name;
+          }
+        }
+
+        if (userExists) {
+          const localPass = passwords[coachIdUpper];
+          const activePass = localPass || '123456';
+          if (activePass === pass) {
+            isPasswordCorrect = true;
+          }
+        }
+      }
+
+      if (!userExists) {
+        alert(`登入失敗！在「${currentRole === 'tourist' ? '遊客' : '教練'}」清單中找不到此帳號。請先註冊。`);
+        return;
+      }
+
+      if (!isPasswordCorrect) {
+        alert('密碼輸入錯誤，請重新確認！');
+        return;
+      }
+
+      // 登入成功，寫入 localStorage 憑證
+      localStorage.setItem('loginRole', currentRole);
+      localStorage.setItem('userName', userName);
+      if (currentRole === 'tourist') {
+        localStorage.setItem('touristId', touristIdNumber);
+        localStorage.removeItem('coachId');
+        alert(`歡迎回來，${userName}！`);
+        window.location.href = 'tourist-home.html';
+      } else {
+        localStorage.setItem('coachId', id.toUpperCase());
+        localStorage.removeItem('touristId');
+        alert(`歡迎回來，${userName} 教練！`);
+        window.location.href = 'coach-home.html';
+      }
+    }
+
+    // ==========================================================
+    // ✍️ 註冊處理 (遊客)
+    // ==========================================================
+    async function handleRegisterTourist(e) {
+      e.preventDefault();
+      
+      const id = document.getElementById('regTId').value.trim().toUpperCase();
+      const pass = document.getElementById('regTPass').value;
+      const name = document.getElementById('regTName').value.trim();
+      const gender = document.getElementById('regTGender').value;
+      const birth = document.getElementById('regTBirth').value;
+      const phone = document.getElementById('regTPhone').value.trim();
+      const email = document.getElementById('regTEmail').value.trim().toLowerCase();
+      const address = document.getElementById('regTAddress').value.trim() || null;
+      const diet = document.getElementById('regTDiet').value.trim() || '葷食';
+      const emerName = document.getElementById('regTEmergencyName').value.trim() || null;
+      const emerPhone = document.getElementById('regTEmergencyPhone').value.trim() || null;
+
+      // 檢查是否已註冊密碼
+      const passwords = JSON.parse(localStorage.getItem('user_passwords') || '{}');
+      if (passwords[email]) {
+        alert('此電子信箱已註冊過密碼！請直接登入。');
+        return;
+      }
+
+      const newTourist = {
+        id_number: id,
+        password: pass, // NEW
+        name: name,
+        gender: gender,
+        birth_date: birth,
+        phone: phone,
+        email: email,
+        address: address,
+        dietary_habit: diet,
+        emergency_contact: emerName,
+        emergency_phone: emerPhone
+      };
+
+      let success = false;
+
+      if (!isMockMode) {
+        // 寫入 Supabase
+        const { error } = await _supabase.from('tourists').insert([newTourist]);
+        if (!error) {
+          success = true;
+        } else {
+          console.error(error);
+          alert('資料庫寫入失敗：' + error.message);
+        }
+      }
+
+      // 如果是 MockMode，或 Supabase 失敗
+      if (isMockMode || !success) {
+        const mockTourists = JSON.parse(localStorage.getItem('mock_tourists') || '[]');
+        if (mockTourists.some(t => t.id_number === id)) {
+          alert('此身分證字號已被註冊！');
+          return;
+        }
+        if (mockTourists.some(t => t.email && t.email.toLowerCase() === email)) {
+          alert('此電子信箱已被註冊！');
+          return;
+        }
+        mockTourists.push(newTourist);
+        localStorage.setItem('mock_tourists', JSON.stringify(mockTourists));
+        success = true;
+      }
+
+      if (success) {
+        // 儲存密碼 (以 email 作為 key)
+        passwords[email] = pass;
+        localStorage.setItem('user_passwords', JSON.stringify(passwords));
+
+        alert('遊客帳號註冊成功！系統已為您自動登入。');
+        
+        localStorage.setItem('loginRole', 'tourist');
+        localStorage.setItem('userName', name);
+        localStorage.setItem('touristId', id);
+        localStorage.removeItem('coachId');
+        
+        window.location.href = 'tourist-home.html';
+      }
+    }
+
+    // ==========================================================
+    // ✍️ 註冊處理 (教練)
+    // ==========================================================
+    async function handleRegisterCoach(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('regCId').value.trim().toUpperCase();
+      const pass = document.getElementById('regCPass').value;
+      const name = document.getElementById('regCName').value.trim();
+      const gender = document.getElementById('regCGender').value;
+      const birth = document.getElementById('regCBirth').value;
+      const phone = document.getElementById('regCPhone').value.trim();
+      const email = document.getElementById('regCEmail').value.trim() || null;
+      const address = document.getElementById('regCAddress').value.trim() || null;
+      const diet = document.getElementById('regCDiet').value.trim() || '葷食';
+      const bio = document.getElementById('regCBio').value.trim() || null;
+      const emerName = document.getElementById('regCEmergencyName').value.trim() || null;
+      const emerPhone = document.getElementById('regCEmergencyPhone').value.trim() || null;
+
+      // 專長
+      const specElements = document.querySelectorAll('input[name="specialty"]:checked');
+      const specialties = Array.from(specElements).map(el => el.value);
+
+      // 證照
+      const licensesText = document.getElementById('regCLicenses').value.trim();
+      const licenses = licensesText ? licensesText.split(',').map(l => l.trim()) : [];
+
+      const passwords = JSON.parse(localStorage.getItem('user_passwords') || '{}');
+      if (passwords[id]) {
+        alert('此身分證字號已註冊過密碼！請直接登入。');
+        return;
+      }
+
+      const newCoach = {
+        id_number: id,
+        name: name,
+        gender: gender,
+        birth_date: birth,
+        phone: phone,
+        email: email,
+        address: address,
+        dietary_habit: diet,
+        bio: bio,
+        emergency_contact: emerName,
+        emergency_phone: emerPhone
+      };
+
+      let success = false;
+
+      if (!isMockMode) {
+        // 1. 寫入 Coach 表
+        const { error: coachErr } = await _supabase.from('coach').insert([newCoach]);
+        if (!coachErr) {
+          success = true;
+
+          // 2. 寫入專長項目
+          if (specialties.length > 0) {
+            const specData = specialties.map(s => ({ id_number: id, specialty: s }));
+            await _supabase.from('coach_specialties').insert(specData);
+          }
+
+          // 3. 寫入證照
+          if (licenses.length > 0) {
+            const licData = licenses.map(l => ({ id_number: id, license_name: l }));
+            await _supabase.from('coach_licenses').insert(licData);
+          }
+        } else {
+          console.error(coachErr);
+          alert('教練基本資料資料庫寫入失敗：' + coachErr.message);
+        }
+      }
+
+      if (isMockMode || !success) {
+        const mockCoaches = JSON.parse(localStorage.getItem('mock_coaches') || '[]');
+        if (mockCoaches.some(c => c.id_number === id)) {
+          alert('此身分證字號已被註冊為教練！');
+          return;
+        }
+
+        // 保存專長與證照至對象內，便於 Mock 時獲取
+        newCoach.specialties = specialties;
+        newCoach.licenses = licenses;
+
+        mockCoaches.push(newCoach);
+        localStorage.setItem('mock_coaches', JSON.stringify(mockCoaches));
+        success = true;
+      }
+
+      if (success) {
+        passwords[id] = pass;
+        localStorage.setItem('user_passwords', JSON.stringify(passwords));
+
+        alert('教練帳號註冊成功！系統已為您自動登入。');
+        
+        localStorage.setItem('loginRole', 'coach');
+        localStorage.setItem('userName', name);
+        localStorage.setItem('coachId', id);
+        localStorage.removeItem('touristId');
+        
+        window.location.href = 'coach-home.html';
+      }
+    }
+  </script>
+</body>
+</html>

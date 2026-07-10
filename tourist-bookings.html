@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OutdoorPeer活動網 - 我的歷程紀錄</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blue: {
+              50: '#f0fafb',
+              100: '#e0f4f5',
+              200: '#c0e4e4', // 主色
+              300: '#a3d8d8',
+              400: '#7ac5c5',
+              500: '#c0e4e4', // 主色
+              600: '#ffaa39', // 橘色 (主要強烈色/按鈕等)
+              700: '#7b7c80', // 灰
+              800: '#545558',
+              900: '#1e293b',
+            },
+            cyan: {
+              500: '#c0e4e4',
+            },
+            slate: {
+              600: '#7b7c80',
+              700: '#7b7c80',
+            },
+            yellow: {
+              100: '#fff1c2', // 淺黃
+              200: '#fecd67', // 暖黃
+              300: '#fecd67',
+              400: '#fecd67',
+              500: '#fecd67',
+            },
+            orange: {
+              500: '#ffaa39', // 亮橘
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold text-blue-700">OutdoorPeer活動網</h1>
+        <p class="text-xs text-slate-500 mt-1">遊客模式</p>
+      </div>
+
+      <div class="md:flex max-md:hidden items-center gap-4 text-sm">
+        <nav class="flex items-center gap-2">
+          <a href="tourist-home.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">首頁</a>
+          <a href="tourist-bookings.html" class="px-4 py-2 rounded-md bg-blue-600 text-white font-medium">我的歷程</a>
+          <a href="cart.html" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">
+            購物車
+            <span id="cartCount" class="ml-1 text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">0</span>
+          </a>
+          <a href="tourist-profile.html"
+            class="p-2 rounded-md text-slate-600 hover:bg-slate-100 flex items-center justify-center" title="個人檔案">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+          </a>
+          <button onclick="logout()" class="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">登出</button>
+        </nav>
+      </div>
+
+      <button id="mobileMenuBtn" class="md:hidden text-slate-600 border px-3 py-2 rounded-md">
+        選單
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden border-t bg-white px-6 py-3 space-y-2 text-sm">
+      <div class="px-3 py-2 text-xs text-slate-500 font-bold border-b"><span id="welcomeUserNameMobile"></span></div>
+      <a href="tourist-home.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">首頁</a>
+      <a href="tourist-bookings.html" class="block px-3 py-2 rounded-md bg-blue-600 text-white">我的歷程</a>
+      <a href="cart.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">購物車</a>
+      <a href="tourist-profile.html" class="block px-3 py-2 rounded-md hover:bg-slate-100">個人檔案</a>
+      <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md hover:bg-slate-100">登出</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-6 py-8">
+
+    <!-- 頂部區塊：等級與健康問卷狀態 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+
+      <!-- 個人等級卡片 -->
+      <div
+        class="bg-gradient-to-br from-blue-500 to-cyan-600 text-white rounded-2xl p-6 shadow-md flex flex-col justify-between">
+        <div>
+          <p class="text-xs text-blue-100 font-bold uppercase tracking-wider">個人水域等級</p>
+          <h3 id="touristNameDisplay" class="text-xl font-bold mt-1">—</h3>
+          <div id="levelListContainer" class="mt-4 space-y-1.5 text-sm">
+            <!-- 動態載入等級 -->
+            <p class="text-xs text-blue-100">尚無水域等級資料</p>
+          </div>
+        </div>
+        <p class="text-[10px] text-blue-200 mt-4 leading-relaxed">
+          * 等級依據您的課程報名次數自動計算：報名過即為「初階」，累積達3次升為「中階」，6次升「中高階」，9次升「高階」。
+        </p>
+      </div>
+
+      <!-- 健康調查表狀態卡片 -->
+      <div
+        class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between md:col-span-2">
+        <div>
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">身體健康調查表</p>
+              <h3 class="text-lg font-bold text-slate-800 mt-1">水域安全健康問卷填寫狀態</h3>
+            </div>
+            <span id="surveyStatusBadge"
+              class="text-xs px-2.5 py-1 rounded-full font-bold bg-yellow-100 text-yellow-700">
+              檢查中...
+            </span>
+          </div>
+          <p class="text-slate-500 text-sm mt-3 leading-relaxed">
+            為保障您的水域活動安全，在參與 SUP、潛水、衝浪等活動前，請務必如實填寫您的游泳能力、過往疾病與手術史，並簽署健康與個人同意聲明。
+          </p>
+        </div>
+        <div class="mt-4 flex gap-3">
+          <button id="fillSurveyBtn" onclick="openSurveyModal()"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition shadow-sm">
+            填寫 / 編輯健康調查表
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 報名紀錄列表 -->
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+        <h3 class="font-extrabold text-slate-800 text-lg flex items-center gap-2">
+
+          已報名的水域活動課程
+        </h3>
+        <button onclick="loadBookings()"
+          class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-3 py-1.5 rounded-lg transition-colors">
+          重新整理
+        </button>
+      </div>
+
+      <div class="divide-y divide-slate-100" id="bookingsContainer">
+        <!-- 報名紀錄載入中 -->
+        <div class="p-8 text-center text-slate-400">
+          正在讀取報名紀錄...
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 身體健康問卷 Modal -->
+  <div id="surveyModal"
+    class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div
+      class="bg-white rounded-3xl shadow-xl w-full max-w-2xl overflow-hidden m-4 border border-slate-100 transform transition-all flex flex-col max-h-[85vh]">
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center flex-shrink-0">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+          📋 填寫身體健康調查問卷
+        </h3>
+        <button onclick="closeSurveyModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Form Body (Scrollable) -->
+      <form id="surveyForm" onsubmit="saveSurvey(event)" class="p-6 space-y-4 overflow-y-auto flex-1 text-sm text-left">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="block text-xs font-bold text-slate-600 mb-1">游泳能力說明</label>
+            <input type="text" id="srvSwimming" placeholder="例如：可換氣游50公尺、不擅游泳" class="w-full p-2 border rounded-lg">
+          </div>
+          <div class="form-group">
+            <label class="block text-xs font-bold text-slate-600 mb-1">SUP 或水域操作經驗</label>
+            <input type="text" id="srvSupExp" placeholder="例如：無經驗、曾玩過幾次" class="w-full p-2 border rounded-lg">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="block text-xs font-bold text-slate-600 mb-1">活動期待或需求</label>
+          <textarea id="srvExpectations" rows="2" placeholder="您對這趟活動的期待..."
+            class="w-full p-2 border rounded-lg"></textarea>
+        </div>
+
+        <div class="border-t pt-3 mt-3 space-y-3">
+          <h4 class="font-bold text-blue-600 text-xs">⚠️ 身體限制與過往健康史</h4>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="block text-xs font-bold text-slate-600 mb-1">是否有身體限制 (如：氣喘、心臟病、骨折等)</label>
+              <select id="srvLimitFlag" onchange="toggleSurveyRow('srvLimitFlag', 'srvLimitDetailRow')"
+                class="w-full p-2 border rounded-lg">
+                <option value="否">否</option>
+                <option value="是">是</option>
+              </select>
+            </div>
+            <div class="form-group hidden" id="srvLimitDetailRow">
+              <label class="block text-xs font-bold text-slate-600 mb-1">限制狀況詳細說明</label>
+              <input type="text" id="srvLimitDetail" placeholder="請詳細說明狀況" class="w-full p-2 border rounded-lg">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="block text-xs font-bold text-slate-600 mb-1">慢性疾病或重大傷病說明</label>
+            <input type="text" id="srvDiseases" value="無上述疾病" class="w-full p-2 border rounded-lg">
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="block text-xs font-bold text-slate-600 mb-1">三年內是否曾受傷或開刀</label>
+              <select id="srvInjuryFlag" onchange="toggleSurveyRow('srvInjuryFlag', 'srvInjuryDetailRow')"
+                class="w-full p-2 border rounded-lg">
+                <option value="否">否</option>
+                <option value="是">是</option>
+              </select>
+            </div>
+            <div class="form-group hidden" id="srvInjuryDetailRow">
+              <label class="block text-xs font-bold text-slate-600 mb-1">受傷或手術細節說明</label>
+              <input type="text" id="srvInjuriesDetail" placeholder="請填寫時間與部位" class="w-full p-2 border rounded-lg">
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t pt-3 mt-3 space-y-3">
+          <h4 class="font-bold text-blue-600 text-xs">✍️ 聲明與簽名</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="block text-xs font-bold text-slate-600 mb-1">健康聲明書簽名 (請輸入姓名)</label>
+              <input type="text" id="srvSigHealth" required placeholder="請輸入完整姓名" class="w-full p-2 border rounded-lg">
+            </div>
+            <div class="form-group">
+              <label class="block text-xs font-bold text-slate-600 mb-1">個人資料同意書簽名 (請輸入姓名)</label>
+              <input type="text" id="srvSigConsent" required placeholder="請輸入完整姓名" class="w-full p-2 border rounded-lg">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="block text-xs font-bold text-slate-600 mb-1">填寫日期</label>
+            <input type="date" id="srvDate" required class="w-full p-2 border rounded-lg">
+          </div>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="border-t pt-4 flex justify-end gap-3 flex-shrink-0">
+          <button type="button" onclick="closeSurveyModal()"
+            class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs transition">
+            取消
+          </button>
+          <button type="submit"
+            class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition shadow-sm">
+            儲存送出問卷
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <footer class="border-t bg-white mt-12">
+    <div class="max-w-6xl mx-auto px-6 py-5 text-sm text-slate-500">
+      © 2026 OutdoorPeer活動網
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // 權限檢查
+    const loginRole = localStorage.getItem("loginRole");
+    const touristId = localStorage.getItem("touristId");
+    if (loginRole !== "tourist" || !touristId) {
+      window.location.href = "login.html";
+    }
+    const userName = localStorage.getItem("userName") || touristId;
+
+    // 🔑 Supabase 連線資訊
+    const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let isMockMode = false;
+    let myBookings = [];
+    let hasFilledSurvey = false;
+    let activeSurveyData = null;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const welcomeEl = document.getElementById("welcomeUserName");
+      if (welcomeEl) welcomeEl.textContent = userName;
+      document.getElementById("touristNameDisplay").textContent = userName;
+      document.getElementById("mobileMenuBtn").addEventListener("click", () => {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+      });
+
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById("srvDate").value = today;
+
+      await checkMockMode();
+      await syncCartFromDb();
+      await loadSurveyStatus();
+      await loadLevels();
+      await loadBookings();
+    });
+
+    async function checkMockMode() {
+      try {
+        const { error } = await supabaseClient.from('coach').select('id_number').limit(1);
+        if (error) isMockMode = true;
+      } catch (e) {
+        isMockMode = true;
+      }
+    }
+
+    async function syncCartFromDb() {
+      if (!touristId) return;
+      if (!isMockMode) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('cart')
+            .select('session_id')
+            .eq('tourist_id', touristId);
+          if (!error && data) {
+            const sessionIds = data.map(item => item.session_id);
+            localStorage.setItem("touristCart", JSON.stringify(sessionIds));
+          }
+        } catch (e) {
+          console.error("Cart sync failed, fallback to localStorage:", e);
+        }
+      }
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("touristCart")) || [];
+      const cartCount = document.getElementById("cartCount");
+      if (cartCount) cartCount.textContent = cart.length;
+    }
+
+    // ==========================================================
+    // 📊 載入水域項目等級
+    // ==========================================================
+    async function loadLevels() {
+      const levelContainer = document.getElementById("levelListContainer");
+      let levels = [];
+
+      if (!isMockMode) {
+        try {
+          const { data, error } = await supabaseClient
+            .from("tourist_item_levels")
+            .select("item, level")
+            .eq("tourist_id", touristId);
+
+          if (!error && data) {
+            levels = data;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (isMockMode || levels.length === 0) {
+        levels = JSON.parse(localStorage.getItem("mock_tourist_levels") || "[]")
+          .filter(l => l.tourist_id === touristId);
+      }
+
+      if (levels.length === 0) {
+        levelContainer.innerHTML = `<p class="text-xs text-blue-100">尚無水域等級資料</p>`;
+        return;
+      }
+
+      levelContainer.innerHTML = levels.map(lvl => `
+        <div class="flex justify-between items-center bg-blue-700/30 px-3 py-1 rounded-lg">
+          <span>${lvl.item}</span>
+          <span class="bg-white text-blue-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">${lvl.level}</span>
+        </div>
+      `).join("");
+    }
+
+    // ==========================================================
+    // 📋 載入健康問卷狀態
+    // ==========================================================
+    async function loadSurveyStatus() {
+      const badge = document.getElementById("surveyStatusBadge");
+
+      let survey = null;
+      if (!isMockMode) {
+        try {
+          const { data, error } = await supabaseClient
+            .from("tourist_health_survey")
+            .select("*")
+            .eq("tourist_id", touristId)
+            .maybeSingle();
+
+          if (!error && data) {
+            survey = data;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (isMockMode || !survey) {
+        const localSurveys = JSON.parse(localStorage.getItem("mock_health_surveys") || "[]");
+        survey = localSurveys.find(s => s.tourist_id === touristId);
+      }
+
+      if (survey) {
+        hasFilledSurvey = true;
+        activeSurveyData = survey;
+        badge.textContent = "已填寫";
+        badge.className = "text-xs px-2.5 py-1 rounded-full font-bold bg-green-100 text-green-700";
+      } else {
+        hasFilledSurvey = false;
+        activeSurveyData = null;
+        badge.textContent = "尚未填寫問卷";
+        badge.className = "text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-700 animate-pulse";
+      }
+    }
+
+    // ==========================================================
+    // 🎯 載入已報名課程
+    // ==========================================================
+    async function loadBookings() {
+      const container = document.getElementById("bookingsContainer");
+      container.innerHTML = `
+        <div class="p-8 text-center text-slate-400">
+          正在載入您的報名紀錄...
+        </div>
+      `;
+
+      let bookings = [];
+
+      if (!isMockMode) {
+        try {
+          const { data, error } = await supabaseClient
+            .from("bookings")
+            .select(`
+              booking_id,
+              session_id,
+              payment_status,
+              booking_time,
+              insurance_status,
+              course:session_id (
+                course_name,
+                item,
+                price,
+                start_time,
+                difficulty_level,
+                coach:instructor_id (
+                  name
+                )
+              )
+            `)
+            .eq("tourist_id", touristId)
+            .order("booking_id", { ascending: false });
+
+          if (!error && data) {
+            bookings = data;
+          } else {
+            console.warn("Supabase 查詢 bookings 失敗，進入 LocalStorage 讀取:", error);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (isMockMode || bookings.length === 0) {
+        const localBookings = JSON.parse(localStorage.getItem("mock_bookings") || "[]")
+          .filter(b => b.tourist_id === touristId);
+
+        const localCourses = JSON.parse(localStorage.getItem("mock_courses") || "[]");
+
+        bookings = localBookings.map(b => {
+          const courseDetail = localCourses.find(c => c.session_id === b.session_id);
+          return {
+            booking_id: b.booking_id,
+            session_id: b.session_id,
+            payment_status: b.payment_status || "未繳費",
+            booking_time: b.booking_time,
+            insurance_status: b.insurance_status || "未投保",
+            course: courseDetail ? {
+              course_name: courseDetail.course_name,
+              item: courseDetail.item,
+              price: courseDetail.price,
+              start_time: courseDetail.start_time,
+              difficulty_level: courseDetail.difficulty_level,
+              coach: { name: courseDetail.coach ? courseDetail.coach.name : "未指定" }
+            } : null
+          };
+        });
+      }
+
+      myBookings = bookings;
+      renderBookings();
+    }
+
+    function renderBookings() {
+      const container = document.getElementById("bookingsContainer");
+      if (myBookings.length === 0) {
+        container.innerHTML = `
+          <div class="p-10 text-center text-slate-400 bg-white">
+            您目前沒有任何課程報名紀錄。快去選購課程吧！
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = myBookings.map(bk => {
+        const course = bk.course || {};
+        const coach = course.coach || {};
+        const coachName = coach.name || "未指定";
+
+        const paymentClass = getPaymentClass(bk.payment_status);
+        const insuranceClass = getInsuranceClass(bk.insurance_status);
+
+        return `
+          <div class="p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-slate-50 transition">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-[10px] bg-slate-100 text-slate-500 font-mono px-2 py-0.5 rounded">報名ID: ${bk.booking_id}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold">${course.item || "水域活動"}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold">${course.difficulty_level || "初階"}</span>
+                <span class="text-[10px] text-slate-400">報名時間：${formatDateTime(bk.booking_time)}</span>
+              </div>
+              <h4 class="text-base font-bold text-slate-800">${course.course_name || "未知課程場次"}</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 text-xs text-slate-500 pt-1">
+                <p><span class="font-medium text-slate-700">指導教練：</span>${coachName}</p>
+                <p><span class="font-medium text-slate-700">活動時間：</span>${formatDateTime(course.start_time)}</p>
+              </div>
+            </div>
+
+            <div class="flex flex-row md:flex-col justify-between items-center md:items-end w-full md:w-auto pt-3 md:pt-0 border-t md:border-t-0 border-slate-100 gap-3">
+              <div class="text-right">
+                <p class="text-slate-400 text-xs">費用金額</p>
+                <p class="font-extrabold text-slate-800 text-base">NT$ ${Number(course.price || 0).toLocaleString()}</p>
+              </div>
+              <div class="flex gap-2">
+                <span class="text-xs px-2.5 py-1 rounded-full font-bold ${paymentClass}">
+                  ${bk.payment_status}
+                </span>
+                <span class="text-xs px-2.5 py-1 rounded-full font-bold ${insuranceClass}">
+                  ${bk.insurance_status}
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "—";
+      const date = new Date(value);
+      return date.toLocaleString("zh-TW", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function getPaymentClass(status) {
+      switch (status) {
+        case "已繳費":
+          return "bg-green-50 text-green-700";
+        case "未繳費":
+          return "bg-amber-50 text-amber-700";
+        case "已退款":
+          return "bg-red-50 text-red-700";
+        default:
+          return "bg-slate-50 text-slate-600";
+      }
+    }
+
+    function getInsuranceClass(status) {
+      switch (status) {
+        case "已投保":
+          return "bg-blue-50 text-blue-700";
+        case "未投保":
+          return "bg-slate-100 text-slate-500";
+        default:
+          return "bg-slate-100 text-slate-500";
+      }
+    }
+
+    // ==========================================================
+    // ✍️ 健康問卷填寫邏輯 (Modal)
+    // ==========================================================
+    function openSurveyModal() {
+      // 若已有填寫過的資料，載入預填
+      if (activeSurveyData) {
+        document.getElementById("srvSwimming").value = activeSurveyData.swimming_ability || "";
+        document.getElementById("srvSupExp").value = activeSurveyData.sup_experience || "";
+        document.getElementById("srvExpectations").value = activeSurveyData.expectations || "";
+
+        const limitVal = activeSurveyData.health_limitations || "否";
+        document.getElementById("srvLimitFlag").value = limitVal;
+        document.getElementById("srvLimitDetail").value = activeSurveyData.limitations_detail || "";
+        toggleSurveyRow("srvLimitFlag", "srvLimitDetailRow");
+
+        document.getElementById("srvDiseases").value = activeSurveyData.has_diseases || "無上述疾病";
+
+        const injuryVal = activeSurveyData.recent_injuries || "否";
+        document.getElementById("srvInjuryFlag").value = injuryVal;
+        document.getElementById("srvInjuriesDetail").value = activeSurveyData.injuries_detail || "";
+        toggleSurveyRow("srvInjuryFlag", "srvInjuryDetailRow");
+
+        document.getElementById("srvSigHealth").value = activeSurveyData.signature_health || "";
+        document.getElementById("srvSigConsent").value = activeSurveyData.signature_consent || "";
+        if (activeSurveyData.fill_date) {
+          document.getElementById("srvDate").value = activeSurveyData.fill_date;
+        }
+      } else {
+        document.getElementById("surveyForm").reset();
+        document.getElementById("srvDiseases").value = "無上述疾病";
+        toggleSurveyRow("srvLimitFlag", "srvLimitDetailRow");
+        toggleSurveyRow("srvInjuryFlag", "srvInjuryDetailRow");
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("srvDate").value = today;
+      }
+
+      document.getElementById("surveyModal").classList.remove("hidden");
+    }
+
+    function closeSurveyModal() {
+      document.getElementById("surveyModal").classList.add("hidden");
+    }
+
+    function toggleSurveyRow(selectId, targetRowId) {
+      const selectVal = document.getElementById(selectId).value;
+      const row = document.getElementById(targetRowId);
+      if (selectVal === "是") {
+        row.classList.remove("hidden");
+      } else {
+        row.classList.add("hidden");
+      }
+    }
+
+    async function saveSurvey(e) {
+      e.preventDefault();
+
+      const survey = {
+        tourist_id: touristId,
+        swimming_ability: document.getElementById("srvSwimming").value.trim(),
+        sup_experience: document.getElementById("srvSupExp").value.trim(),
+        expectations: document.getElementById("srvExpectations").value.trim(),
+        health_limitations: document.getElementById("srvLimitFlag").value,
+        limitations_detail: document.getElementById("srvLimitDetail").value.trim(),
+        has_diseases: document.getElementById("srvDiseases").value.trim(),
+        recent_injuries: document.getElementById("srvInjuryFlag").value,
+        injuries_detail: document.getElementById("srvInjuriesDetail").value.trim(),
+        signature_health: document.getElementById("srvSigHealth").value.trim(),
+        signature_consent: document.getElementById("srvSigConsent").value.trim(),
+        fill_date: document.getElementById("srvDate").value
+      };
+
+      let success = false;
+
+      if (!isMockMode) {
+        try {
+          const { error } = await supabaseClient
+            .from("tourist_health_survey")
+            .upsert([survey]);
+
+          if (!error) {
+            success = true;
+          } else {
+            console.error("Supabase upsert survey fail:", error);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      if (isMockMode || !success) {
+        const localSurveys = JSON.parse(localStorage.getItem("mock_health_surveys") || "[]");
+        const idx = localSurveys.findIndex(s => s.tourist_id === touristId);
+        if (idx !== -1) {
+          localSurveys[idx] = survey;
+        } else {
+          localSurveys.push(survey);
+        }
+        localStorage.setItem("mock_health_surveys", JSON.stringify(localSurveys));
+        success = true;
+      }
+
+      if (success) {
+        alert("身體健康調查問卷儲存成功！");
+        closeSurveyModal();
+        await loadSurveyStatus();
+      } else {
+        alert("問卷儲存失敗，請確認欄位格式是否正確。");
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("loginRole");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("touristId");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+
+</html>

@@ -58,8 +58,14 @@
                         <input type="text" id="tPhone" required placeholder="例如：0912345678" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="tEmail" placeholder="example@email.com" class="form-control">
+                        <label class="form-label">Email (登入帳號，必填)</label>
+                        <input type="email" id="tEmail" required placeholder="example@email.com" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">登入密碼 (需含英數字)</label>
+                        <input type="password" id="tPassword" required minlength="6"
+                            pattern="^(?=.*[A-Za-z])(?=.*\d).{6,}$" title="密碼需至少 6 碼，且必須包含英文與數字"
+                            placeholder="至少 6 碼且含英數字" value="password123" class="form-control">
                     </div>
                     <div class="form-group">
                         <label class="form-label">飲食習慣</label>
@@ -210,9 +216,13 @@
                                 <span class="text-slate-500 text-xs block">出生年月日</span>
                                 <span id="modalBirthDate" class="font-semibold font-mono text-slate-800"></span>
                             </div>
-                            <div class="col-span-2 border-t border-slate-200/60 pt-2 mt-1">
+                            <div class="border-t border-slate-200/60 pt-2 mt-1">
                                 <span class="text-slate-500 text-xs block">建立時間</span>
                                 <span id="modalCreatedAt" class="font-semibold font-mono text-slate-800"></span>
+                            </div>
+                            <div class="border-t border-slate-200/60 pt-2 mt-1">
+                                <span class="text-slate-500 text-xs block">登入密碼</span>
+                                <span id="modalPassword" class="font-semibold font-mono text-slate-800"></span>
                             </div>
                         </div>
                     </div>
@@ -499,8 +509,15 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label text-xs">Email</label>
-                        <input type="email" id="editEmail" class="form-control">
+                        <label class="form-label text-xs">Email (登入帳號，必填)</label>
+                        <input type="email" id="editEmail" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label text-xs">登入密碼 (需含英數字)</label>
+                        <input type="password" id="editPassword" required minlength="6"
+                            pattern="^(?=.*[A-Za-z])(?=.*\d).{6,}$" title="密碼需至少 6 碼，且必須包含英文與數字"
+                            class="form-control">
                     </div>
 
                     <div class="form-group">
@@ -846,7 +863,8 @@
             const gender = document.getElementById('tGender').value;
             const birth_date = document.getElementById('tBirthDate').value;
             const phone = document.getElementById('tPhone').value;
-            const email = document.getElementById('tEmail').value || null;
+            const email = document.getElementById('tEmail').value.trim().toLowerCase();
+            const password = document.getElementById('tPassword').value.trim();
             const dietary_habit = document.getElementById('tDiet').value;
             const address = document.getElementById('tAddress').value || null;
             const emergency_contact = document.getElementById('tEmergencyContact').value || null;
@@ -855,14 +873,27 @@
             const { error } = await _supabase
                 .from('tourists')
                 .insert([
-                    { id_number, name, gender, birth_date, phone, email, dietary_habit, address, emergency_contact, emergency_phone }
+                    { id_number, name, gender, birth_date, phone, email, password, dietary_habit, address, emergency_contact, emergency_phone }
                 ]);
 
             if (error) {
                 alert('新增失敗：' + error.message);
             } else {
+                // 同步密碼到 LocalStorage
+                const passwords = JSON.parse(localStorage.getItem('user_passwords') || '{}');
+                passwords[email] = password;
+                localStorage.setItem('user_passwords', JSON.stringify(passwords));
+
+                // 同步到 LocalStorage mock_tourists
+                const mockTourists = JSON.parse(localStorage.getItem('mock_tourists') || '[]');
+                if (!mockTourists.some(t => t.id_number === id_number)) {
+                    mockTourists.push({ id_number, name, gender, birth_date, phone, email, password, dietary_habit, address, emergency_contact, emergency_phone });
+                    localStorage.setItem('mock_tourists', JSON.stringify(mockTourists));
+                }
+
                 alert('遊客資料登記成功！');
                 document.getElementById('addTouristForm').reset();
+                document.getElementById('tPassword').value = 'password123'; // 重置密碼欄位預設值
                 document.getElementById('tDiet').value = '葷食';
                 fetchTourists();
             }
@@ -902,6 +933,14 @@
             document.getElementById('modalDiet').textContent = item.dietary_habit || '未填';
             document.getElementById('modalEmergencyContact').textContent = item.emergency_contact || '未填';
             document.getElementById('modalEmergencyPhone').textContent = item.emergency_phone || '';
+
+            // 登入密碼
+            let userPass = item.password;
+            if (!userPass) {
+                const passwords = JSON.parse(localStorage.getItem('user_passwords') || '{}');
+                userPass = passwords[item.email ? item.email.toLowerCase() : ''] || 'password123';
+            }
+            document.getElementById('modalPassword').textContent = userPass;
 
             // 建立時間
             let formattedCreatedAt = '—';
@@ -1234,6 +1273,14 @@
             document.getElementById('editEmergencyContact').value = item.emergency_contact || '';
             document.getElementById('editEmergencyPhone').value = item.emergency_phone || '';
 
+            // 填寫密碼欄位
+            let editUserPass = item.password;
+            if (!editUserPass) {
+                const passwords = JSON.parse(localStorage.getItem('user_passwords') || '{}');
+                editUserPass = passwords[item.email ? item.email.toLowerCase() : ''] || 'password123';
+            }
+            document.getElementById('editPassword').value = editUserPass;
+
             // 2. 切換至預設的個人資料 Tab
             switchEditTab('personal');
 
@@ -1394,7 +1441,8 @@
             const gender = document.getElementById('editGender').value;
             const birth_date = document.getElementById('editBirthDate').value;
             const phone = document.getElementById('editPhone').value;
-            const email = document.getElementById('editEmail').value || null;
+            const email = document.getElementById('editEmail').value.trim().toLowerCase();
+            const password = document.getElementById('editPassword').value.trim();
             const dietary_habit = document.getElementById('editDiet').value;
             const address = document.getElementById('editAddress').value || null;
             const emergency_contact = document.getElementById('editEmergencyContact').value || null;
@@ -1403,12 +1451,25 @@
             // 1. 更新遊客基本資料
             const { error: profileError } = await _supabase
                 .from('tourists')
-                .update({ name, gender, birth_date, phone, email, dietary_habit, address, emergency_contact, emergency_phone })
+                .update({ name, gender, birth_date, phone, email, password, dietary_habit, address, emergency_contact, emergency_phone })
                 .eq('id_number', id_number);
 
             if (profileError) {
                 alert('遊客基本資料修改失敗：' + profileError.message);
                 return;
+            }
+
+            // 同步密碼到 LocalStorage
+            const passwords = JSON.parse(localStorage.getItem('user_passwords') || '{}');
+            passwords[email] = password;
+            localStorage.setItem('user_passwords', JSON.stringify(passwords));
+
+            // 同步到 LocalStorage mock_tourists
+            const mockTourists = JSON.parse(localStorage.getItem('mock_tourists') || '[]');
+            const idx = mockTourists.findIndex(t => t.id_number === id_number);
+            if (idx !== -1) {
+                mockTourists[idx] = { ...mockTourists[idx], name, gender, birth_date, phone, email, password, dietary_habit, address, emergency_contact, emergency_phone };
+                localStorage.setItem('mock_tourists', JSON.stringify(mockTourists));
             }
 
             // 2. 獲取並儲存身體健康問卷數據
@@ -1538,6 +1599,13 @@
                     const hasSurvey = dbSurveys.some(s => s.tourist_id === item.id_number) ||
                         localSurveys.some(s => s.tourist_id === item.id_number);
 
+                    // 取得密碼
+                    let userPass = item.password;
+                    if (!userPass) {
+                        const passwords = JSON.parse(localStorage.getItem('user_passwords') || '{}');
+                        userPass = passwords[item.email ? item.email.toLowerCase() : ''] || 'password123';
+                    }
+
                     return {
                         '身分證字號': item.id_number,
                         '姓名': item.name,
@@ -1545,6 +1613,7 @@
                         '出生年月日': item.birth_date,
                         '聯絡電話': item.phone,
                         '電子信箱': item.email || '未填',
+                        '登入密碼': userPass,
                         '飲食習慣': item.dietary_habit || '葷食',
                         '通訊地址': item.address || '未填',
                         '緊急聯絡人姓名': item.emergency_contact || '未填',

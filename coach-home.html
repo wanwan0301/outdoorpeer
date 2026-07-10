@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OutdoorPeer活動網 - 教練工作台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <h1 class="text-xl md:text-2xl font-bold text-amber-700">OutdoorPeer活動網</h1>
+        <span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">教練模式</span>
+      </div>
+
+      <div class="md:flex max-md:hidden items-center gap-4 text-sm">
+        <span class="text-slate-600 font-medium"><span id="welcomeCoachName" class="text-amber-700 font-bold"></span> 教練
+          您好</span>
+        <button onclick="logout()"
+          class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium transition">登出</button>
+      </div>
+
+      <button id="mobileMenuBtn" class="md:hidden text-slate-600 border px-3 py-2 rounded-md">
+        選單
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden border-t bg-white px-6 py-3 space-y-2 text-sm">
+      <div class="px-3 py-2 text-xs text-slate-500 font-bold border-b"><span id="welcomeCoachNameMobile"></span></div>
+      <button onclick="logout()"
+        class="block w-full text-left px-3 py-2 rounded-md hover:bg-slate-100 text-red-500">登出</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-6 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+      <!-- 左側：教練基本資訊 -->
+      <div class="lg:col-span-1 space-y-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+          <div class="text-center pb-4 border-b">
+            <div
+              class="w-16 h-16 rounded-full coach-badge flex items-center justify-center text-white text-2xl font-bold mx-auto mb-3 shadow-md">
+            </div>
+            <h3 id="profileName" class="text-lg font-bold text-slate-800">—</h3>
+            <p id="profileId" class="text-xs text-slate-400 font-mono mt-1">—</p>
+          </div>
+
+          <div class="mt-4 space-y-3 text-xs text-slate-600">
+            <div>
+              <span class="text-slate-400 font-medium block">聯絡電話</span>
+              <span id="profilePhone" class="font-bold text-slate-700 mt-0.5 block">—</span>
+            </div>
+            <div>
+              <span class="text-slate-400 font-medium block">電子信箱</span>
+              <span id="profileEmail" class="font-bold text-slate-700 mt-0.5 block">—</span>
+            </div>
+            <div>
+              <span class="text-slate-400 font-medium block">專長領域</span>
+              <div id="profileSpecialties" class="flex flex-wrap gap-1 mt-1">
+                <!-- specialties -->
+              </div>
+            </div>
+            <div>
+              <span class="text-slate-400 font-medium block">專業證照</span>
+              <span id="profileLicenses" class="font-bold text-slate-700 mt-0.5 block">—</span>
+            </div>
+            <div>
+              <span class="text-slate-400 font-medium block">自我介紹</span>
+              <p id="profileBio" class="text-slate-500 mt-1 italic leading-relaxed">—</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 時段發布區 -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+          <h4 class="text-sm font-bold text-slate-700 border-l-4 border-amber-500 pl-2.5 mb-3">發布接客時段</h4>
+          <form id="addAvailForm" onsubmit="handleAddAvailability(event)" class="space-y-3 text-xs">
+            <div>
+              <label class="block text-slate-500 mb-1 font-bold">可接客日期</label>
+              <input type="date" id="avDate" required class="w-full p-2 border rounded-lg">
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1 font-bold">接客時段</label>
+              <select id="avSlot" class="w-full p-2 border rounded-lg bg-white">
+                <option value="上午 (09:00 - 12:00)">上午 (09:00 - 12:00)</option>
+                <option value="下午 (14:00 - 17:00)">下午 (14:00 - 17:00)</option>
+                <option value="全天 (09:00 - 17:00)">全天 (09:00 - 17:00)</option>
+              </select>
+            </div>
+            <button type="submit"
+              class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-lg transition shadow-sm">
+              發布接客時段
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- 右側：主要操作區（開設課程與時段管理） -->
+      <div class="lg:col-span-3 space-y-6">
+
+        <!-- 開設課程面板 -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+          <h3 class="text-lg font-bold text-slate-800 border-b pb-3 mb-4 flex items-center gap-2">
+            開設新課程 (單次活動 / 常態班)
+          </h3>
+
+          <form id="createCourseForm" onsubmit="handleCreateCourse(event)" class="space-y-4 text-xs">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="block font-bold text-slate-600 mb-1">課程名稱 (必填)</label>
+                <input type="text" id="cName" required placeholder="例如：暑期SUP立槳衝浪班"
+                  class="w-full p-2.5 border rounded-lg text-sm">
+              </div>
+              <div class="form-group">
+                <label class="block font-bold text-slate-600 mb-1">課程項目 (必填)</label>
+                <select id="cItem" required class="w-full p-2.5 border rounded-lg text-sm bg-white">
+                  <option value="SUP立槳">SUP立槳</option>
+                  <option value="獨木舟">獨木舟</option>
+                  <option value="衝浪">衝浪</option>
+                  <option value="自由潛水">自由潛水</option>
+                  <option value="水肺潛水">水肺潛水</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="form-group">
+                <label class="block font-bold text-slate-600 mb-1">難易度分類</label>
+                <select id="cLevel" class="w-full p-2.5 border rounded-lg text-sm bg-white">
+                  <option value="初階">初階</option>
+                  <option value="中階">中階</option>
+                  <option value="中高階">中高階</option>
+                  <option value="高階">高階</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="block font-bold text-slate-600 mb-1">人數上限 (必填)</label>
+                <input type="number" id="cCapacity" required min="1" placeholder="例如：10"
+                  class="w-full p-2.5 border rounded-lg text-sm">
+              </div>
+              <div class="form-group">
+                <label class="block font-bold text-slate-600 mb-1">單次價格 (TWD, 必填)</label>
+                <input type="number" id="cPrice" required min="0" placeholder="例如：1500"
+                  class="w-full p-2.5 border rounded-lg text-sm">
+              </div>
+            </div>
+
+            <div class="form-group bg-slate-50 p-4 rounded-xl border">
+              <label class="block font-bold text-slate-700 mb-1 text-sm">課程類型</label>
+              <div class="flex gap-4 mt-2">
+                <label class="inline-flex items-center text-sm cursor-pointer font-medium">
+                  <input type="radio" name="course_type" value="單次活動" checked onchange="toggleCourseTypeFields()"
+                    class="mr-1.5 w-4 h-4 text-amber-700"> 單次活動 (固定時間排程)
+                </label>
+                <label class="inline-flex items-center text-sm cursor-pointer font-medium">
+                  <input type="radio" name="course_type" value="常態班" onchange="toggleCourseTypeFields()"
+                    class="mr-1.5 w-4 h-4 text-amber-700"> 常態班 (按月計算，可勾選複數開課時段)
+                </label>
+              </div>
+            </div>
+
+            <!-- 單次活動時間選擇 -->
+            <div id="singleTimeGroup" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="block font-bold text-slate-600 mb-1">開始時間</label>
+                <input type="datetime-local" id="cStartTime" class="w-full p-2.5 border rounded-lg text-sm">
+              </div>
+              <div class="form-group">
+                <label class="block font-bold text-slate-600 mb-1">結束時間</label>
+                <input type="datetime-local" id="cEndTime" class="w-full p-2.5 border rounded-lg text-sm">
+              </div>
+            </div>
+
+            <!-- 常態班月份與時段勾選 -->
+            <div id="recurringTimeGroup" class="hidden space-y-3">
+              <div class="form-group w-full md:w-1/3">
+                <label class="block font-bold text-slate-600 mb-1">選擇開課月份</label>
+                <input type="month" id="cMonth" onchange="generateMonthSlots()"
+                  class="w-full p-2.5 border rounded-lg text-sm">
+              </div>
+
+              <div class="border rounded-xl p-4 bg-white">
+                <p class="font-bold text-slate-700 mb-2">勾選本月開課日期與時段 (可複選)</p>
+                <div id="monthSlotsContainer"
+                  class="grid grid-cols-2 md:grid-cols-4 gap-2.5 max-h-[220px] overflow-y-auto p-1.5 border rounded-lg bg-slate-50">
+                  <p class="text-slate-400 text-xs col-span-full py-4 text-center">請先選擇開課月份</p>
+                </div>
+              </div>
+
+              <!-- 月費計算說明 -->
+              <div class="bg-amber-50 text-amber-800 p-3 rounded-lg flex justify-between items-center text-xs">
+                <span>已勾選時段數：<strong id="selectedSlotsCount">0</strong> 次</span>
+                <span>常態班月費估計：<strong id="recurringMonthlyPrice">NT$ 0</strong> / 月</span>
+              </div>
+            </div>
+
+            <button type="submit"
+              class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl transition shadow-md text-sm">
+              確認開設課程
+            </button>
+          </form>
+        </div>
+
+        <!-- 頁籤切換：已開設課程 / 可接客時段清單 -->
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+          <div class="flex border-b">
+            <button id="tabCoursesBtn" onclick="switchRightTab('courses')"
+              class="flex-1 py-3 text-center font-bold text-xs border-b-2 border-amber-500 text-amber-700 bg-slate-50/50">
+              我已開設的課程
+            </button>
+            <button id="tabAvailsBtn" onclick="switchRightTab('avails')"
+              class="flex-1 py-3 text-center font-bold text-xs border-b-2 border-transparent text-slate-400 hover:text-slate-600">
+              我的接客時段列表
+            </button>
+          </div>
+
+          <!-- A. 課程列表 -->
+          <div id="panelCourses" class="p-4 space-y-3">
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left text-slate-500">
+                <thead class="text-slate-700 uppercase bg-slate-50 font-bold">
+                  <tr>
+                    <th class="px-4 py-3">課程名稱</th>
+                    <th class="px-4 py-3">項目/類型</th>
+                    <th class="px-4 py-3">時間場次</th>
+                    <th class="px-4 py-3 text-right">單次價格</th>
+                    <th class="px-4 py-3">狀態</th>
+                  </tr>
+                </thead>
+                <tbody id="coachCoursesTableBody">
+                  <tr>
+                    <td colspan="5" class="px-4 py-6 text-center text-slate-400">載入中...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- B. 時段列表 -->
+          <div id="panelAvails" class="p-4 space-y-3 hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left text-slate-500">
+                <thead class="text-slate-700 uppercase bg-slate-50 font-bold">
+                  <tr>
+                    <th class="px-4 py-3">日期</th>
+                    <th class="px-4 py-3">時段</th>
+                    <th class="px-4 py-3">預約狀態</th>
+                    <th class="px-4 py-3 text-center">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="coachAvailsTableBody">
+                  <tr>
+                    <td colspan="4" class="px-4 py-6 text-center text-slate-400">載入中...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="border-t bg-white mt-12">
+    <div class="max-w-6xl mx-auto px-6 py-5 text-sm text-slate-500">
+      © 2026 OutdoorPeer活動網
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // 權限檢查
+    const loginRole = localStorage.getItem("loginRole");
+    const coachId = localStorage.getItem("coachId");
+    if (loginRole !== "coach" || !coachId) {
+      window.location.href = "login.html";
+    }
+    const coachName = localStorage.getItem("userName") || coachId;
+
+    // 🔑 Supabase 連線資訊
+    const SUPABASE_URL = 'https://myvxgyovbckilyoelgxe.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15dnhneW92YmNraWx5b2VsZ3hlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjU4MjUsImV4cCI6MjA5NzgwMTgyNX0.bj0b5c72OIB16kw811XfNpTKOAkq34Of4YzUeuVqLJI';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let isMockMode = false;
+    let coachProfile = null;
+    let coachCourses = [];
+    let coachAvailabilities = [];
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      document.getElementById("welcomeCoachName").textContent = coachName;
+      document.getElementById("welcomeCoachNameMobile").textContent = coachName + " 您好";
+
+      document.getElementById("mobileMenuBtn").addEventListener("click", () => {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+      });
+
+      // 預設日期為今天
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('avDate').value = today;
+
+      // 監聽價格變更以更新預估月費
+      document.getElementById('cPrice').addEventListener('input', updateRecurringPrice);
+
+      await checkMockMode();
+      await loadProfile();
+      await refreshAllData();
+    });
+
+    async function checkMockMode() {
+      try {
+        const { error } = await supabaseClient.from('coach').select('id_number').limit(1);
+        if (error) isMockMode = true;
+      } catch (e) {
+        isMockMode = true;
+      }
+    }
+
+    // ==========================================================
+    // 👤 載入教練基本資料
+    // ==========================================================
+    async function loadProfile() {
+      let profile = null;
+      let specialties = [];
+      let licenses = [];
+
+      if (!isMockMode) {
+        try {
+          const { data, error } = await supabaseClient
+            .from("coach")
+            .select("*")
+            .eq("id_number", coachId)
+            .maybeSingle();
+
+          if (!error && data) {
+            profile = data;
+
+            // 撈取專長
+            const { data: spec } = await supabaseClient.from("coach_specialties").select("specialty").eq("id_number", coachId);
+            specialties = spec ? spec.map(s => s.specialty) : [];
+
+            // 撈取證照
+            const { data: lic } = await supabaseClient.from("coach_licenses").select("license_name").eq("id_number", coachId);
+            licenses = lic ? lic.map(l => l.license_name) : [];
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (isMockMode || !profile) {
+        const mockCoaches = JSON.parse(localStorage.getItem("mock_coaches") || "[]");
+        profile = mockCoaches.find(c => c.id_number === coachId);
+        if (profile) {
+          specialties = profile.specialties || [];
+          licenses = profile.licenses || [];
+        }
+      }
+
+      if (profile) {
+        coachProfile = profile;
+        document.getElementById("profileName").textContent = profile.name;
+        document.getElementById("profileId").textContent = profile.id_number;
+        document.getElementById("profilePhone").textContent = profile.phone;
+        document.getElementById("profileEmail").textContent = profile.email || "未填";
+        document.getElementById("profileBio").textContent = profile.bio || "無自我介紹內容";
+
+        // 渲染專長
+        const specDiv = document.getElementById("profileSpecialties");
+        if (specialties.length > 0) {
+          specDiv.innerHTML = specialties.map(s => `
+            <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border font-semibold">${s}</span>
+          `).join("");
+        } else {
+          specDiv.innerHTML = `<span class="text-slate-400">尚無專長資料</span>`;
+        }
+
+        // 證照
+        document.getElementById("profileLicenses").textContent = licenses.length > 0 ? licenses.join(", ") : "未設定證照";
+      }
+    }
+
+    // ==========================================================
+    // 🔄 讀取教練的課程與接客時段
+    // ==========================================================
+    async function refreshAllData() {
+      let dbCourses = [];
+      let dbAvails = [];
+
+      if (!isMockMode) {
+        try {
+          const { data: cData, error: cErr } = await supabaseClient
+            .from("course")
+            .select("*, coach!instructor_id(name)")
+            .eq("instructor_id", coachId)
+            .order("session_id", { ascending: false });
+
+          if (!cErr && cData) dbCourses = cData;
+
+          const { data: aData, error: aErr } = await supabaseClient
+            .from("coach_availability")
+            .select("*")
+            .eq("coach_id", coachId)
+            .order("available_date", { ascending: true });
+
+          if (!aErr && aData) dbAvails = aData;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (isMockMode || (dbCourses.length === 0 && dbAvails.length === 0)) {
+        const localCourses = JSON.parse(localStorage.getItem("mock_courses") || "[]");
+        dbCourses = localCourses.filter(c => c.instructor_id === coachId);
+
+        const localAvails = JSON.parse(localStorage.getItem("mock_availabilities") || "[]");
+        dbAvails = localAvails.filter(a => a.coach_id === coachId);
+      }
+
+      coachCourses = dbCourses;
+      coachAvailabilities = dbAvails;
+
+      renderCoursesTable();
+      renderAvailsTable();
+    }
+
+    function renderCoursesTable() {
+      const tbody = document.getElementById("coachCoursesTableBody");
+      if (coachCourses.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="px-4 py-8 text-center text-slate-400 bg-white">您目前尚未開設任何活動課程。</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = coachCourses.map(c => `
+        <tr class="bg-white border-b hover:bg-slate-50">
+          <td class="px-4 py-3 font-bold text-slate-800">${c.course_name}</td>
+          <td class="px-4 py-3">
+            <span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700">${c.item}</span>
+            <span class="ml-1 text-slate-400 font-medium">${c.course_type || "單次活動"}</span>
+          </td>
+          <td class="px-4 py-3 text-slate-500 font-mono">${formatDateTime(c.start_time)}</td>
+          <td class="px-4 py-3 text-right font-bold text-amber-700">NT$ ${Number(c.price || 0).toLocaleString()}</td>
+          <td class="px-4 py-3">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${getStatusBadgeClass(c.session_status)}">${c.session_status}</span>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderAvailsTable() {
+      const tbody = document.getElementById("coachAvailsTableBody");
+      if (coachAvailabilities.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="px-4 py-8 text-center text-slate-400 bg-white">您目前尚未設定任何空閒時段。</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = coachAvailabilities.map(av => `
+        <tr class="bg-white border-b hover:bg-slate-50">
+          <td class="px-4 py-3 font-medium text-slate-700 font-mono">${av.available_date}</td>
+          <td class="px-4 py-3 text-slate-600">${av.time_slot}</td>
+          <td class="px-4 py-3">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${av.status === '已預約' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-800'}">${av.status || '開放預約'}</span>
+          </td>
+          <td class="px-4 py-3 text-center">
+            <button onclick="deleteAvail(${av.availability_id})" class="text-red-500 hover:text-red-700 font-bold bg-red-50 hover:bg-red-100 px-2 py-1 rounded">
+              刪除
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    // ==========================================================
+    // 接客時段發布與刪除
+    // ==========================================================
+    async function handleAddAvailability(e) {
+      e.preventDefault();
+      const date = document.getElementById("avDate").value;
+      const slot = document.getElementById("avSlot").value;
+
+      if (!date) return;
+
+      // 檢查重複
+      const isDup = coachAvailabilities.some(av => av.available_date === date && av.time_slot === slot);
+      if (isDup) {
+        alert("此日期與時段已發布過囉！");
+        return;
+      }
+
+      const newAvail = {
+        coach_id: coachId,
+        available_date: date,
+        time_slot: slot,
+        status: "開放預約"
+      };
+
+      let success = false;
+
+      if (!isMockMode) {
+        try {
+          const { error } = await supabaseClient.from("coach_availability").insert([newAvail]);
+          if (!error) success = true;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (isMockMode || !success) {
+        const localAvails = JSON.parse(localStorage.getItem("mock_availabilities") || "[]");
+        const nextId = localAvails.length > 0 ? Math.max(...localAvails.map(a => a.availability_id)) + 1 : 2001;
+        newAvail.availability_id = nextId;
+        newAvail.coach = { name: coachProfile ? coachProfile.name : "教練" };
+        localAvails.push(newAvail);
+        localStorage.setItem("mock_availabilities", JSON.stringify(localAvails));
+        success = true;
+      }
+
+      if (success) {
+        alert("接客時段發布成功！");
+        await refreshAllData();
+      } else {
+        alert("時段發布失敗，請重試。");
+      }
+    }
+
+    async function deleteAvail(id) {
+      if (!confirm("確定要移除此空閒時段嗎？")) return;
+
+      let success = false;
+
+      if (!isMockMode) {
+        try {
+          const { error } = await supabaseClient.from("coach_availability").delete().eq("availability_id", id);
+          if (!error) success = true;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (isMockMode || !success) {
+        let localAvails = JSON.parse(localStorage.getItem("mock_availabilities") || "[]");
+        localAvails = localAvails.filter(a => a.availability_id !== id);
+        localStorage.setItem("mock_availabilities", JSON.stringify(localAvails));
+        success = true;
+      }
+
+      if (success) {
+        alert("接客時段已移除。");
+        await refreshAllData();
+      }
+    }
+
+    // ==========================================================
+    // ✍️ 課程開設邏輯 (單次 vs 常態月份勾選)
+    // ==========================================================
+    function toggleCourseTypeFields() {
+      const type = document.querySelector('input[name="course_type"]:checked').value;
+      const singleGroup = document.getElementById("singleTimeGroup");
+      const recurringGroup = document.getElementById("recurringTimeGroup");
+
+      if (type === "單次活動") {
+        singleGroup.classList.remove("hidden");
+        recurringGroup.classList.add("hidden");
+        // 使單次時間必填
+        document.getElementById("cStartTime").required = true;
+        document.getElementById("cEndTime").required = true;
+      } else {
+        singleGroup.classList.add("hidden");
+        recurringGroup.classList.remove("hidden");
+        document.getElementById("cStartTime").required = false;
+        document.getElementById("cEndTime").required = false;
+      }
+    }
+
+    // 產生選取月份的所有可選時段
+    function generateMonthSlots() {
+      const monthVal = document.getElementById("cMonth").value; // "2026-08"
+      const container = document.getElementById("monthSlotsContainer");
+
+      if (!monthVal) {
+        container.innerHTML = `<p class="text-slate-400 text-xs col-span-full py-4 text-center">請先選擇開課月份</p>`;
+        return;
+      }
+
+      const [year, month] = monthVal.split("-").map(Number);
+      // 獲取該月份的總天數
+      const daysInMonth = new Date(year, month, 0).getDate();
+
+      let html = "";
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+        // 每一天提供三種時段選項
+        html += `
+          <div class="bg-white p-2 border rounded-lg shadow-sm space-y-1">
+            <p class="font-bold text-[10px] text-slate-700">${dateStr}</p>
+            <div class="flex flex-col gap-1 text-[9px]">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="slot-check" value="${dateStr} 上午" onchange="updateRecurringPrice()" class="mr-1"> 上午 (9-12)
+              </label>
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="slot-check" value="${dateStr} 下午" onchange="updateRecurringPrice()" class="mr-1"> 下午 (14-17)
+              </label>
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="slot-check" value="${dateStr} 全天" onchange="updateRecurringPrice()" class="mr-1"> 全天 (9-17)
+              </label>
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+      updateRecurringPrice();
+    }
+
+    function updateRecurringPrice() {
+      const checkedBoxes = document.querySelectorAll(".slot-check:checked");
+      const count = checkedBoxes.length;
+      document.getElementById("selectedSlotsCount").textContent = count;
+
+      const price = Number(document.getElementById("cPrice").value) || 0;
+      const totalMonthly = price * count;
+      document.getElementById("recurringMonthlyPrice").textContent = `NT$ ${totalMonthly.toLocaleString()}`;
+    }
+
+    // ==========================================================
+    // 💾 開設課程提交
+    // ==========================================================
+    async function handleCreateCourse(e) {
+      e.preventDefault();
+
+      const course_name = document.getElementById("cName").value.trim();
+      const item = document.getElementById("cItem").value;
+      const difficulty_level = document.getElementById("cLevel").value;
+      const capacity = parseInt(document.getElementById("cCapacity").value);
+      const price = parseFloat(document.getElementById("cPrice").value);
+      const course_type = document.querySelector('input[name="course_type"]:checked').value;
+
+      if (course_type === "單次活動") {
+        const start_time = document.getElementById("cStartTime").value;
+        const end_time = document.getElementById("cEndTime").value;
+
+        if (!start_time || !end_time) {
+          alert("請填寫單次活動的開始與結束時間！");
+          return;
+        }
+
+        const newCourse = {
+          course_name,
+          item,
+          course_type,
+          instructor_id: coachId,
+          start_time: start_time.replace('T', ' '),
+          end_time: end_time.replace('T', ' '),
+          price,
+          difficulty_level,
+          capacity,
+          session_status: "開放報名中"
+        };
+
+        await insertCourseRecord(newCourse);
+
+      } else {
+        // 常態班
+        const monthVal = document.getElementById("cMonth").value;
+        const checkedBoxes = document.querySelectorAll(".slot-check:checked");
+
+        if (!monthVal) {
+          alert("請選擇開課月份！");
+          return;
+        }
+        if (checkedBoxes.length === 0) {
+          alert("請勾選至少一個開課時段！");
+          return;
+        }
+
+        if (!confirm(`您已勾選 ${checkedBoxes.length} 個時段，系統將為您自動批次建立常態班課程與接客時段，是否確認？`)) {
+          return;
+        }
+
+        // 常態班以月計算：批次寫入 course 與 coach_availability
+        let successCount = 0;
+        for (const box of checkedBoxes) {
+          const [date, slot] = box.value.split(" ");
+
+          let start_time = "";
+          let end_time = "";
+
+          if (slot === "上午") {
+            start_time = `${date} 09:00:00`;
+            end_time = `${date} 12:00:00`;
+          } else if (slot === "下午") {
+            start_time = `${date} 14:00:00`;
+            end_time = `${date} 17:00:00`;
+          } else {
+            start_time = `${date} 09:00:00`;
+            end_time = `${date} 17:00:00`;
+          }
+
+          const newCourse = {
+            course_name: `${course_name} (${date} ${slot})`,
+            item,
+            course_type: "常態班",
+            instructor_id: coachId,
+            start_time,
+            end_time,
+            price,
+            difficulty_level,
+            capacity,
+            session_status: "開放報名中"
+          };
+
+          // 寫入課程
+          const cSuccess = await insertCourseRecord(newCourse, true);
+          if (cSuccess) {
+            // 同步寫入接客時段，狀態為「已預約」
+            const newAvail = {
+              coach_id: coachId,
+              available_date: date,
+              time_slot: `${slot} (課程預約)`,
+              status: "已預約"
+            };
+            await insertAvailRecord(newAvail);
+            successCount++;
+          }
+        }
+
+        alert(`常態班課程開設完成！成功建立 ${successCount} 個常態場次與預約時段。`);
+        document.getElementById("createCourseForm").reset();
+        document.getElementById("monthSlotsContainer").innerHTML = `<p class="text-slate-400 text-xs col-span-full py-4 text-center">請先選擇開課月份</p>`;
+        document.getElementById("selectedSlotsCount").textContent = 0;
+        document.getElementById("recurringMonthlyPrice").textContent = "NT$ 0";
+        await refreshAllData();
+      }
+    }
+
+    async function insertCourseRecord(course, isBulk = false) {
+      let success = false;
+
+      if (!isMockMode) {
+        try {
+          const { error } = await supabaseClient.from("course").insert([course]);
+          if (!error) success = true;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (isMockMode || !success) {
+        const localCourses = JSON.parse(localStorage.getItem("mock_courses") || "[]");
+        const nextId = localCourses.length > 0 ? Math.max(...localCourses.map(c => c.session_id)) + 1 : 1001;
+        course.session_id = nextId;
+        course.coach = { name: coachProfile ? coachProfile.name : "教練" };
+        localCourses.unshift(course);
+        localStorage.setItem("mock_courses", JSON.stringify(localCourses));
+        success = true;
+      }
+
+      if (!isBulk) {
+        if (success) {
+          alert("單次課程開設成功！");
+          document.getElementById("createCourseForm").reset();
+          await refreshAllData();
+        } else {
+          alert("開課失敗，請重試。");
+        }
+      }
+
+      return success;
+    }
+
+    async function insertAvailRecord(avail) {
+      let success = false;
+      if (!isMockMode) {
+        try {
+          const { error } = await supabaseClient.from("coach_availability").insert([avail]);
+          if (!error) success = true;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      if (isMockMode || !success) {
+        const localAvails = JSON.parse(localStorage.getItem("mock_availabilities") || "[]");
+        const nextId = localAvails.length > 0 ? Math.max(...localAvails.map(a => a.availability_id)) + 1 : 2001;
+        avail.availability_id = nextId;
+        avail.coach = { name: coachProfile ? coachProfile.name : "教練" };
+        localAvails.push(avail);
+        localStorage.setItem("mock_availabilities", JSON.stringify(localAvails));
+        success = true;
+      }
+      return success;
+    }
+
+    // ==========================================================
+    // 🛠️ 輔助與 UI 切換
+    // ==========================================================
+    function switchRightTab(tab) {
+      const panelCourses = document.getElementById("panelCourses");
+      const panelAvails = document.getElementById("panelAvails");
+      const tabCoursesBtn = document.getElementById("tabCoursesBtn");
+      const tabAvailsBtn = document.getElementById("tabAvailsBtn");
+
+      if (tab === "courses") {
+        panelCourses.classList.remove("hidden");
+        panelAvails.classList.add("hidden");
+        tabCoursesBtn.className = "flex-1 py-3 text-center font-bold text-xs border-b-2 border-amber-500 text-amber-700 bg-slate-50/50";
+        tabAvailsBtn.className = "flex-1 py-3 text-center font-bold text-xs border-b-2 border-transparent text-slate-400 hover:text-slate-600";
+      } else {
+        panelCourses.classList.add("hidden");
+        panelAvails.classList.remove("hidden");
+        tabCoursesBtn.className = "flex-1 py-3 text-center font-bold text-xs border-b-2 border-transparent text-slate-400 hover:text-slate-600";
+        tabAvailsBtn.className = "flex-1 py-3 text-center font-bold text-xs border-b-2 border-amber-500 text-amber-700 bg-slate-50/50";
+      }
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "未設定";
+      const date = new Date(value);
+      return date.toLocaleString("zh-TW", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function getStatusBadgeClass(status) {
+      switch (status) {
+        case "開放報名中": return "bg-amber-100 text-amber-800";
+        case "已成團": return "bg-blue-100 text-blue-700";
+        case "已客滿": return "bg-orange-100 text-orange-700";
+        default: return "bg-slate-100 text-slate-600";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("loginRole");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("coachId");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+
+</html>

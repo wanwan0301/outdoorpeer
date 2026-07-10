@@ -1016,5 +1016,19 @@ textarea.form-control {
 
   .brand__title {
     font-size: 1.12rem;
+    transform: scale(0.72) rotate(62deg);
   }
+}
+
+/* ---------- 14. Coach Page Specific Styles (Original Emerald Theme) ---------- */
+.coach-badge {
+  background: #d97706;
+  color: white;
+}
+
+/* ---------- 15. Coach Tab Active Override ---------- */
+#tabCoach.active {
+  background: #eab308 !important;
+  color: #422006 !important;
+  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.25) !important;
 }
